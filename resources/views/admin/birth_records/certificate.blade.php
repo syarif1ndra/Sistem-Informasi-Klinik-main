@@ -231,7 +231,7 @@
             left: 50%;
             transform: translate(-50%, -50%) rotate(-45deg);
             font-size: 80px;
-            color: rgba(44, 95, 125, 0.03);
+            color: rgba(0, 0, 0, 0.03);
             font-weight: bold;
             pointer-events: none;
             z-index: -1;
@@ -245,8 +245,8 @@
 
         <div class="header">
             <div class="logo-placeholder">+</div>
-            <div class="clinic-name">KLINIK SEHAT BERSAMA</div>
-            <div class="clinic-info">Jl. Raya Kesehatan No. 123, Kota Sehat</div>
+            <div class="clinic-name">Bidan Siti Hajar</div>
+            <div class="clinic-info">Jl. Raya, Merak Batin, Natar, Lampung</div>
             <div class="clinic-info">Telp: (021) 12345678 | Email: info@kliniksehat.id</div>
         </div>
 
@@ -263,10 +263,15 @@
             <div class="section-box">
                 <div class="section-title">Telah Lahir Seorang Bayi</div>
                 <div class="data-row">
+                    <span class="data-label">Nama Bayi</span>
+                    <span class="data-value">: <span class="baby-name">{{ $birthRecord->baby_name }}</span></span>
+                </div>
+                <div class="data-row">
                     <span class="data-label">Hari, Tanggal</span>
                     <span class="data-value">:
                         {{ \Carbon\Carbon::parse($birthRecord->birth_date)->translatedFormat('l, d F Y') }}</span>
                 </div>
+
                 <div class="data-row">
                     <span class="data-label">Pukul</span>
                     <span class="data-value">: {{ \Carbon\Carbon::parse($birthRecord->birth_time)->format('H:i') }}
@@ -288,17 +293,14 @@
                     <span class="data-label">Panjang Badan</span>
                     <span class="data-value">: {{ $birthRecord->baby_length }} cm</span>
                 </div>
-                <div class="data-row">
-                    <span class="data-label">Nama Bayi</span>
-                    <span class="data-value">: <span class="baby-name">{{ $birthRecord->baby_name }}</span></span>
-                </div>
+
             </div>
 
             <div class="section-title" style="margin-top: 10px; margin-bottom: 5px;">Anak Dari Pasangan</div>
 
             <div style="display: flex; gap: 10px;">
                 <div class="parent-section" style="flex: 1;">
-                    <div class="parent-title">👤 IBU</div>
+                    <div class="parent-title"> IBU</div>
                     <div class="data-row">
                         <span class="data-label" style="width: 60px;">Nama</span>
                         <span class="data-value">: {{ $birthRecord->mother_name }}</span>
@@ -314,7 +316,7 @@
                 </div>
 
                 <div class="parent-section" style="flex: 1;">
-                    <div class="parent-title">👤 AYAH</div>
+                    <div class="parent-title"> AYAH</div>
                     <div class="data-row">
                         <span class="data-label" style="width: 60px;">Nama</span>
                         <span class="data-value">: {{ $birthRecord->father_name }}</span>
@@ -332,10 +334,14 @@
 
             @if($birthRecord->gpa || $birthRecord->head_circumference || $birthRecord->chest_circumference)
                 <div class="medical-notes">
-                    <strong>📋 Catatan Medis:</strong>
+                    <strong> Catatan Medis:</strong>
                     @if($birthRecord->gpa) GPA: {{ $birthRecord->gpa }} @endif
                     @if($birthRecord->head_circumference) | Lingkar Kepala: {{ $birthRecord->head_circumference }} cm @endif
                     @if($birthRecord->chest_circumference) | Lingkar Dada: {{ $birthRecord->chest_circumference }} cm @endif
+                    @if($birthRecord->kala_1) | Kala 1: {{ $birthRecord->kala_1 }} @endif
+                    @if($birthRecord->kala_2) | Kala 2: {{ $birthRecord->kala_2 }} @endif
+                    @if($birthRecord->kala_3) | Kala 3: {{ $birthRecord->kala_3 }} @endif
+
                 </div>
             @endif
         </div>
@@ -347,9 +353,10 @@
             </div>
             <div class="footer-right">
                 <div class="signature-box">
-                    <div style="font-size: 9pt; margin-bottom: 2px;">Kota Sehat,
-                        {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</div>
-                    <div class="signature-title">Penolong Kelahiran</div>
+                    <div style="font-size: 9pt; margin-bottom: 2px;">Natar,
+                        {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
+                    </div>
+                    <div class="signature-title">Bidan,</div>
                     <div class="signature-name">( _________________ )</div>
                 </div>
             </div>

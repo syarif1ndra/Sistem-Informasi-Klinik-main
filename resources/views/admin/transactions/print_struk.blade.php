@@ -111,8 +111,8 @@
 <body onload="window.print()">
 
     <div class="header">
-        <h1>KLINIK SEHAT</h1>
-        <p>Jl. Kesehatan No. 123, Jakarta</p>
+        <h1>Bidan Siti Hajar</h1>
+        <p>Jl. Raya, Merak Batin, Natar, Lampung</p>
         <p>Telp: (021) 123-4567</p>
     </div>
 
