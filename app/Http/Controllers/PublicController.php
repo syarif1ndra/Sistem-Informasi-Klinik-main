@@ -19,8 +19,9 @@ class PublicController extends Controller
 
         $medicines = Medicine::all();
         $faqs = Faq::all();
+        $services = Service::all();
 
-        return view('public.home', compact('currentQueue', 'medicines', 'faqs'));
+        return view('public.home', compact('currentQueue', 'medicines', 'faqs', 'services'));
     }
 
     public function services()

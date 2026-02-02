@@ -13,7 +13,7 @@
                         Kami memberikan pelayanan kesehatan terbaik untuk ibu dan anak. Dengan tenaga bidan profesional dan
                         berpengalaman, kami siap mendampingi perjalanan kehamilan hingga persalinan Anda.
                     </p>
-                    <a href="#daftar"
+                    <a href="#" onclick="openRegistrationModal(event)"
                         class="inline-block bg-white text-pink-600 px-8 py-3 rounded-full font-bold hover:bg-pink-50 transition duration-150">
                         Daftar Sekarang
                     </a>
@@ -268,19 +268,262 @@
         </div>
     </div>
 
-    <!-- CTA Section -->
-    <div id="daftar" class="py-16 bg-gradient-to-r from-pink-500 via-pink-600 to-rose-600 text-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-4xl font-bold mb-6">Siap Mendaftar?</h2>
-            <p class="text-xl text-pink-100 mb-8">Daftarkan diri Anda sekarang dan dapatkan nomor antrian untuk konsultasi
-                dengan bidan kami.</p>
-            <a href="{{ route('public.register') }}"
-                class="inline-block bg-white text-pink-600 px-8 py-3 rounded-full font-bold hover:bg-pink-50 transition duration-150">
-                Daftar Sekarang
-            </a>
+    <!-- Registration Modal -->
+    <div id="registrationModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title"
+        role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
+                onclick="closeRegistrationModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="text-center sm:mt-0 sm:text-left">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Pendaftaran Pasien</h3>
+                        <div class="mt-2">
+                            <form id="registrationForm" onsubmit="submitRegistration(event)">
+                                @csrf
+                                <div id="formErrors"
+                                    class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                                    role="alert"></div>
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="name" class="block text-sm font-medium text-gray-700">Nama
+                                            Lengkap</label>
+                                        <input id="name" name="name" type="text" required
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="dob" class="block text-sm font-medium text-gray-700">Tanggal
+                                                Lahir</label>
+                                            <input id="dob" name="dob" type="date" required
+                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                        </div>
+                                        <div>
+                                            <label for="gender" class="block text-sm font-medium text-gray-700">Jenis
+                                                Kelamin</label>
+                                            <select id="gender" name="gender" required
+                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                                <option value="L">Laki-laki</option>
+                                                <option value="P">Perempuan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="whatsapp_number" class="block text-sm font-medium text-gray-700">Nomor
+                                            WhatsApp</label>
+                                        <input id="whatsapp_number" name="whatsapp_number" type="tel" required
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                    </div>
+                                    <div>
+                                        <label for="address" class="block text-sm font-medium text-gray-700">Alamat</label>
+                                        <textarea id="address" name="address" rows="2" required
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"></textarea>
+                                    </div>
+                                    <div>
+                                        <label for="service_id" class="block text-sm font-medium text-gray-700">Layanan
+                                            Kesehatan</label>
+                                        <select id="service_id" name="service_id" required
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                            @foreach($services as $service)
+                                                <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Penggunaan BPJS</label>
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center">
+                                                <input id="bpjs_yes" name="bpjs_usage" type="radio" value="1"
+                                                    class="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300">
+                                                <label for="bpjs_yes" class="ml-2 block text-sm text-gray-900">Ya</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="bpjs_no" name="bpjs_usage" type="radio" value="0" checked
+                                                    class="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300">
+                                                <label for="bpjs_no" class="ml-2 block text-sm text-gray-900">Tidak</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                                    <button type="submit"
+                                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:col-start-2 sm:text-sm">
+                                        Daftar
+                                    </button>
+                                    <button type="button"
+                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                                        onclick="closeRegistrationModal()">
+                                        Batal
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
+                onclick="closeSuccessModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4" id="registration-proof">
+                    <div class="text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                            <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mt-2" id="modal-title">Pendaftaran Berhasil
+                        </h3>
+                        <p class="text-sm text-gray-500">Simpan bukti ini untuk ditunjukkan kepada petugas.</p>
+
+                        <div class="mt-4 border-t border-b border-gray-200 py-4 text-left">
+                            <div class="grid grid-cols-2 gap-y-2 text-sm">
+                                <div class="text-gray-500">Nomor Antrian</div>
+                                <div class="font-bold text-2xl text-pink-600" id="proof-queue"></div>
+
+                                <div class="text-gray-500">Layanan</div>
+                                <div class="font-semibold" id="proof-service"></div>
+
+                                <div class="text-gray-500">Nama Pasien</div>
+                                <div class="font-semibold" id="proof-name"></div>
+
+                                <div class="text-gray-500">Tanggal</div>
+                                <div class="font-semibold" id="proof-date"></div>
+
+                                <div class="text-gray-500">Pembayaran</div>
+                                <div class="font-semibold" id="proof-payment"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse" data-html2canvas-ignore>
+                    <button type="button"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                        onclick="downloadProof()">
+                        Download
+                    </button>
+                    <button type="button"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                        onclick="closeSuccessModal()">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        const REGISTRATION_KEY = 'clinic_last_registration';
+        const REGISTRATION_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
+        function checkRecentRegistration() {
+            const saved = localStorage.getItem(REGISTRATION_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                const now = new Date().getTime();
+                if (now - data.timestamp < REGISTRATION_TIMEOUT_MS) {
+                    showSuccessModal(data.details);
+                    return true;
+                } else {
+                    localStorage.removeItem(REGISTRATION_KEY);
+                }
+            }
+            return false;
+        }
+
+        function openRegistrationModal(e) {
+            e.preventDefault();
+            if (checkRecentRegistration()) return;
+
+            document.getElementById('registrationModal').classList.remove('hidden');
+        }
+
+        function closeRegistrationModal() {
+            document.getElementById('registrationModal').classList.add('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+
+        function showSuccessModal(details) {
+            document.getElementById('proof-queue').innerText = details.queue.queue_number;
+            document.getElementById('proof-service').innerText = details.queue.service.name;
+            document.getElementById('proof-name').innerText = details.queue.patient.name;
+            document.getElementById('proof-date').innerText = details.date_formatted;
+            document.getElementById('proof-payment').innerText = details.payment_type;
+
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function submitRegistration(e) {
+            e.preventDefault();
+            const form = document.getElementById('registrationForm');
+            const data = new FormData(form);
+            const errorDiv = document.getElementById('formErrors');
+
+            errorDiv.classList.add('hidden');
+            errorDiv.innerHTML = '';
+
+            fetch('{{ route("public.register.store") }}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: data
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        closeRegistrationModal();
+                        form.reset();
+
+                        // Save to local storage
+                        const persistenceData = {
+                            timestamp: new Date().getTime(),
+                            details: result
+                        };
+                        localStorage.setItem(REGISTRATION_KEY, JSON.stringify(persistenceData));
+
+                        showSuccessModal(result);
+                    } else {
+                        throw new Error(result.message || 'Terjadi kesalahan');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorDiv.classList.remove('hidden');
+                    errorDiv.innerText = error.message;
+                });
+        }
+
+        function downloadProof() {
+            const element = document.getElementById('registration-proof');
+            html2canvas(element).then(canvas => {
+                const link = document.createElement('a');
+                // Use queue number from the displayed text
+                const queueNum = document.getElementById('proof-queue').innerText;
+                link.download = 'Bukti-Pendaftaran-' + queueNum + '.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
     <script>
         function updateQueue() {
             // Since we don't have the API Endpoint yet, this fetch might fail or return 404.

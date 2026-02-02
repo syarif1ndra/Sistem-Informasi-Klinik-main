@@ -66,12 +66,34 @@ class PatientRegistrationController extends Controller
                 ]);
             });
 
+
+            if ($request->ajax() || $request->wantsJson()) {
+                // Eager load relations for the success modal
+                $queue->load(['patient', 'service']);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Pendaftaran berhasil',
+                    'queue' => $queue,
+                    'date_formatted' => \Carbon\Carbon::parse($queue->date)->translatedFormat('d F Y'),
+                    'payment_type' => $queue->bpjs_usage ? 'BPJS' : 'Umum',
+                ]);
+            }
+
             // Redirect to success page with queue object
             return view('public.registration_success', compact('queue'));
 
         } catch (\Exception $e) {
             // Log the error
             \Illuminate\Support\Facades\Log::error('Registration Error: ' . $e->getMessage());
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage(),
+                ], 500);
+            }
+
             // Return back with error message
             return back()->withErrors(['msg' => 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage()])->withInput();
         }
