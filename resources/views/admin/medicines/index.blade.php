@@ -13,7 +13,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Obat</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Kategori</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Stok</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Harga</th>
