@@ -271,97 +271,142 @@
     <!-- Registration Modal -->
     <div id="registrationModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title"
         role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-900 bg-opacity-60 transition-opacity backdrop-blur-sm" aria-hidden="true"
                 onclick="closeRegistrationModal()"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div
-                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="text-center sm:mt-0 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Pendaftaran Pasien</h3>
-                        <div class="mt-2">
-                            <form id="registrationForm" onsubmit="submitRegistration(event)">
-                                @csrf
-                                <div id="formErrors"
-                                    class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-                                    role="alert"></div>
+                class="inline-block bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full relative">
 
-                                <div class="space-y-4">
-                                    <div>
-                                        <label for="name" class="block text-sm font-medium text-gray-700">Nama
-                                            Lengkap</label>
-                                        <input id="name" name="name" type="text" required
-                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="dob" class="block text-sm font-medium text-gray-700">Tanggal
-                                                Lahir</label>
-                                            <input id="dob" name="dob" type="date" required
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
-                                        </div>
-                                        <div>
-                                            <label for="gender" class="block text-sm font-medium text-gray-700">Jenis
-                                                Kelamin</label>
-                                            <select id="gender" name="gender" required
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
-                                                <option value="L">Laki-laki</option>
-                                                <option value="P">Perempuan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="whatsapp_number" class="block text-sm font-medium text-gray-700">Nomor
-                                            WhatsApp</label>
-                                        <input id="whatsapp_number" name="whatsapp_number" type="tel" required
-                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
-                                    </div>
-                                    <div>
-                                        <label for="address" class="block text-sm font-medium text-gray-700">Alamat</label>
-                                        <textarea id="address" name="address" rows="2" required
-                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"></textarea>
-                                    </div>
-                                    <div>
-                                        <label for="service_id" class="block text-sm font-medium text-gray-700">Layanan
-                                            Kesehatan</label>
-                                        <select id="service_id" name="service_id" required
-                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
-                                            @foreach($services as $service)
-                                                <option value="{{ $service->id }}">{{ $service->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Penggunaan BPJS</label>
-                                        <div class="flex items-center space-x-4">
-                                            <div class="flex items-center">
-                                                <input id="bpjs_yes" name="bpjs_usage" type="radio" value="1"
-                                                    class="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300">
-                                                <label for="bpjs_yes" class="ml-2 block text-sm text-gray-900">Ya</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input id="bpjs_no" name="bpjs_usage" type="radio" value="0" checked
-                                                    class="focus:ring-pink-500 h-4 w-4 text-pink-600 border-gray-300">
-                                                <label for="bpjs_no" class="ml-2 block text-sm text-gray-900">Tidak</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                                    <button type="submit"
-                                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-pink-600 text-base font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:col-start-2 sm:text-sm">
-                                        Daftar
-                                    </button>
-                                    <button type="button"
-                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:mt-0 sm:col-start-1 sm:text-sm"
-                                        onclick="closeRegistrationModal()">
-                                        Batal
-                                    </button>
-                                </div>
-                            </form>
+                <!-- Modal Header -->
+                <div class="bg-gradient-to-r from-pink-500 to-rose-600 px-6 py-4 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2" id="modal-title">
+                        <svg class="w-6 h-6 text-pink-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                            </path>
+                        </svg>
+                        Pendaftaran Pasien
+                    </h3>
+                    <button onclick="closeRegistrationModal()"
+                        class="text-pink-100 hover:text-white transition duration-150">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="px-6 py-6 pb-8">
+                    <form id="registrationForm" onsubmit="submitRegistration(event)" class="space-y-5">
+                        @csrf
+                        <div id="formErrors"
+                            class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-4 text-sm"
+                            role="alert"></div>
+
+                        <!-- Nama Lengkap -->
+                        <div>
+                            <label for="name" class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
+                            <div class="relative">
+                                <span
+                                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </span>
+                                <input id="name" name="name" type="text" required placeholder="Masukkan nama lengkap"
+                                    class="pl-10 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm py-2.5 bg-gray-50 focus:bg-white transition duration-150">
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="grid grid-cols-2 gap-5">
+                            <!-- Tanggal Lahir -->
+                            <div>
+                                <label for="dob" class="block text-sm font-semibold text-gray-700 mb-1">Tanggal
+                                    Lahir</label>
+                                <input id="dob" name="dob" type="date" required
+                                    class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm py-2.5 bg-gray-50 focus:bg-white transition duration-150">
+                            </div>
+                            <!-- Jenis Kelamin -->
+                            <div>
+                                <label for="gender" class="block text-sm font-semibold text-gray-700 mb-1">Jenis
+                                    Kelamin</label>
+                                <select id="gender" name="gender" required
+                                    class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm py-2.5 bg-gray-50 focus:bg-white transition duration-150">
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp -->
+                        <div>
+                            <label for="whatsapp_number" class="block text-sm font-semibold text-gray-700 mb-1">Nomor
+                                WhatsApp</label>
+                            <div class="relative">
+                                <span
+                                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <input id="whatsapp_number" name="whatsapp_number" type="tel" required
+                                    placeholder="Contoh: 081234567890"
+                                    class="pl-10 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm py-2.5 bg-gray-50 focus:bg-white transition duration-150">
+                            </div>
+                        </div>
+
+                        <!-- Alamat -->
+                        <div>
+                            <label for="address" class="block text-sm font-semibold text-gray-700 mb-1">Alamat</label>
+                            <textarea id="address" name="address" rows="2" required placeholder="Alamat lengkap..."
+                                class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm py-2.5 bg-gray-50 focus:bg-white transition duration-150"></textarea>
+                        </div>
+
+                        <!-- Layanan -->
+                        <div>
+                            <label for="service_id" class="block text-sm font-semibold text-gray-700 mb-1">Layanan
+                                Kesehatan</label>
+                            <select id="service_id" name="service_id" required
+                                class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm py-2.5 bg-gray-50 focus:bg-white transition duration-150">
+                                @foreach($services as $service)
+                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- BPJS -->
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Metode Pembayaran</label>
+                            <div class="flex items-center space-x-6">
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" id="bpjs_no" name="bpjs_usage" value="0" checked
+                                        class="form-radio text-pink-600 focus:ring-pink-500 h-4 w-4">
+                                    <span class="ml-2 text-gray-800 font-medium">Umum / Tunai</span>
+                                </label>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" id="bpjs_yes" name="bpjs_usage" value="1"
+                                        class="form-radio text-pink-600 focus:ring-pink-500 h-4 w-4">
+                                    <span class="ml-2 text-gray-800 font-medium">BPJS Kesehatan</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex items-center justify-end space-x-3">
+                            <button type="button"
+                                class="bg-gray-100 text-gray-700 px-5 py-2.5 rounded-lg hover:bg-gray-200 transition duration-150 font-medium text-sm"
+                                onclick="closeRegistrationModal()">
+                                Batal
+                            </button>
+                            <button type="submit"
+                                class="bg-gradient-to-r from-pink-500 to-rose-600 text-white px-8 py-2.5 rounded-lg hover:from-pink-600 hover:to-rose-700 transition duration-150 font-bold shadow-lg transform hover:-translate-y-0.5 text-sm">
+                                Daftar Sekarang
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
