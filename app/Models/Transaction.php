@@ -13,6 +13,7 @@ class Transaction extends Model
         'patient_id',
         'total_amount',
         'status',
+        'payment_method',
         'date',
     ];
 

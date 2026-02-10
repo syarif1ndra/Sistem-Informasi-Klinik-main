@@ -25,6 +25,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Tanggal</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Pasien</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Metode</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Total</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider">Aksi</th>
@@ -38,6 +39,11 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {{ $transaction->patient->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->payment_method == 'bpjs' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                                {{ $transaction->payment_method == 'bpjs' ? 'BPJS' : 'Tunai' }}
+                            </span>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp
                             {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">

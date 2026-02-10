@@ -39,6 +39,7 @@ class TransactionController extends Controller
     {
         $request->validate([
             'patient_id' => 'required|exists:patients,id',
+            'payment_method' => 'required|in:cash,bpjs',
             'items' => 'required|array',
             'items.*.type' => 'required|in:service,medicine',
             'items.*.id' => 'required',
@@ -51,6 +52,7 @@ class TransactionController extends Controller
             $totalAmount = 0;
             $transaction = Transaction::create([
                 'patient_id' => $request->patient_id,
+                'payment_method' => $request->payment_method,
                 'date' => now(),
                 'status' => 'unpaid', // Default
                 'total_amount' => 0, // Will update later
@@ -83,6 +85,11 @@ class TransactionController extends Controller
                         'subtotal' => $subtotal,
                     ]);
                 }
+            }
+
+            // If BPJS, total amount is 0
+            if ($request->payment_method === 'bpjs') {
+                $totalAmount = 0;
             }
 
             $transaction->update(['total_amount' => $totalAmount]);

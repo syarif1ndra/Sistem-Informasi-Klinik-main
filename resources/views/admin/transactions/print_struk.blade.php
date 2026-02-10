@@ -131,6 +131,10 @@
             <span>Pasien</span>
             <span>{{ $transaction->patient->name }}</span>
         </div>
+        <div class="info-row">
+            <span>Metode Bayar</span>
+            <span>{{ $transaction->payment_method == 'bpjs' ? 'BPJS' : 'Tunai' }}</span>
+        </div>
     </div>
 
     <div class="divider"></div>

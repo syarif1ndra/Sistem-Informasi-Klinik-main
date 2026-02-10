@@ -50,6 +50,14 @@
                                     <option value="{{ $patient->id }}">{{ $patient->name }} - {{ $patient->address }}</option>
                                 @endforeach
                             </select>
+
+                            <label class="block text-sm font-semibold text-gray-700 mt-4 mb-2">Metode Pembayaran</label>
+                            <select name="payment_method" x-model="paymentType"
+                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3"
+                                required>
+                                <option value="cash">Tunai / Umum</option>
+                                <option value="bpjs">BPJS Kesehatan</option>
+                            </select>
                         </div>
                     </div>
 
@@ -196,12 +204,14 @@
     <script>
         function billingSystem() {
             return {
+                paymentType: 'cash',
                 itemType: 'service',
                 selectedServiceId: '',
                 selectedMedicineId: '',
                 items: [],
 
                 get total() {
+                    if (this.paymentType === 'bpjs') return 0;
                     return this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 },
 

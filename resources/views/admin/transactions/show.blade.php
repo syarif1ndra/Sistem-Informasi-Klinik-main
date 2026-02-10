@@ -79,6 +79,16 @@
                                 {{ $transaction->created_at->translatedFormat('d F Y, H:i') }} WIB
                             </div>
                         </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Metode
+                                Pembayaran</label>
+                            <div class="text-lg font-semibold text-gray-900">
+                                <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->payment_method == 'bpjs' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                                    {{ $transaction->payment_method == 'bpjs' ? 'BPJS Kesehatan' : 'Tunai / Umum' }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -133,7 +143,8 @@
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row justify-end gap-3 print:hidden">
-                    <button onclick="window.open('{{ route('admin.transactions.print_struk', $transaction->id) }}', '_blank', 'width=400,height=600')"
+                    <button
+                        onclick="window.open('{{ route('admin.transactions.print_struk', $transaction->id) }}', '_blank', 'width=400,height=600')"
                         class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
