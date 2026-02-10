@@ -29,6 +29,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'g-recaptcha-response' => ['required'],
         ];
     }
 
@@ -41,7 +42,32 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Validate Google reCAPTCHA
+        $recaptcha_response = $this->input('g-recaptcha-response');
+
+        if (is_null($recaptcha_response)) {
+            throw ValidationException::withMessages([
+                'g-recaptcha-response' => 'Please complete the reCAPTCHA to proceed.',
+            ]);
+        }
+
+        $url = "https://www.google.com/recaptcha/api/siteverify";
+        $body = [
+            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $recaptcha_response,
+            'remoteip' => $this->ip(),
+        ];
+
+        $response = \Illuminate\Support\Facades\Http::asForm()->post($url, $body);
+        $result = json_decode($response->body());
+
+        if (!$result->success) {
+            throw ValidationException::withMessages([
+                'g-recaptcha-response' => 'reCAPTCHA verification failed. Please try again.',
+            ]);
+        }
+
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -59,7 +85,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -80,6 +106,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

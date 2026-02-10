@@ -1,4 +1,5 @@
 <x-guest-layout>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- Session Status -->
     @if ($errors->any())
         <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
@@ -28,17 +29,10 @@
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                     Email Address
                 </label>
-                <input 
-                    id="email" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition @error('email') border-red-500 @enderror" 
-                    type="email" 
-                    name="email" 
-                    value="{{ old('email') }}" 
-                    required 
-                    autofocus 
-                    autocomplete="username"
-                    placeholder="nama@email.com"
-                />
+                <input id="email"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition @error('email') border-red-500 @enderror"
+                    type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                    placeholder="nama@email.com" />
                 @error('email')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -49,15 +43,9 @@
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                     Password
                 </label>
-                <input 
-                    id="password" 
+                <input id="password"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition @error('password') border-red-500 @enderror"
-                    type="password"
-                    name="password"
-                    required 
-                    autocomplete="current-password"
-                    placeholder="••••••••"
-                />
+                    type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
                 @error('password')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -65,32 +53,36 @@
 
             <!-- Remember Me -->
             <div class="flex items-center">
-                <input 
-                    id="remember_me" 
-                    type="checkbox" 
-                    class="rounded border-gray-300 text-pink-600 shadow-sm focus:ring-pink-500 cursor-pointer" 
-                    name="remember"
-                >
+                <input id="remember_me" type="checkbox"
+                    class="rounded border-gray-300 text-pink-600 shadow-sm focus:ring-pink-500 cursor-pointer"
+                    name="remember">
                 <label for="remember_me" class="ms-2 text-sm text-gray-600 cursor-pointer">
                     Ingat saya
                 </label>
             </div>
 
+            <!-- reCAPTCHA -->
+            <div class="flex justify-center mb-4">
+                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+            </div>
+
+            @if ($errors->has('g-recaptcha-response'))
+                <span class="text-red-600 text-sm block text-center mb-4">
+                    {{ $errors->first('g-recaptcha-response') }}
+                </span>
+            @endif
+
             <!-- Actions -->
             <div class="space-y-3">
-                <button 
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold py-2 rounded-lg hover:from-pink-600 hover:to-rose-700 transition duration-200 transform hover:scale-105"
-                >
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold py-2 rounded-lg hover:from-pink-600 hover:to-rose-700 transition duration-200 transform hover:scale-105">
                     Masuk
                 </button>
 
                 @if (Route::has('password.request'))
                     <div class="text-center">
-                        <a 
-                            href="{{ route('password.request') }}" 
-                            class="text-sm text-pink-600 hover:text-pink-700 font-medium"
-                        >
+                        <a href="{{ route('password.request') }}"
+                            class="text-sm text-pink-600 hover:text-pink-700 font-medium">
                             Lupa Password?
                         </a>
                     </div>
@@ -111,7 +103,7 @@
         <!-- Register Link -->
         <div class="mt-6 text-center">
             <p class="text-gray-600 text-sm">
-                Belum punya akun? 
+                Belum punya akun?
                 <a href="{{ route('register') }}" class="text-pink-600 hover:text-pink-700 font-semibold">
                     Daftar di sini
                 </a>

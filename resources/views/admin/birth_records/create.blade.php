@@ -193,7 +193,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Surat Keterangan
-                                        (Opsional)</label>
+                                        </label>
                                     <input type="text" name="birth_certificate_number"
                                         class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5">
                                 </div>

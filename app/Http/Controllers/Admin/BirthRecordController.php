@@ -9,9 +9,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class BirthRecordController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
