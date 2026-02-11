@@ -36,8 +36,17 @@
                                         d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                     </path>
                                 </svg>
+                                </svg>
                                 Data Bayi
                             </h3>
+
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Surat Keterangan</label>
+                                <input type="text" name="birth_certificate_number"
+                                    class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
+                                    placeholder="Nomor Surat Kelahiran">
+                            </div>
+
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <div class="col-span-1 md:col-span-2 lg:col-span-1">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Bayi</label>
@@ -116,15 +125,21 @@
                                 <div class="col-span-2 md:col-span-3">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Tahap Persalinan</label>
                                     <div class="grid grid-cols-3 gap-4">
-                                        <input type="text" name="kala_1"
-                                            class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
-                                            placeholder="Kala I">
-                                        <input type="text" name="kala_2"
-                                            class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
-                                            placeholder="Kala II">
-                                        <input type="text" name="kala_3"
-                                            class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
-                                            placeholder="Kala III">
+                                        <div class="relative">
+                                            <label class="text-xs text-gray-500 mb-1 block">Kala I (Jam)</label>
+                                            <input type="time" name="kala_1"
+                                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5">
+                                        </div>
+                                        <div class="relative">
+                                            <label class="text-xs text-gray-500 mb-1 block">Kala II (Jam)</label>
+                                            <input type="time" name="kala_2"
+                                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5">
+                                        </div>
+                                        <div class="relative">
+                                            <label class="text-xs text-gray-500 mb-1 block">Kala III (Jam)</label>
+                                            <input type="time" name="kala_3"
+                                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -189,12 +204,6 @@
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">No. Telepon /
                                         WhatsApp</label>
                                     <input type="text" name="phone_number"
-                                        class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Surat Keterangan
-                                        </label>
-                                    <input type="text" name="birth_certificate_number"
                                         class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5">
                                 </div>
                                 <div class="md:col-span-2">

@@ -98,9 +98,10 @@
         }
 
         .document-number {
-            font-size: 10px;
-            color: #666;
-            margin-top: 3px;
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-top: 5px;
         }
 
         .content {

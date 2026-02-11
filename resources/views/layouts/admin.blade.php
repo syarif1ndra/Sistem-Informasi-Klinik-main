@@ -44,7 +44,7 @@
         <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
             class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-gray-900 text-white overflow-y-auto lg:translate-x-0 lg:static lg:inset-0 lg:block flex flex-col shadow-xl">
             <div class="flex items-center justify-between p-6 border-b border-gray-800">
-                <span class="text-2xl font-bold tracking-wider text-pink-500">Klinik Bidan</span>
+                <span class="text-2xl font-bold tracking-wider text-pink-500">Bidan Siti Hajar</span>
                 <button @click="sidebarOpen = false" class="lg:hidden text-gray-400 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">

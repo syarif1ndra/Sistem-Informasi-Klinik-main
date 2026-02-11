@@ -33,8 +33,9 @@ class QueueController extends Controller
         DB::transaction(function () use ($queue, $status) {
             $queue->update(['status' => $status]);
 
-            // Synchronization Logic: If finished, valid user_patient, and no official patient linked yet
-            if ($status === 'finished' && $queue->user_patient_id && !$queue->patient_id) {
+            // Synchronization Logic: If calling (panggil), valid user_patient, and no official patient linked yet
+            // Updated based on user request to sync when calling, not when finished
+            if ($status === 'calling' && $queue->user_patient_id && !$queue->patient_id) {
                 $userPatient = $queue->userPatient;
 
                 if ($userPatient) {

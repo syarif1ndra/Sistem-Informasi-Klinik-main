@@ -8,7 +8,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h1 class="text-5xl font-bold mb-6">Selamat Datang di Klinik Bidan</h1>
+                    <h1 class="text-5xl font-bold mb-6">Selamat Datang di Bidan Siti Hajar</h1>
                     <p class="text-xl text-pink-100 mb-8 leading-relaxed">
                         Kami memberikan pelayanan kesehatan terbaik untuk ibu dan anak. Dengan tenaga bidan profesional dan
                         berpengalaman, kami siap mendampingi perjalanan kehamilan hingga persalinan Anda.
