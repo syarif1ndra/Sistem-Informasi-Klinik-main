@@ -75,7 +75,7 @@
 
             <!-- reCAPTCHA -->
             <div class="flex justify-center mb-4">
-                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
             </div>
 
             @if ($errors->has('g-recaptcha-response'))

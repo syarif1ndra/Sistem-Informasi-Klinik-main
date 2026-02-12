@@ -41,6 +41,10 @@ Route::post('user/logout', [UserAuthenticatedSessionController::class, 'destroy'
     ->middleware('auth')
     ->name('user.logout');
 
+// Google Auth Routes
+Route::get('auth/google', [App\Http\Controllers\Auth\SocialController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [App\Http\Controllers\Auth\SocialController::class, 'handleGoogleCallback']);
+
 // Admin Routes (Protected by Breeze)
 Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

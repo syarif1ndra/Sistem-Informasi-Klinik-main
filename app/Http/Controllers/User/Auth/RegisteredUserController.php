@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
 
         $url = "https://www.google.com/recaptcha/api/siteverify";
         $body = [
-            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'secret' => config('services.recaptcha.secret_key'),
             'response' => $recaptcha_response,
             'remoteip' => $request->ip(),
         ];
