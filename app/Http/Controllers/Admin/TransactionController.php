@@ -84,14 +84,15 @@ class TransactionController extends Controller
                         'price' => $price,
                         'subtotal' => $subtotal,
                     ]);
+
+                    // Deduct stock if item is medicine
+                    if ($itemData['type'] === 'medicine') {
+                        $item->decrement('stock', $itemData['quantity']);
+                    }
                 }
             }
 
-            // If BPJS, total amount is 0
-            if ($request->payment_method === 'bpjs') {
-                $totalAmount = 0;
-            }
-
+            // Removed BPJS 0 logic so price remains valid
             $transaction->update(['total_amount' => $totalAmount]);
 
             DB::commit();

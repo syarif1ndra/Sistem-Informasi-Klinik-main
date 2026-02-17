@@ -79,6 +79,12 @@
                                         <option value="service" selected>Layanan</option>
                                         <option value="medicine">Obat</option>
                                     </select>
+
+                                    <div x-show="itemType === 'medicine'" class="mt-4">
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah</label>
+                                        <input type="number" x-model="itemQuantity" min="1"
+                                            class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3">
+                                    </div>
                                 </div>
                                 <div class="w-full md:w-2/3">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Item</label>
@@ -208,10 +214,12 @@
                 itemType: 'service',
                 selectedServiceId: '',
                 selectedMedicineId: '',
+                itemQuantity: 1, // Default quantity
                 items: [],
 
                 get total() {
-                    if (this.paymentType === 'bpjs') return 0;
+                    // BPJS still calculates total, but maybe payment handling is different elsewhere.
+                    // Request: "bpjs payment total remains according to price"
                     return this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 },
 
@@ -229,6 +237,8 @@
                         this.selectedServiceId = ''; // Reset
                     } else {
                         if (!this.selectedMedicineId) return alert('Pilih obat terlebih dahulu');
+                        if (this.itemQuantity < 1) return alert('Jumlah harus minimal 1');
+
                         const select = document.querySelector('select[x-model="selectedMedicineId"]');
                         const option = select.options[select.selectedIndex];
                         id = this.selectedMedicineId;
@@ -238,22 +248,19 @@
                         this.selectedMedicineId = ''; // Reset
                     }
 
-                    // Cek jika item sudah ada
-                    /* 
-                    // Jika ingin menggabungkan quantity, uncomment ini
-                    let existing = this.items.find(i => i.id === id && i.type === type);
-                    if (existing) {
-                        existing.quantity++;
-                    } else {
-                    */
+                    // For medicine, use input quantity. For service, default to 1 (or make configurable if needed)
+                    let quantity = this.itemType === 'medicine' ? parseInt(this.itemQuantity) : 1;
+
                     this.items.push({
                         type: type,
                         id: id,
                         name: name,
                         price: parseFloat(price),
-                        quantity: 1
+                        quantity: quantity
                     });
-                    /* } */
+
+                    // Reset quantity
+                    this.itemQuantity = 1;
                 },
 
                 removeItem(index) {

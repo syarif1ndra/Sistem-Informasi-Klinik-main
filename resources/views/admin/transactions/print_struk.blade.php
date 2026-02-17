@@ -142,15 +142,17 @@
     <table class="items">
         <thead>
             <tr>
-                <th style="width: 45%;">Item</th>
-                <th style="width: 20%; text-align: center;">Qty</th>
-                <th style="width: 35%;" class="text-right">Total</th>
+                <th style="width: 40%;">Item</th>
+                <th style="width: 25%; text-align: right;">Harga</th>
+                <th style="width: 10%; text-align: center;">Qty</th>
+                <th style="width: 25%;" class="text-right">Total</th>
             </tr>
         </thead>
         <tbody>
             @foreach($transaction->items as $item)
                 <tr>
                     <td>{{ $item->name }}</td>
+                    <td class="text-right">{{ number_format($item->price, 0, ',', '.') }}</td>
                     <td style="text-align: center;">{{ $item->quantity }}</td>
                     <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                 </tr>
