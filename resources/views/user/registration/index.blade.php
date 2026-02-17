@@ -34,6 +34,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">NIK</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Layanan</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -70,10 +71,23 @@
                                         {{ $statusLabel[$registration->status] ?? $registration->status }}
                                     </span>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    @if($registration->status === 'waiting')
+                                        <form action="{{ route('user.registration.cancel', $registration) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pendaftaran ini?');" class="inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="text-red-600 hover:text-red-900 font-bold hover:underline">
+                                                Batalkan
+                                            </button>
+                                        </form>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                     Belum ada riwayat pendaftaran.
                                 </td>
                             </tr>

@@ -84,6 +84,7 @@ Route::middleware(['auth', 'verified', 'role.user', 'patient.data'])->prefix('us
     Route::get('/', [UserClinicRegistrationController::class, 'index'])->name('index');
     Route::get('/create', [UserClinicRegistrationController::class, 'create'])->name('create');
     Route::post('/', [UserClinicRegistrationController::class, 'store'])->name('store');
+    Route::patch('/{queue}/cancel', [UserClinicRegistrationController::class, 'cancel'])->name('cancel');
 });
 
 Route::middleware('auth')->group(function () {

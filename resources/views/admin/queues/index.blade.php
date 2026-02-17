@@ -44,37 +44,32 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($queues as $queue)
-                    <tr class="{{ $queue->status == 'calling' ? 'bg-yellow-50' : '' }}">
+                    <tr id="row-{{ $queue->id }}" class="{{ $queue->status == 'calling' ? 'bg-yellow-50' : '' }}">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-lg font-bold text-gray-900">{{ $queue->queue_number }}</span>
+                            <span class="text-lg font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $queue->patient_name }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $queue->service_name ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                        {{ $queue->status === 'waiting' ? 'bg-gray-100 text-gray-800' : '' }}
-                                                        {{ $queue->status === 'calling' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                                        {{ $queue->status === 'called' ? 'bg-blue-100 text-blue-800' : '' }}
-                                                        {{ $queue->status === 'finished' ? 'bg-green-100 text-green-800' : '' }}
-                                                        {{ $queue->status === 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
+                            <span id="status-{{ $queue->id }}"
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                                                                                {{ $queue->status === 'waiting' ? 'bg-gray-100 text-gray-800' : '' }}
+                                                                                                                {{ $queue->status === 'calling' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                                                                                                {{ $queue->status === 'called' ? 'bg-blue-100 text-blue-800' : '' }}
+                                                                                                                {{ $queue->status === 'finished' ? 'bg-green-100 text-green-800' : '' }}
+                                                                                                                {{ $queue->status === 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
                                 {{ ucfirst($queue->status) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex justify-end space-x-2">
                                 @if($queue->status != 'finished' && $queue->status != 'cancelled')
-                                    @if($queue->status != 'calling')
-                                        <form action="{{ route('admin.queues.updateStatus', $queue) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <input type="hidden" name="status" value="calling">
-                                            <button type="submit"
-                                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs">
-                                                Panggil
-                                            </button>
-                                        </form>
-                                    @endif
+                                    <button type="button"
+                                        onclick="callPatient({{ $queue->id }}, '{{ sprintf('%03d', $queue->queue_number) }}', '{{ addslashes($queue->patient_name) }}')"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs">
+                                        Panggil
+                                    </button>
 
                                     <form action="{{ route('admin.queues.updateStatus', $queue) }}" method="POST">
                                         @csrf
@@ -108,4 +103,45 @@
             </tbody>
         </table>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function callPatient(queueId, queueNumber, patientName) {
+            console.log(`Calling patient: ${queueNumber} - ${patientName}`);
+            // Text to Speech
+            const text = `Nomor antrian ${queueNumber}, ${patientName}`;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID'; // Indonesian
+            window.speechSynthesis.speak(utterance);
+
+            // Update Status via AJAX
+            fetch(`/admin/queues/${queueId}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ status: 'calling' })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update UI Status Badge
+                        const statusSpan = document.getElementById(`status-${queueId}`);
+                        if (statusSpan) {
+                            statusSpan.className = 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800';
+                            statusSpan.innerText = 'Calling';
+                        }
+                        // Optional: Update row background
+                        const row = document.getElementById(`row-${queueId}`);
+                        if (row) {
+                            row.classList.add('bg-yellow-50');
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 @endsection

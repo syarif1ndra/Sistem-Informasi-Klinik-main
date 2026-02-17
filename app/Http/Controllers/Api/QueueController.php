@@ -16,7 +16,10 @@ class QueueController extends Controller
             ->first();
 
         return response()->json([
-            'queue_number' => $currentQueue ? $currentQueue->queue_number : null
+            'id' => $currentQueue ? $currentQueue->id : null,
+            'queue_number' => $currentQueue ? $currentQueue->queue_number : null,
+            'patient_name' => $currentQueue ? $currentQueue->patient_name : null,
+            'service_name' => $currentQueue ? ($currentQueue->service_name ?? '-') : null,
         ]);
     }
 }

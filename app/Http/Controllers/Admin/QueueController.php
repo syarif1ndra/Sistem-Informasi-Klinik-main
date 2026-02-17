@@ -30,51 +30,75 @@ class QueueController extends Controller
 
         $status = $validated['status'];
 
-        DB::transaction(function () use ($queue, $status) {
+
+        // NUCLEAR DEBUGGING - Write directly to a file in public path
+        $logFile = public_path('debug_queue_sync.txt');
+        $logData = "\n[" . date('Y-m-d H:i:s') . "] Status Update Request: " . $status . "\n";
+        $logData .= "Queue ID: " . $queue->id . "\n";
+        $logData .= "User Patient ID: " . ($queue->user_patient_id ?? 'NULL') . "\n";
+        $logData .= "Patient ID (Before): " . ($queue->patient_id ?? 'NULL') . "\n";
+
+        file_put_contents($logFile, $logData, FILE_APPEND);
+
+        DB::transaction(function () use ($queue, $status, $logFile) {
             $queue->update(['status' => $status]);
 
-            // Synchronization Logic: If calling (panggil), valid user_patient, and no official patient linked yet
-            // Updated based on user request to sync when calling, not when finished
-            if ($status === 'calling' && $queue->user_patient_id && !$queue->patient_id) {
-                $userPatient = $queue->userPatient;
+            // Logic 1: When status becomes 'calling' (Button Panggil clicked)
+            // Create or Sync Patient Data
+            if ($status === 'calling' && $queue->user_patient_id) {
+                file_put_contents($logFile, "Condition MET: Calling + UserPatientID\n", FILE_APPEND);
 
+                $userPatient = $queue->userPatient;
                 if ($userPatient) {
+                    file_put_contents($logFile, "UserPatient Found: " . $userPatient->name . "\n", FILE_APPEND);
+
                     // Check if patient already exists by NIK
                     $patient = Patient::where('nik', $userPatient->nik)->first();
 
                     if (!$patient) {
+                        file_put_contents($logFile, "Creating NEW Patient...\n", FILE_APPEND);
                         // Create new official patient
-                        // Note: whatsapp_number is removed from Patient model
                         $patient = Patient::create([
                             'user_id' => $userPatient->user_id,
                             'name' => $userPatient->name,
                             'nik' => $userPatient->nik,
                             'dob' => $userPatient->dob,
                             'gender' => $userPatient->gender,
-                            'phone' => $userPatient->phone, // Ensure phone is synced
+                            'phone' => $userPatient->phone,
                             'address' => $userPatient->address,
-                            'service' => $queue->service_name, // Sync service from queue
+                            'service' => $queue->service_name,
                         ]);
+                        file_put_contents($logFile, "Created Patient ID: " . $patient->id . "\n", FILE_APPEND);
                     } else {
-                        // Update existing patient phone and service
-                        $updates = [];
-                        if ($patient->phone !== $userPatient->phone) {
-                            $updates['phone'] = $userPatient->phone;
-                        }
-                        // Always update service to the latest one
-                        $updates['service'] = $queue->service_name;
-
-                        if (!empty($updates)) {
-                            $patient->update($updates);
-                        }
+                        file_put_contents($logFile, "Updating EXISTING Patient ID: " . $patient->id . "\n", FILE_APPEND);
+                        // Update existing patient data
+                        $patient->update([
+                            'phone' => $userPatient->phone,
+                            'service' => $queue->service_name,
+                        ]);
                     }
-
-                    // Link the queue to the official patient
+                    // Link queue to patient
                     $queue->update(['patient_id' => $patient->id]);
+                    file_put_contents($logFile, "Linked Queue to Patient ID: " . $patient->id . "\n", FILE_APPEND);
+                } else {
+                    file_put_contents($logFile, "ERROR: UserPatient relation returned NULL\n", FILE_APPEND);
                 }
+            } else {
+                file_put_contents($logFile, "Condition NOT MET. Status: $status, UserPatientID: " . ($queue->user_patient_id ?? 'NULL') . "\n", FILE_APPEND);
+            }
+
+            // Logic 2: When status becomes 'cancelled' (Button Batal clicked)
+            // Unlink Patient Data (do NOT delete the patient record)
+            if ($status === 'cancelled' && $queue->patient_id) {
+                file_put_contents($logFile, "Cancelling... Unlinking Patient ID: " . $queue->patient_id . " (Data Preserved)\n", FILE_APPEND);
+
+                // Just unlink the patient from this queue
+                $queue->update(['patient_id' => null]);
             }
         });
 
-        return redirect()->route('admin.queues.index')->with('success', 'Status antrian berhasil diperbarui.');
+        return $request->wantsJson()
+            ? response()->json(['success' => true, 'message' => 'Status antrian berhasil diperbarui.', 'status' => $status])
+            : redirect()->route('admin.queues.index')->with('success', 'Status antrian berhasil diperbarui.');
     }
 }

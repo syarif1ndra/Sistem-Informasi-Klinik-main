@@ -67,6 +67,23 @@ class ClinicRegistrationController extends Controller
             'status' => 'waiting',
         ]);
 
-        return redirect()->route('user.registration.index')->with('success', 'Pendaftaran berhasil dibuat. Nomor Antrian Anda: ' . $queueNumber);
+        return redirect()->route('user.registration.index')->with('success', 'Pendaftaran berhasil dibuat. Nomor Antrian Anda: ' . sprintf('%03d', $queueNumber));
+    }
+
+    public function cancel(Request $request, Queue $queue)
+    {
+        // Ensure the queue belongs to the authenticated user's patient profile
+        // Also check if the status is waiting to allow cancellation
+        if ($queue->user_patient_id !== Auth::user()->userPatient->id) {
+            abort(403);
+        }
+
+        if ($queue->status !== 'waiting') {
+            return redirect()->back()->with('error', 'Pendaftaran tidak dapat dibatalkan karena sudah diproses.');
+        }
+
+        $queue->update(['status' => 'cancelled']);
+
+        return redirect()->back()->with('success', 'Pendaftaran berhasil dibatalkan.');
     }
 }

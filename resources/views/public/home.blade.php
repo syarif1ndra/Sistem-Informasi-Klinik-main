@@ -270,9 +270,10 @@
 
     <!-- Scripts -->
     <script>
+        let lastQueueId = null;
+        let lastQueueNumber = null;
+
         function updateQueue() {
-            // Since we don't have the API Endpoint yet, this fetch might fail or return 404.
-            // I should implement the route /api/current-queue to make this work as requested.
             fetch('{{ url("/api/current-queue") }}')
                 .then(response => {
                     if (response.ok) return response.json();
@@ -287,10 +288,25 @@
                             el.innerText = '---';
                         }
                     });
+
+                    // Play Audio if new queue is called
+                    if (data.id && data.id !== lastQueueId) {
+                        lastQueueId = data.id;
+                        lastQueueNumber = data.queue_number.toString().padStart(3, '0');
+
+                        // Text to Speech logic removed as per user request
+                        // const text = `Nomor antrian ${data.queue_number}, ${data.patient_name}`;
+                        // const utterance = new SpeechSynthesisUtterance(text);
+                        // utterance.lang = 'id-ID'; // Indonesian
+                        // window.speechSynthesis.speak(utterance);
+                    }
                 })
                 .catch(error => console.log('Queue update error:', error));
         }
-        // Only run if we actually implement the API, but I will put it here as requested.
-        setInterval(updateQueue, 5000);
+
+        // Poll every 3 seconds
+        setInterval(updateQueue, 3000);
+        // Initial call
+        updateQueue();
     </script>
 @endsection

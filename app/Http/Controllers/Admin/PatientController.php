@@ -11,7 +11,10 @@ class PatientController extends Controller
     public function index(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
-        $patients = Patient::whereDate('created_at', $date)
+
+        // Filter by updated_at so that patients modified/served today (including returning ones) appear.
+        // If we filtered by created_at, returning patients processed today would be hidden.
+        $patients = Patient::whereDate('updated_at', $date)
             ->latest()
             ->paginate(10);
 
