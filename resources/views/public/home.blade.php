@@ -13,7 +13,7 @@
                         Kami memberikan pelayanan kesehatan terbaik untuk ibu dan anak. Dengan tenaga bidan profesional dan
                         berpengalaman, kami siap mendampingi perjalanan kehamilan hingga persalinan Anda.
                     </p>
-                    <a href="{{ route('user.login') }}"
+                    <a href="{{ route('login') }}"
                         class="inline-block border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-pink-600 transition duration-150">
                         Masuk
                     </a>

@@ -16,7 +16,6 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ImmunizationController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\Auth\RegisteredUserController as UserRegisteredUserController;
-use App\Http\Controllers\User\Auth\AuthenticatedSessionController as UserAuthenticatedSessionController;
 use App\Http\Controllers\User\PatientProfileController as UserPatientProfileController;
 use App\Http\Controllers\User\ClinicRegistrationController as UserClinicRegistrationController;
 use Illuminate\Support\Facades\Route;
@@ -31,15 +30,13 @@ Route::post('/daftar', [PatientRegistrationController::class, 'store'])->name('p
 
 // User Auth Routes
 Route::middleware('guest')->group(function () {
+    // User login/register now handled by standard Breeze routes
     Route::get('user/register', [UserRegisteredUserController::class, 'create'])->name('user.register');
     Route::post('user/register', [UserRegisteredUserController::class, 'store']);
-    Route::get('user/login', [UserAuthenticatedSessionController::class, 'create'])->name('user.login');
-    Route::post('user/login', [UserAuthenticatedSessionController::class, 'store']);
 });
 
-Route::post('user/logout', [UserAuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('user.logout');
+// Logout is handled by standard auth routes
+
 
 // Google Auth Routes
 Route::get('auth/google', [App\Http\Controllers\Auth\SocialController::class, 'redirectToGoogle'])->name('auth.google');

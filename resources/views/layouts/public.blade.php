@@ -87,9 +87,9 @@
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                         role="menuitem">Profile</a>
                                 @endif
-                                <form method="POST" action="{{ route('user.logout') }}">
+                                <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <a href="{{ route('user.logout') }}"
+                                    <a href="{{ route('logout') }}"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                         onclick="event.preventDefault(); this.closest('form').submit();">
                                         Log Out
@@ -99,11 +99,9 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}"
-                            class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition">Login
-                            Admin</a>
-                        <a href="{{ route('user.login') }}"
-                            class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-md text-sm font-medium transition shadow-md">Login
-                            User</a>
+                            class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-md text-sm font-medium transition shadow-md">
+                            Masuk
+                        </a>
                     @endauth
                 </div>
 
@@ -148,7 +146,8 @@
                     <div class="mt-4 px-3 border-t border-gray-200 pt-4">
                         <div class="flex items-center px-4">
                             <div class="flex-shrink-0">
-                                <div class="h-10 w-10 rounded-full bg-pink-500 flex items-center justify-center text-white font-bold text-lg">
+                                <div
+                                    class="h-10 w-10 rounded-full bg-pink-500 flex items-center justify-center text-white font-bold text-lg">
                                     {{ substr(Auth::user()->name, 0, 1) }}
                                 </div>
                             </div>
@@ -160,7 +159,8 @@
                         <div class="mt-3 space-y-1">
                             @if(Auth::user()->role === 'admin')
                                 <a href="{{ route('admin.dashboard') }}"
-                                    class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Dashboard Admin</a>
+                                    class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Dashboard
+                                    Admin</a>
                             @else
                                 <a href="{{ route('dashboard') }}"
                                     class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Dashboard</a>
@@ -178,13 +178,11 @@
                         </div>
                     </div>
                 @else
-                    <div class="grid grid-cols-2 gap-4 mt-4 px-3">
+                    <div class="mt-4 px-3">
                         <a href="{{ route('login') }}"
-                            class="block w-full text-center px-4 py-2 rounded-md font-medium text-gray-700 bg-gray-100 hover:bg-gray-200">Login
-                            Admin</a>
-                        <a href="{{ route('user.login') }}"
-                            class="block w-full text-center px-4 py-2 rounded-md font-bold text-white bg-primary-600 hover:bg-primary-700">Login
-                            User</a>
+                            class="block w-full text-center px-4 py-2 rounded-md font-bold text-white bg-primary-600 hover:bg-primary-700">
+                            Masuk
+                        </a>
                     </div>
                 @endauth
             </div>

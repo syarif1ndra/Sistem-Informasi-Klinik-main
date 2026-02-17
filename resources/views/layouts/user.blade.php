@@ -79,9 +79,9 @@
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Profile</a>
                             @endif
-                            <form method="POST" action="{{ route('user.logout') }}">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <a href="{{ route('user.logout') }}"
+                                <a href="{{ route('logout') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
                                     Log Out
@@ -146,9 +146,9 @@
                             <a href="{{ route('profile.edit') }}"
                                 class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Profile</a>
                         @endif
-                        <form method="POST" action="{{ route('user.logout') }}">
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <a href="{{ route('user.logout') }}"
+                            <a href="{{ route('logout') }}"
                                 class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                                 onclick="event.preventDefault(); this.closest('form').submit();">
                                 Log Out

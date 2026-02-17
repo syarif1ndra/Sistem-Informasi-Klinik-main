@@ -21,7 +21,7 @@
         <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">Masuk Pengguna</h2>
         <p class="text-gray-600 text-center mb-8">Silakan masukkan kredensial Anda untuk mengakses layanan</p>
 
-        <form method="POST" action="{{ route('user.login') }}" class="space-y-6">
+        <form method="POST" action="{{ route('login') }}" class="space-y-6">
             @csrf
 
             <!-- Email Address -->

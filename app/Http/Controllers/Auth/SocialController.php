@@ -20,14 +20,14 @@ class SocialController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if ($user) {
                 // Check if user is admin
                 if ($user->role === 'admin') {
-                    return redirect()->route('user.login')->withErrors(['email' => 'Access denied. Admins cannot login via Google.']);
+                    return redirect()->route('login')->withErrors(['email' => 'Access denied. Admins cannot login via Google.']);
                 }
 
                 // Update google_id if not set
@@ -57,7 +57,8 @@ class SocialController extends Controller
             }
 
         } catch (\Exception $e) {
-            return redirect()->route('user.login')->withErrors(['email' => 'Login with Google failed. Please try again. ' . $e->getMessage()]);
+            \Illuminate\Support\Facades\Log::error('Google Login Error: ' . $e->getMessage());
+            return redirect()->route('login')->withErrors(['email' => 'Login with Google failed. Please try again. ' . $e->getMessage()]);
         }
     }
 }

@@ -29,7 +29,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            'g-recaptcha-response' => ['required'],
+            'g-recaptcha-response' => ['nullable'],
         ];
     }
 
@@ -46,9 +46,14 @@ class LoginRequest extends FormRequest
         $recaptcha_response = $this->input('g-recaptcha-response');
 
         if (is_null($recaptcha_response)) {
-            throw ValidationException::withMessages([
-                'g-recaptcha-response' => 'Please complete the reCAPTCHA to proceed.',
-            ]);
+            // Check if we are in local environment, if so, skip recaptcha
+            if (app()->environment('local')) {
+                // Skip
+            } else {
+                throw ValidationException::withMessages([
+                    'g-recaptcha-response' => 'Please complete the reCAPTCHA to proceed.',
+                ]);
+            }
         }
 
         $url = "https://www.google.com/recaptcha/api/siteverify";
