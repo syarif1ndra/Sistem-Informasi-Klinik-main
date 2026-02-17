@@ -88,11 +88,18 @@ class QueueController extends Controller
             }
 
             // Logic 2: When status becomes 'cancelled' (Button Batal clicked)
-            // Unlink Patient Data (do NOT delete the patient record)
+            // Logic 2: When status becomes 'cancelled' (Button Batal clicked)
+            // Delete Patient Data (Cleanup master data, but keep queue history)
             if ($status === 'cancelled' && $queue->patient_id) {
-                file_put_contents($logFile, "Cancelling... Unlinking Patient ID: " . $queue->patient_id . " (Data Preserved)\n", FILE_APPEND);
+                file_put_contents($logFile, "Cancelling... Deleting Patient ID: " . $queue->patient_id . "\n", FILE_APPEND);
 
-                // Just unlink the patient from this queue
+                $patient = Patient::find($queue->patient_id);
+                if ($patient) {
+                    $patient->delete();
+                    file_put_contents($logFile, "Deleted Patient ID: " . $patient->id . "\n", FILE_APPEND);
+                }
+
+                // Unlink current queue
                 $queue->update(['patient_id' => null]);
             }
         });

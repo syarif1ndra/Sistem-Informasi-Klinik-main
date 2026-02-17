@@ -161,3 +161,9 @@ Condition MET: Calling + UserPatientID
 UserPatient Found: Syarif Indra
 Updating EXISTING Patient ID: 4
 Linked Queue to Patient ID: 4
+
+[2026-02-17 10:47:13] Status Update Request: finished
+Queue ID: 23
+User Patient ID: 1
+Patient ID (Before): 4
+Condition NOT MET. Status: finished, UserPatientID: 1

@@ -15,6 +15,7 @@ class Patient extends Model
         'name',
         'address',
         'phone',
+        'medical_history',
         'service',
         'dob',
         'gender',

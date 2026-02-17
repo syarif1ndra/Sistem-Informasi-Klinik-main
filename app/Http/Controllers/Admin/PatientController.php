@@ -34,6 +34,7 @@ class PatientController extends Controller
             'phone' => 'required|string',
             'dob' => 'required|date',
             'gender' => 'required|in:L,P',
+            'medical_history' => 'nullable|string',
         ]);
 
         Patient::create($validated);
@@ -54,6 +55,7 @@ class PatientController extends Controller
             'phone' => 'required|string',
             'dob' => 'required|date',
             'gender' => 'required|in:L,P',
+            'medical_history' => 'nullable|string',
         ]);
 
         $patient->update($validated);

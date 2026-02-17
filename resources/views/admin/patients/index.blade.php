@@ -24,7 +24,9 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Telepon</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan Terakhir</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Alamat</th>
@@ -35,7 +37,18 @@
                 @forelse($patients as $patient)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                                $todaysQueue = $patient->queues->where('date', $date)->sortByDesc('created_at')->first();
+                            @endphp
+                            <span class="text-lg font-bold text-gray-900">
+                                {{ $todaysQueue ? sprintf('%03d', $todaysQueue->queue_number) : '-' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">{{ $patient->name }}</div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500">
+                            {{ Str::limit($patient->medical_history, 30) ?? '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $patient->phone }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $patient->service ?? '-' }}</td>
@@ -55,7 +68,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada data pasien.</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada data pasien.</td>
                     </tr>
                 @endforelse
             </tbody>

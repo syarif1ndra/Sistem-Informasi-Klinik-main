@@ -85,6 +85,15 @@
                                 class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
                                 required>{{ $patient->address }}</textarea>
                         </div>
+
+                        <!-- Medical History -->
+                        <div>
+                            <label for="medical_history" class="block text-sm font-semibold text-gray-700 mb-2">Riwayat
+                                Penyakit / Keluhan</label>
+                            <textarea name="medical_history" id="medical_history" rows="3"
+                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
+                                placeholder="Masukkan riwayat penyakit atau keluhan pasien (opsional)">{{ $patient->medical_history }}</textarea>
+                        </div>
                     </div>
 
                     <!-- Actions -->
