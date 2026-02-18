@@ -75,26 +75,10 @@
             <canvas id="monthlyIncomeChart"></canvas>
         </div>
 
-        <!-- Payment Method Stats -->
-        <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-green-500">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Perbandingan Pembayaran</h3>
-            <div class="h-64 flex justify-center">
-                <canvas id="paymentMethodChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Top Medicines -->
+        <!-- Patient Trend Chart -->
         <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-purple-500">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Top 5 Obat Terlaris</h3>
-            <canvas id="topMedicinesChart"></canvas>
-        </div>
-
-        <!-- Queue Stats -->
-        <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-yellow-500">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Status Antrian Hari Ini</h3>
-            <div class="h-64 flex justify-center">
-                <canvas id="queueStatusChart"></canvas>
-            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Grafik Jumlah Pasien 7 Hari Terakhir</h3>
+            <canvas id="patientTrendChart"></canvas>
         </div>
     </div>
 
@@ -158,17 +142,10 @@
                 labels: {!! json_encode($monthlyIncome['labels']) !!},
                 datasets: [
                     {
-                        label: 'BPJS',
-                        data: {!! json_encode($monthlyIncome['bpjs']) !!},
+                        label: 'Total Pendapatan',
+                        data: {!! json_encode($monthlyIncome['data']) !!},
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Tunai',
-                        data: {!! json_encode($monthlyIncome['cash']) !!},
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     }
                 ]
@@ -204,76 +181,30 @@
             }
         });
 
-        // 2. Payment Method Chart (Pie)
-        const paymentCtx = document.getElementById('paymentMethodChart').getContext('2d');
-        new Chart(paymentCtx, {
-            type: 'pie',
+        // 2. Patient Trend Chart (Line)
+        const trendCtx = document.getElementById('patientTrendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
             data: {
-                labels: {!! json_encode($paymentStats['labels']) !!},
+                labels: {!! json_encode($patientTrend['labels']) !!},
                 datasets: [{
-                    data: {!! json_encode($paymentStats['data']) !!},
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.8)', // BPJS - Blue
-                        'rgba(75, 192, 192, 0.8)'  // Tunai - Teal
-                    ],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-                }
-            }
-        });
-
-        // 3. Top Medicines Chart (Horizontal Bar)
-        const medCtx = document.getElementById('topMedicinesChart').getContext('2d');
-        new Chart(medCtx, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($topMedicines['labels']) !!},
-                datasets: [{
-                    label: 'Jumlah Terjual',
-                    data: {!! json_encode($topMedicines['data']) !!},
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                    label: 'Jumlah Pasien',
+                    data: {!! json_encode($patientTrend['data']) !!},
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
                     borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1,
-                    indexAxis: 'y',
+                    borderWidth: 2,
+                    tension: 0.4, // Smooth curve
+                    fill: true
                 }]
             },
             options: {
-                indexAxis: 'y', // Horizontal bar chart
                 responsive: true,
                 scales: {
-                    x: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // 4. Queue Status Chart (Donut)
-        const queueCtx = document.getElementById('queueStatusChart').getContext('2d');
-        new Chart(queueCtx, {
-            type: 'doughnut',
-            data: {
-                labels: {!! json_encode($queueStats['labels']) !!},
-                datasets: [{
-                    data: {!! json_encode($queueStats['data']) !!},
-                    backgroundColor: [
-                        'rgba(255, 206, 86, 0.8)',  // Menunggu - Yellow
-                        'rgba(54, 162, 235, 0.8)',  // Dipanggil - Blue
-                        'rgba(75, 192, 192, 0.8)'   // Selesai - Green
-                    ],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 }
             }
