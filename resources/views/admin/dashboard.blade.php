@@ -91,46 +91,216 @@
         </div>
     </div>
 
-    <!-- Recent Queues -->
-    <div class="bg-white shadow rounded-lg mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Antrian Terbaru Hari Ini</h3>
+    <!-- Charts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Monthly Income Chart -->
+        <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-blue-500">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Pendapatan Klinik per Bulan</h3>
+            <canvas id="monthlyIncomeChart"></canvas>
         </div>
-        <div class="px-6 py-4">
-            @if($recentQueues->count() > 0)
-                <div class="flow-root">
-                    <ul class="-my-5 divide-y divide-gray-200">
-                        @foreach($recentQueues as $queue)
-                            <li class="py-4">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <span
-                                            class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-primary-100 text-primary-800 font-bold">
-                                            {{ $queue->queue_number }}
-                                        </span>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate">
-                                            {{ $queue->patient_name }}
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate">
-                                            Status: <span class="capitalize">{{ $queue->status }}</span>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <a href="{{ route('admin.queues.index') }}"
-                                            class="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
-                                            Lihat
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @else
-                <p class="text-gray-500">Belum ada antrian hari ini.</p>
-            @endif
+
+        <!-- Payment Method Stats -->
+        <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-green-500">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Perbandingan Pembayaran</h3>
+            <div class="h-64 flex justify-center">
+                <canvas id="paymentMethodChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Medicines -->
+        <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-purple-500">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Top 5 Obat Terlaris</h3>
+            <canvas id="topMedicinesChart"></canvas>
+        </div>
+
+        <!-- Queue Stats -->
+        <div class="bg-white rounded-lg shadow-lg p-6 border-t-4 border-yellow-500">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Status Antrian Hari Ini</h3>
+            <div class="h-64 flex justify-center">
+                <canvas id="queueStatusChart"></canvas>
+            </div>
         </div>
     </div>
+
+    <!-- Recent Queues Table -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-800">Antrian Terbaru Hari Ini</h3>
+            <a href="{{ route('admin.queues.index') }}" class="text-sm text-blue-600 hover:text-blue-800">Lihat Semua</a>
+        </div>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($recentQueues as $queue)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span
+                                class="text-lg font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                                {{ $queue->patient->name ?? ($queue->userPatient->name ?? '-') }}</div>
+                            <div class="text-xs text-gray-500">
+                                {{ $queue->patient->nik ?? ($queue->userPatient->nik ?? '-') }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $queue->service_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            {{ $queue->status == 'waiting' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                            {{ $queue->status == 'calling' ? 'bg-blue-100 text-blue-800' : '' }}
+                            {{ $queue->status == 'finished' ? 'bg-green-100 text-green-800' : '' }}
+                            {{ $queue->status == 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
+                                {{ ucfirst($queue->status) }}
+                            </span>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada antrian hari ini.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 1. Monthly Income Chart
+        const incomeCtx = document.getElementById('monthlyIncomeChart').getContext('2d');
+        new Chart(incomeCtx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($monthlyIncome['labels']) !!},
+                datasets: [
+                    {
+                        label: 'BPJS',
+                        data: {!! json_encode($monthlyIncome['bpjs']) !!},
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Tunai',
+                        data: {!! json_encode($monthlyIncome['cash']) !!},
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Payment Method Chart (Pie)
+        const paymentCtx = document.getElementById('paymentMethodChart').getContext('2d');
+        new Chart(paymentCtx, {
+            type: 'pie',
+            data: {
+                labels: {!! json_encode($paymentStats['labels']) !!},
+                datasets: [{
+                    data: {!! json_encode($paymentStats['data']) !!},
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)', // BPJS - Blue
+                        'rgba(75, 192, 192, 0.8)'  // Tunai - Teal
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+
+        // 3. Top Medicines Chart (Horizontal Bar)
+        const medCtx = document.getElementById('topMedicinesChart').getContext('2d');
+        new Chart(medCtx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($topMedicines['labels']) !!},
+                datasets: [{
+                    label: 'Jumlah Terjual',
+                    data: {!! json_encode($topMedicines['data']) !!},
+                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1,
+                    indexAxis: 'y',
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bar chart
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // 4. Queue Status Chart (Donut)
+        const queueCtx = document.getElementById('queueStatusChart').getContext('2d');
+        new Chart(queueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {!! json_encode($queueStats['labels']) !!},
+                datasets: [{
+                    data: {!! json_encode($queueStats['data']) !!},
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.8)',  // Menunggu - Yellow
+                        'rgba(54, 162, 235, 0.8)',  // Dipanggil - Blue
+                        'rgba(75, 192, 192, 0.8)'   // Selesai - Green
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

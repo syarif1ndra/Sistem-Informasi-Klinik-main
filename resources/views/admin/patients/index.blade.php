@@ -88,7 +88,8 @@
                             {{ Str::limit($patient->medical_history, 30) ?? '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $patient->phone }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $patient->service ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $todaysQueue ? $todaysQueue->service_name : ($patient->service ?? '-') }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit($patient->address, 30) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <a href="{{ route('admin.patients.edit', $patient) }}"

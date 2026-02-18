@@ -79,6 +79,7 @@ class QueueController extends Controller
                     }
                     // Link queue to patient
                     $queue->update(['patient_id' => $patient->id]);
+                    $patient->touch(); // Force update timestamp so it appears in daily list
                     file_put_contents($logFile, "Linked Queue to Patient ID: " . $patient->id . "\n", FILE_APPEND);
                 } else {
                     file_put_contents($logFile, "ERROR: UserPatient relation returned NULL\n", FILE_APPEND);
