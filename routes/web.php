@@ -46,6 +46,10 @@ Route::get('auth/google/callback', [App\Http\Controllers\Auth\SocialController::
 Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Patient Exports
+    Route::get('/patients/export/excel', [PatientController::class, 'exportExcel'])->name('patients.exportExcel');
+    Route::get('/patients/export/pdf', [PatientController::class, 'exportPdf'])->name('patients.exportPdf');
+
     // Queue Management
     Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
     Route::patch('/queues/{queue}/status', [QueueController::class, 'updateStatus'])->name('queues.updateStatus');
@@ -59,10 +63,16 @@ Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('ad
     Route::resource('transactions', TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [TransactionController::class, 'printStruk'])->name('transactions.print_struk');
     Route::resource('medical-records', MedicalRecordController::class);
+    Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.exportExcel');
+    Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::resource('users', UserController::class);
+    Route::get('/birth_records/export/excel', [BirthRecordController::class, 'exportExcel'])->name('birth_records.exportExcel');
+    Route::get('/birth_records/export/pdf', [BirthRecordController::class, 'exportPdf'])->name('birth_records.exportPdf');
     Route::resource('birth_records', BirthRecordController::class);
     Route::get('/birth_records/{birthRecord}/pdf', [BirthRecordController::class, 'generatePdf'])->name('birth_records.generatePdf');
+    Route::get('/immunizations/export/excel', [ImmunizationController::class, 'exportExcel'])->name('immunizations.exportExcel');
+    Route::get('/immunizations/export/pdf', [ImmunizationController::class, 'exportPdf'])->name('immunizations.exportPdf');
     Route::resource('immunizations', ImmunizationController::class);
 });
 

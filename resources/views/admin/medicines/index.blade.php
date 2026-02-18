@@ -13,6 +13,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Kategori</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Stok</th>
@@ -23,6 +24,9 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($medicines as $medicine)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ $loop->iteration + ($medicines->currentPage() - 1) * $medicines->perPage() }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $medicine->name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $medicine->category }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

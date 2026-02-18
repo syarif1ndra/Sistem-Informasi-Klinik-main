@@ -151,4 +151,20 @@ class BirthRecordController extends Controller
 
         return $pdf->download($filename);
     }
+    public function exportExcel(Request $request)
+    {
+        $date = $request->input('date', date('Y-m-d'));
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\BirthRecordsExport($date), 'data-kelahiran-' . $date . '.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $date = $request->input('date', date('Y-m-d'));
+        $birthRecords = BirthRecord::whereDate('birth_date', $date)->latest()->get();
+
+        $pdf = Pdf::loadView('admin.birth_records.pdf', compact('birthRecords', 'date'));
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download('data-kelahiran-' . $date . '.pdf');
+    }
 }

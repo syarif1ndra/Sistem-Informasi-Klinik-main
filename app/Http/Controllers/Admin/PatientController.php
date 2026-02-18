@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
+use App\Exports\PatientsExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class PatientController extends Controller
 {
     public function index(Request $request)
@@ -67,5 +71,22 @@ class PatientController extends Controller
     {
         $patient->delete();
         return redirect()->route('admin.patients.index')->with('success', 'Data pasien berhasil dihapus.');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $date = $request->input('date', date('Y-m-d'));
+        return Excel::download(new PatientsExport($date), 'data-pasien-' . $date . '.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $date = $request->input('date', date('Y-m-d'));
+        $patients = Patient::whereDate('updated_at', $date)->latest()->get();
+
+        $pdf = Pdf::loadView('admin.patients.pdf', compact('patients', 'date'));
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download('data-pasien-' . $date . '.pdf');
     }
 }

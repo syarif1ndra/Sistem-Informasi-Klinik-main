@@ -98,4 +98,20 @@ class ImmunizationController extends Controller
 
         return redirect()->route('admin.immunizations.index')->with('success', 'Immunization record deleted successfully.');
     }
+    public function exportExcel(Request $request)
+    {
+        $date = $request->input('date', date('Y-m-d'));
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ImmunizationsExport($date), 'data-imunisasi-' . $date . '.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $date = $request->input('date', date('Y-m-d'));
+        $immunizations = Immunization::whereDate('immunization_date', $date)->latest()->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.immunizations.pdf', compact('immunizations', 'date'));
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download('data-imunisasi-' . $date . '.pdf');
+    }
 }

@@ -23,6 +23,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Tanggal</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Pasien</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Metode</th>
@@ -34,6 +35,9 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($transactions as $transaction)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $loop->iteration + ($transactions->currentPage() - 1) * $transactions->perPage() }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ $transaction->created_at->translatedFormat('d F Y, H:i') }} WIB
                         </td>

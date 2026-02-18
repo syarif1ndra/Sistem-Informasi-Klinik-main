@@ -8,22 +8,44 @@
             <input type="date" name="date" value="{{ $date }}"
                 class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2">
             <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                Filter
-            </button>
+                <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Filter
+                </button>
         </form>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
         <a href="{{ route('admin.immunizations.create') }}"
             class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded">
-            Tambah Data Imunisasi
+            + Tambah Data Imunisasi
         </a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.immunizations.exportExcel', ['date' => $date]) }}" target="_blank"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+                Export Excel
+            </a>
+            <a href="{{ route('admin.immunizations.exportPdf', ['date' => $date]) }}" target="_blank"
+                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+                Export PDF
+            </a>
+        </div>
     </div>
 
     <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Anak</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Orang Tua
                     </th>
@@ -36,6 +58,9 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($immunizations as $record)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $loop->iteration + ($immunizations->currentPage() - 1) * $immunizations->perPage() }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">{{ $record->child_name }}</div>
                             <div class="text-xs text-gray-500">NIK: {{ $record->child_nik ?? '-' }}</div>

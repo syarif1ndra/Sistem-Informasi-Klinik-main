@@ -13,6 +13,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Layanan</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Deskripsi
                     </th>
@@ -23,6 +24,9 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($services as $service)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ $loop->iteration + ($services->currentPage() - 1) * $services->perPage() }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $service->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit($service->description, 50) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp

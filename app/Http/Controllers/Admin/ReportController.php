@@ -33,4 +33,30 @@ class ReportController extends Controller
 
         return view('admin.reports.index', compact('totalPatients', 'totalTransactions', 'totalVisits', 'transactions', 'month', 'year'));
     }
+    public function exportExcel(Request $request)
+    {
+        $month = $request->input('month', date('m'));
+        $year = $request->input('year', date('Y'));
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ReportExport($month, $year), 'laporan-bulanan-' . $month . '-' . $year . '.xlsx');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $month = $request->input('month', date('m'));
+        $year = $request->input('year', date('Y'));
+
+        $startDate = "$year-$month-01";
+        $endDate = date("Y-m-t", strtotime($startDate));
+
+        $transactions = Transaction::with('patient')
+            ->whereBetween('date', [$startDate, $endDate])
+            ->latest()
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.reports.pdf', compact('transactions', 'month', 'year'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('laporan-bulanan-' . $month . '-' . $year . '.pdf');
+    }
 }

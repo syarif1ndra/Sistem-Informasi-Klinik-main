@@ -182,3 +182,13 @@ Queue ID: 25
 User Patient ID: 1
 Patient ID (Before): 4
 Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-17 21:37:08] Status Update Request: calling
+Queue ID: 26
+User Patient ID: 5
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif
+Creating NEW Patient...
+Created Patient ID: 8
+Linked Queue to Patient ID: 8
