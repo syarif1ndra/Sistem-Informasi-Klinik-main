@@ -32,7 +32,6 @@
                     {{ \Carbon\Carbon::parse($visit->patient->dob ?? now())->translatedFormat('d F Y') }}
                 </td>
             </tr>
-            </tr>
         @endforeach
     </tbody>
 </table>
