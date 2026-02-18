@@ -29,6 +29,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        Auth::logoutOtherDevices($request->string('password'));
+
         if ($request->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
