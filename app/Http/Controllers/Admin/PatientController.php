@@ -10,18 +10,22 @@ use App\Exports\PatientsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+use App\Models\Queue; // Add this
+
 class PatientController extends Controller
 {
     public function index(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
 
-        // Filter by patients who have a visit (queue) on the selected date
-        $patients = Patient::whereHas('queues', function ($query) use ($date) {
-            $query->whereDate('date', $date);
-        })->latest()->paginate(10);
+        // Fetch Queues (Visits) instead of Patients
+        // We load patient relationship to display patient details
+        $visits = Queue::with('patient')
+            ->whereDate('date', $date)
+            ->orderBy('queue_number', 'asc')
+            ->paginate(10);
 
-        return view('admin.patients.index', compact('patients', 'date'));
+        return view('admin.patients.index', compact('visits', 'date'));
     }
 
     public function create()
@@ -72,6 +76,40 @@ class PatientController extends Controller
         return redirect()->route('admin.patients.index')->with('success', 'Data pasien berhasil dihapus.');
     }
 
+    public function editVisit(Queue $queue)
+    {
+        $queue->load('patient');
+        return view('admin.patients.edit', compact('queue'));
+    }
+
+    public function updateVisit(Request $request, Queue $queue)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string',
+            'phone' => 'required|string',
+            'dob' => 'required|date',
+            'gender' => 'required|in:L,P',
+            'complaint' => 'nullable|string', // Validating complaint
+        ]);
+
+        // Update Patient Data
+        $queue->patient->update([
+            'name' => $validated['name'],
+            'address' => $validated['address'],
+            'phone' => $validated['phone'],
+            'dob' => $validated['dob'],
+            'gender' => $validated['gender'],
+        ]);
+
+        // Update Queue Data (Complaint)
+        $queue->update([
+            'complaint' => $validated['complaint'] ?? null,
+        ]);
+
+        return redirect()->route('admin.patients.index')->with('success', 'Data kunjungan berhasil diperbarui.');
+    }
+
     public function exportExcel(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
@@ -81,9 +119,13 @@ class PatientController extends Controller
     public function exportPdf(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
-        $patients = Patient::whereDate('updated_at', $date)->latest()->get();
+        // Fetch Queues (Visits) instead of Patients
+        $visits = Queue::with('patient')
+            ->whereDate('date', $date)
+            ->orderBy('queue_number', 'asc')
+            ->get();
 
-        $pdf = Pdf::loadView('admin.patients.pdf', compact('patients', 'date'));
+        $pdf = Pdf::loadView('admin.patients.pdf', compact('visits', 'date'));
         $pdf->setPaper('A4', 'landscape');
 
         return $pdf->download('data-pasien-' . $date . '.pdf');

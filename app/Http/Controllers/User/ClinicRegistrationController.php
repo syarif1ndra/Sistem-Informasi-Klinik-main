@@ -48,6 +48,7 @@ class ClinicRegistrationController extends Controller
         $request->validate([
             'service_name' => 'required|string|in:Periksa Kehamilan,Persalinan,Keluarga Berencana,Kesehatan Ibu dan Anak,Imunisasi',
             'date' => 'required|date|after_or_equal:today',
+            'complaint' => 'nullable|string', // Add validation
         ]);
 
         // Generate Queue Number (Simple logic: Max for date + 1)
@@ -65,6 +66,7 @@ class ClinicRegistrationController extends Controller
             'date' => $date,
             'queue_number' => $queueNumber,
             'status' => 'waiting',
+            'complaint' => $request->complaint, // Save complaint
         ]);
 
         return redirect()->route('user.registration.index')->with('success', 'Pendaftaran berhasil dibuat. Nomor Antrian Anda: ' . sprintf('%03d', $queueNumber));

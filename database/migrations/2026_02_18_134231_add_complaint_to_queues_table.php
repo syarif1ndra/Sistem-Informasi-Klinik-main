@@ -10,8 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('patients', function (Blueprint $table) {
-            $table->text('medical_history')->nullable()->after('address');
+        Schema::table('queues', function (Blueprint $table) {
+            $table->text('complaint')->nullable()->after('bpjs_usage');
         });
     }
 
@@ -20,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('patients', function (Blueprint $table) {
-            $table->dropColumn('medical_history');
+        Schema::table('queues', function (Blueprint $table) {
+            $table->dropColumn('complaint');
         });
     }
 };

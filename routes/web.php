@@ -59,6 +59,8 @@ Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('ad
 
     // Resource Routes
     Route::resource('patients', PatientController::class);
+    Route::get('/patients/{queue}/edit-visit', [PatientController::class, 'editVisit'])->name('patients.editVisit');
+    Route::put('/patients/{queue}/update-visit', [PatientController::class, 'updateVisit'])->name('patients.updateVisit');
     Route::resource('medicines', MedicineController::class);
     Route::resource('transactions', TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [TransactionController::class, 'printStruk'])->name('transactions.print_struk');

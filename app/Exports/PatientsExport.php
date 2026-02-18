@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Patient;
+use App\Models\Queue; // Add this
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -19,7 +19,7 @@ class PatientsExport implements FromView, ShouldAutoSize
     public function view(): View
     {
         return view('admin.patients.excel', [
-            'patients' => Patient::whereDate('updated_at', $this->date)->latest()->get(),
+            'visits' => Queue::with('patient')->whereDate('date', $this->date)->orderBy('queue_number', 'asc')->get(),
             'date' => $this->date
         ]);
     }

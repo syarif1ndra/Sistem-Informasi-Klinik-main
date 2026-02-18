@@ -54,21 +54,23 @@
             <tr>
                 <th width="5%">No</th>
                 <th>Nama Pasien</th>
-                <th>Alamat</th>
+                <th>Keluhan</th>
                 <th>No. HP</th>
                 <th>Jenis Kelamin</th>
                 <th>Tanggal Lahir</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($patients as $index => $patient)
+            @foreach($visits as $index => $visit)
                 <tr>
                     <td style="text-align: center;">{{ $index + 1 }}</td>
-                    <td>{{ $patient->name }}</td>
-                    <td>{{ $patient->address }}</td>
-                    <td>{{ $patient->phone }}</td>
-                    <td style="text-align: center;">{{ $patient->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                    <td style="text-align: center;">{{ \Carbon\Carbon::parse($patient->dob)->translatedFormat('d F Y') }}
+                    <td>{{ $visit->patient->name ?? '-' }}</td>
+                    <td>{{ $visit->complaint ?? '-' }}</td>
+                    <td>{{ $visit->patient->phone ?? '-' }}</td>
+                    <td style="text-align: center;">{{ ($visit->patient->gender ?? '') == 'L' ? 'Laki-laki' : 'Perempuan' }}
+                    </td>
+                    <td style="text-align: center;">
+                        {{ \Carbon\Carbon::parse($visit->patient->dob ?? now())->translatedFormat('d F Y') }}
                     </td>
                 </tr>
             @endforeach

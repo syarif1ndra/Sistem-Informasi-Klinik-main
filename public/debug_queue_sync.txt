@@ -255,3 +255,100 @@ Condition MET: Calling + UserPatientID
 UserPatient Found: Syarif
 Updating EXISTING Patient ID: 8
 Linked Queue to Patient ID: 8
+
+[2026-02-18 13:39:05] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Creating NEW Patient...
+Created Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-18 13:39:16] Status Update Request: calling
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-18 13:39:29] Status Update Request: finished
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-18 13:39:31] Status Update Request: finished
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-18 13:41:49] Status Update Request: calling
+Queue ID: 3
+User Patient ID: 2
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: indra indra
+Creating NEW Patient...
+Created Patient ID: 2
+Linked Queue to Patient ID: 2
+
+[2026-02-18 13:53:44] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Creating NEW Patient...
+Created Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-18 13:54:20] Status Update Request: finished
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-18 13:54:21] Status Update Request: calling
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-18 13:57:20] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Creating NEW Patient...
+Created Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-18 13:57:26] Status Update Request: finished
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-18 13:57:31] Status Update Request: calling
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-18 13:57:33] Status Update Request: finished
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1

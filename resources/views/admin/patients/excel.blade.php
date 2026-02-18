@@ -5,29 +5,33 @@
         </tr>
         <tr>
             <th colspan="6" style="text-align: center; font-weight: bold;">Tanggal:
-                {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</th>
+                {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}
+            </th>
         </tr>
         <tr></tr>
         <tr>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">No</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Nama Pasien</th>
-            <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Alamat</th>
+            <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Keluhan</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">No. HP</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Jenis Kelamin</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Tanggal Lahir</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($patients as $index => $patient)
+        @foreach($visits as $index => $visit)
             <tr>
                 <td style="border: 1px solid #000000; text-align: center;">{{ $index + 1 }}</td>
-                <td style="border: 1px solid #000000;">{{ $patient->name }}</td>
-                <td style="border: 1px solid #000000;">{{ $patient->address }}</td>
-                <td style="border: 1px solid #000000;">{{ $patient->phone }}</td>
+                <td style="border: 1px solid #000000;">{{ $visit->patient->name ?? '-' }}</td>
+                <td style="border: 1px solid #000000;">{{ $visit->complaint ?? '-' }}</td>
+                <td style="border: 1px solid #000000;">{{ $visit->patient->phone ?? '-' }}</td>
                 <td style="border: 1px solid #000000; text-align: center;">
-                    {{ $patient->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+                    {{ ($visit->patient->gender ?? '') == 'L' ? 'Laki-laki' : 'Perempuan' }}
+                </td>
                 <td style="border: 1px solid #000000; text-align: center;">
-                    {{ \Carbon\Carbon::parse($patient->dob)->translatedFormat('d F Y') }}</td>
+                    {{ \Carbon\Carbon::parse($visit->patient->dob ?? now())->translatedFormat('d F Y') }}
+                </td>
+            </tr>
             </tr>
         @endforeach
     </tbody>

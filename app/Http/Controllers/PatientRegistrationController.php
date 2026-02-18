@@ -29,7 +29,7 @@ class PatientRegistrationController extends Controller
         ]);
 
         try {
-            $queue = DB::transaction(function () use ($validated) {
+            $queue = DB::transaction(function () use ($validated, $request) {
                 // Check if patient exists by WA
                 $patientData = [
                     'name' => $validated['name'],
@@ -63,6 +63,7 @@ class PatientRegistrationController extends Controller
                     'queue_number' => $lastQueue + 1,
                     'status' => 'waiting',
                     'date' => date('Y-m-d'),
+                    'complaint' => $request->complaint, // Save complaint if present
                 ]);
             });
 

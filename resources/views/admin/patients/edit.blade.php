@@ -11,7 +11,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    Edit Data Pasien
+                    @if(isset($queue))
+                        Edit Data Kunjungan (Antrian: {{ sprintf('%03d', $queue->queue_number) }})
+                    @else
+                        Edit Data Pasien
+                    @endif
                 </h2>
                 <a href="{{ route('admin.patients.index') }}"
                     class="text-white hover:text-pink-100 transition duration-150">
@@ -24,7 +28,13 @@
 
             <!-- Form -->
             <div class="p-8">
-                <form action="{{ route('admin.patients.update', $patient) }}" method="POST">
+                @php
+                    $isVisit = isset($queue);
+                    $data = $isVisit ? $queue->patient : $patient;
+                    $action = $isVisit ? route('admin.patients.updateVisit', $queue) : route('admin.patients.update', $patient);
+                @endphp
+
+                <form action="{{ $action }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -32,7 +42,7 @@
                         <!-- Primary Info -->
                         <div>
                             <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                            <input type="text" name="name" id="name" value="{{ $patient->name }}"
+                            <input type="text" name="name" id="name" value="{{ $data->name }}"
                                 class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
                                 required>
                         </div>
@@ -42,7 +52,7 @@
                             <div>
                                 <label for="dob" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal
                                     Lahir</label>
-                                <input type="date" name="dob" id="dob" value="{{ $patient->dob }}"
+                                <input type="date" name="dob" id="dob" value="{{ $data->dob }}"
                                     class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
                                     required>
                             </div>
@@ -53,8 +63,8 @@
                                 <select name="gender" id="gender"
                                     class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
                                     required>
-                                    <option value="L" {{ $patient->gender == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                    <option value="P" {{ $patient->gender == 'P' ? 'selected' : '' }}>Perempuan</option>
+                                    <option value="L" {{ $data->gender == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="P" {{ $data->gender == 'P' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
                             </div>
                         </div>
@@ -71,7 +81,7 @@
                                         </path>
                                     </svg>
                                 </div>
-                                <input type="text" name="phone" id="phone" value="{{ $patient->phone }}"
+                                <input type="text" name="phone" id="phone" value="{{ $data->phone }}"
                                     class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 pl-10 p-2.5"
                                     required>
                             </div>
@@ -83,16 +93,24 @@
                                 Lengkap</label>
                             <textarea name="address" id="address" rows="3"
                                 class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
-                                required>{{ $patient->address }}</textarea>
+                                required>{{ $data->address }}</textarea>
                         </div>
 
-                        <!-- Medical History -->
+                        <!-- Complaint / Medical History -->
                         <div>
-                            <label for="medical_history" class="block text-sm font-semibold text-gray-700 mb-2">Riwayat
-                                Penyakit / Keluhan</label>
-                            <textarea name="medical_history" id="medical_history" rows="3"
-                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
-                                placeholder="Masukkan riwayat penyakit atau keluhan pasien (opsional)">{{ $patient->medical_history }}</textarea>
+                            @if($isVisit)
+                                <label for="complaint" class="block text-sm font-semibold text-gray-700 mb-2">Keluhan (Kunjungan
+                                    Ini)</label>
+                                <textarea name="complaint" id="complaint" rows="3"
+                                    class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
+                                    placeholder="Masukkan keluhan pasien untuk kunjungan ini">{{ $queue->complaint }}</textarea>
+                            @else
+                                <label for="medical_history" class="block text-sm font-semibold text-gray-700 mb-2">Riwayat
+                                    Penyakit / Keluhan</label>
+                                <textarea name="medical_history" id="medical_history" rows="3"
+                                    class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
+                                    placeholder="Masukkan riwayat penyakit atau keluhan pasien (opsional)">{{ $patient->medical_history }}</textarea>
+                            @endif
                         </div>
                     </div>
 

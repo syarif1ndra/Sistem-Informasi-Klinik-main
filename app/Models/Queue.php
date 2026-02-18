@@ -18,6 +18,7 @@ class Queue extends Model
         'bpjs_usage',
         'queue_number',
         'status',
+        'complaint', // Added complaint
         'date',
     ];
 

@@ -71,48 +71,52 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($patients as $patient)
+                @forelse($visits as $visit)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @php
-                                $todaysQueue = $patient->queues->where('date', $date)->sortByDesc('created_at')->first();
-                            @endphp
                             <span class="text-lg font-bold text-gray-900">
-                                {{ $todaysQueue ? sprintf('%03d', $todaysQueue->queue_number) : '-' }}
+                                {{ sprintf('%03d', $visit->queue_number) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $patient->name }}</div>
+                            <div class="text-sm font-medium text-gray-900">
+                                {{ $visit->patient->name ?? '-' }}
+                            </div>
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500">
-                            {{ Str::limit($patient->medical_history, 30) ?? '-' }}
+                            {{ Str::limit($visit->complaint ?? '-', 30) }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $patient->phone }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $visit->patient->phone ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $todaysQueue ? $todaysQueue->service_name : ($patient->service ?? '-') }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit($patient->address, 30) }}</td>
+                            {{ $visit->service_name }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit($visit->patient->address ?? '-', 30) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('admin.patients.edit', $patient) }}"
-                                class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
-                            <form action="{{ route('admin.patients.destroy', $patient) }}" method="POST" class="inline-block"
-                                id="delete-form-{{ $patient->id }}" onsubmit="event.preventDefault();">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button"
-                                    onclick="openDeleteModal(document.getElementById('delete-form-{{ $patient->id }}'), '{{ $patient->name }}')"
-                                    class="text-red-600 hover:text-red-900">Hapus</button>
-                            </form>
+                            @if($visit->patient)
+                                <a href="{{ route('admin.patients.editVisit', $visit) }}"
+                                    class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
+                                <form action="{{ route('admin.patients.destroy', $visit->patient) }}" method="POST"
+                                    class="inline-block" id="delete-form-{{ $visit->patient->id }}"
+                                    onsubmit="event.preventDefault();">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button"
+                                        onclick="openDeleteModal(document.getElementById('delete-form-{{ $visit->patient->id }}'), '{{ $visit->patient->name }}')"
+                                        class="text-red-600 hover:text-red-900">Hapus</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada data pasien.</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada data pasien (kunjungan) hari ini.
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
         <div class="px-6 py-4">
-            {{ $patients->links() }}
+            {{ $visits->links() }}
         </div>
     </div>
 @endsection
