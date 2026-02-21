@@ -20,6 +20,7 @@ class QueueController extends Controller
             'queue_number' => $currentQueue ? $currentQueue->queue_number : null,
             'patient_name' => $currentQueue ? $currentQueue->patient_name : null,
             'service_name' => $currentQueue ? ($currentQueue->service_name ?? '-') : null,
+            'updated_at' => $currentQueue ? $currentQueue->updated_at->timestamp : null,
         ]);
     }
 }

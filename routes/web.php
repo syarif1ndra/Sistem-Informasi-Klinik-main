@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\PatientRegistrationController;
+use App\Http\Controllers\QueueDisplayController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\Admin\PatientController;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', [PublicController::class, 'index'])->name('public.home');
+Route::get('/antrian-display', [QueueDisplayController::class, 'index'])->name('public.queue_display');
+Route::get('/antrian-display/data', [QueueDisplayController::class, 'data'])->name('public.queue_display.data');
 Route::get('/layanan', [PublicController::class, 'services'])->name('public.services');
 Route::get('/obat', [PublicController::class, 'medicines'])->name('public.medicines');
 Route::get('/faq', [PublicController::class, 'faqs'])->name('public.faqs');

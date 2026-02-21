@@ -42,6 +42,7 @@ class QueueController extends Controller
 
         DB::transaction(function () use ($queue, $status, $logFile) {
             $queue->update(['status' => $status]);
+            $queue->touch(); // Force update updated_at timestamp so frontend realizes it was called again
 
             // Logic 1: When status becomes 'calling' (Button Panggil clicked)
             // Create or Sync Patient Data

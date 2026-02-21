@@ -1,12 +1,22 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+        <a href="{{ route('public.queue_display') }}" target="_blank"
+            class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded shadow flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+            Buka Layar Antrian
+        </a>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
- 
 
-  
+
+
         <div
             class="bg-white rounded-lg shadow-lg p-6 flex items-center border-l-4 border-pink-500 transform hover:scale-105 transition duration-300">
             <div class="p-3 rounded-full bg-pink-100 text-pink-500 mr-4">
@@ -101,23 +111,23 @@
                 @forelse($recentQueues as $queue)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span
-                                class="text-lg font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
+                            <span class="text-lg font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">
-                                {{ $queue->patient->name ?? ($queue->userPatient->name ?? '-') }}</div>
+                                {{ $queue->patient->name ?? ($queue->userPatient->name ?? '-') }}
+                            </div>
                             <div class="text-xs text-gray-500">
-                                {{ $queue->patient->nik ?? ($queue->userPatient->nik ?? '-') }}</div>
+                                {{ $queue->patient->nik ?? ($queue->userPatient->nik ?? '-') }}
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $queue->service_name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span
-                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            {{ $queue->status == 'waiting' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                            {{ $queue->status == 'calling' ? 'bg-blue-100 text-blue-800' : '' }}
-                            {{ $queue->status == 'finished' ? 'bg-green-100 text-green-800' : '' }}
-                            {{ $queue->status == 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {{ $queue->status == 'waiting' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                    {{ $queue->status == 'calling' ? 'bg-blue-100 text-blue-800' : '' }}
+                                    {{ $queue->status == 'finished' ? 'bg-green-100 text-green-800' : '' }}
+                                    {{ $queue->status == 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
                                 {{ ucfirst($queue->status) }}
                             </span>
                         </td>
@@ -156,7 +166,7 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
                             }
                         }
@@ -165,7 +175,7 @@
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 let label = context.dataset.label || '';
                                 if (label) {
                                     label += ': ';

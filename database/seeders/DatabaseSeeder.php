@@ -20,8 +20,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin Bidan',
             'email' => 'admin@klinik.com',
             'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
 
+         User::create([
+            'name' => 'user ',
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+        ]);
         // =====================
         // SERVICES (LAYANAN)
         // =====================

@@ -268,9 +268,8 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script>
-        let lastQueueId = null;
+        let lastUpdatedTimestamp = null;
         let lastQueueNumber = null;
 
         function updateQueue() {
@@ -289,16 +288,21 @@
                         }
                     });
 
-                    // Play Audio if new queue is called
-                    if (data.id && data.id !== lastQueueId) {
-                        lastQueueId = data.id;
-                        lastQueueNumber = data.queue_number.toString().padStart(3, '0');
+                    // React if new queue is called or same queue is recalled
+                    if (data.updated_at && data.updated_at !== lastUpdatedTimestamp) {
+                        lastUpdatedTimestamp = data.updated_at;
+                        lastQueueNumber = data.queue_number ? data.queue_number.toString().padStart(3, '0') : null;
 
-                        // Text to Speech logic removed as per user request
-                        // const text = `Nomor antrian ${data.queue_number}, ${data.patient_name}`;
-                        // const utterance = new SpeechSynthesisUtterance(text);
-                        // utterance.lang = 'id-ID'; // Indonesian
-                        // window.speechSynthesis.speak(utterance);
+                        // Add a small bounce/flash effect
+                        if (lastQueueNumber) {
+                            queueElements.forEach(el => {
+                                el.parentElement.classList.add('scale-110', 'shadow-2xl');
+                                el.parentElement.style.transition = 'all 0.3s ease';
+                                setTimeout(() => {
+                                    el.parentElement.classList.remove('scale-110', 'shadow-2xl');
+                                }, 500);
+                            });
+                        }
                     }
                 })
                 .catch(error => console.log('Queue update error:', error));
