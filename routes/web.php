@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('ad
 
     // Queue Management
     Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
+    Route::get('/queues/table-data', [QueueController::class, 'tableData'])->name('queues.tableData');
     Route::patch('/queues/{queue}/status', [QueueController::class, 'updateStatus'])->name('queues.updateStatus');
 
     // Services Management
