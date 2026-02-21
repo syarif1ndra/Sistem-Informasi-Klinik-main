@@ -194,16 +194,16 @@
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
-                    <span class="ml-4 text-lg font-semibold text-gray-900">Klinik Bidan</span>
+                    <span class="ml-4 text-lg font-semibold text-gray-900">Klinik Bidan Siti Hajar</span>
                 </div>
             </header>
 
 
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
                 <!-- Toast Notifications -->
-                <div x-data="{ 
-                    show: false, 
-                    message: '', 
+                <div x-data="{
+                    show: false,
+                    message: '',
                     type: 'success',
                     init() {
                         @if(session('success'))
@@ -286,8 +286,8 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div x-data="{ 
-        showDeleteModal: false, 
+    <div x-data="{
+        showDeleteModal: false,
         deleteForm: null,
         itemName: '',
         openDeleteModal(form, name = 'item ini') {

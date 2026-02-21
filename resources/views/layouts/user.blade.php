@@ -44,7 +44,7 @@
                 <div class="flex">
                     <div class="flex-shrink-0 flex items-center">
                         <a href="{{ route('dashboard') }}" class="text-2xl font-bold text-primary-600">
-                            Klinik Sehat
+                            Klinik Bidan Siti Hajar
                         </a>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div class="md:flex md:items-center md:justify-between">
                 <div class="flex justify-center md:justify-start">
-                    <span class="text-xl font-bold text-white">Klinik Sehat</span>
+                    <span class="text-xl font-bold text-white">Klinik Bidan Siti Hajar</span>
                 </div>
                 <div class="mt-4 md:mt-0">
                     <p class="text-center text-gray-400 text-sm">

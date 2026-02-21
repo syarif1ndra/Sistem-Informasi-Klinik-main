@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Klinik Bidan') }}</title>
+    <title>{{ config('app.name', 'Klinik Bidan Siti Hajar') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -19,7 +19,7 @@
         <!-- Left Side - Branding -->
         <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-pink-500 via-pink-600 to-rose-600 flex-col justify-between p-12">
             <div>
-                <div class="text-4xl font-bold text-white mb-2">🏥 Klinik Bidan</div>
+                <div class="text-4xl font-bold text-white mb-2">🏥 Klinik Bidan Siti Hajar</div>
                 <p class="text-pink-100 text-lg">Pelayanan Kesehatan Ibu dan Anak Terpercaya</p>
             </div>
             <div class="space-y-6">
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="text-pink-100 text-sm">
-                <p>&copy; {{ date('Y') }} Klinik Bidan. Semua hak dilindungi.</p>
+                <p>&copy; {{ date('Y') }} Klinik Bidan Siti Hajar. Semua hak dilindungi.</p>
             </div>
         </div>
 
@@ -73,7 +73,7 @@
             <div class="w-full max-w-md">
                 <!-- Mobile Header -->
                 <div class="lg:hidden text-center mb-8">
-                    <div class="text-3xl font-bold text-pink-600 mb-2">🏥 Klinik Bidan</div>
+                    <div class="text-3xl font-bold text-pink-600 mb-2">🏥 Klinik Bidan Siti Hajar</div>
                     <p class="text-gray-600">Pelayanan Kesehatan Ibu dan Anak</p>
                 </div>
 

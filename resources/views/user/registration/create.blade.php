@@ -3,95 +3,116 @@
 @section('title', 'Pendaftaran Klinik')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50 py-12">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div class="bg-gradient-to-r from-pink-500 to-rose-600 px-8 py-6 flex justify-between items-center">
+<div class="min-h-screen bg-slate-50/50 py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/50 overflow-hidden border border-gray-100">
+            <div class="bg-gradient-to-br from-pink-500 via-rose-500 to-rose-600 px-8 py-10 relative">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+
+                <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-white">Pendaftaran Klinik</h2>
-                        <p class="text-pink-100 mt-2">Daftar layanan kesehatan secara online.</p>
+                        <h2 class="text-3xl font-extrabold text-white tracking-tight">Pendaftaran Klinik</h2>
+                        <p class="text-pink-100 mt-1 font-medium italic opacity-90">Satu langkah lebih dekat menuju sehat.</p>
                     </div>
-                    <a href="{{ route('dashboard') }}" class="text-white hover:text-pink-100 transition">
-                        Kembali ke Dashboard
-                    </a>
+                    <div class="hidden md:block">
+                        <div class="p-3 bg-white/20 rounded-2xl backdrop-blur-md border border-white/30">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ route('user.registration.store') }}" method="POST" class="p-8 md:p-10 space-y-8">
+                @csrf
+
+                @if ($errors->any())
+                    <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 flex items-center space-x-3 animate-pulse">
+                        <svg class="h-6 w-6 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-sm text-rose-700 font-semibold">Mohon periksa kembali inputan Anda.</p>
+                    </div>
+                @endif
+
+                <div class="bg-gray-50/80 rounded-2xl p-6 border border-gray-100 relative group transition-all">
+                    <div class="absolute -top-3 left-6 bg-white px-4 py-1 rounded-full border border-gray-100 shadow-sm">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-pink-500">Informasi Pasien</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                        <div class="space-y-1">
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nama Lengkap</label>
+                            <p class="text-gray-800 font-bold flex items-center">
+                                <span class="w-2 h-2 bg-pink-500 rounded-full mr-2"></span>
+                                {{ Auth::user()->userPatient->name }}
+                            </p>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">NIK Kependudukan</label>
+                            <p class="text-gray-800 font-mono font-bold tracking-wider">
+                                {{ Auth::user()->userPatient->nik ?? '---' }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <form action="{{ route('user.registration.store') }}" method="POST" class="p-8 space-y-6">
-                    @csrf
-
-                    @if ($errors->any())
-                        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-red-700">Terdapat kesalahan pada input Anda.</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Informasi Pasien -->
-                        <div class="col-span-2 bg-pink-50 rounded-lg p-4 border border-pink-100">
-                            <h3 class="text-lg font-semibold text-pink-800 mb-3">Data Pasien</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-500">Nama Pasien</label>
-                                    <p class="mt-1 text-sm font-semibold text-gray-900">{{ Auth::user()->userPatient->name }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-500">NIK (Nomor Induk
-                                        Kependudukan)</label>
-                                    <p class="mt-1 text-sm font-semibold text-gray-900">
-                                        {{ Auth::user()->userPatient->nik ?? '-' }}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tanggal Kunjungan -->
-                        <div class="col-span-2 md:col-span-1">
-                            <label for="date" class="block text-sm font-semibold text-gray-700 mb-1">Tanggal
-                                Kunjungan</label>
-                            <input type="date" name="date" id="date" value="{{ old('date', date('Y-m-d')) }}"
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label for="date" class="block text-sm font-bold text-gray-700 ml-1">Tanggal Kunjungan</label>
+                        <div class="relative group">
+                            <input type="date" name="date" id="date"
+                                value="{{ old('date', date('Y-m-d')) }}"
                                 min="{{ date('Y-m-d') }}"
-                                class="block w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm"
+                                class="w-full pl-4 pr-4 py-3.5 bg-white rounded-xl border-2 border-gray-100 text-gray-700 font-semibold focus:ring-4 focus:ring-pink-500/10 focus:border-pink-500 transition-all outline-none"
                                 required>
-                            @error('date') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                         </div>
+                        @error('date') <p class="text-xs text-rose-500 font-medium ml-1 mt-1">{{ $message }}</p> @enderror
+                    </div>
 
-                        <!-- Layanan -->
-                        <div class="col-span-2 md:col-span-1">
-                            <label for="service_name" class="block text-sm font-semibold text-gray-700 mb-1">Pilih
-                                Layanan</label>
+                    <div class="space-y-2">
+                        <label for="service_name" class="block text-sm font-bold text-gray-700 ml-1">Pilih Layanan</label>
+                        <div class="relative group">
                             <select name="service_name" id="service_name"
-                                class="block w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm"
+                                class="w-full px-4 py-3.5 bg-white rounded-xl border-2 border-gray-100 text-gray-700 font-semibold appearance-none focus:ring-4 focus:ring-pink-500/10 focus:border-pink-500 transition-all outline-none"
                                 required>
-                                <option value="">-- Pilih Layanan --</option>
+                                <option value="" disabled selected>-- Pilih Layanan Klinik --</option>
                                 @foreach($services as $service)
                                     <option value="{{ $service }}" {{ old('service_name') == $service ? 'selected' : '' }}>
                                         {{ $service }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('service_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                            <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
                         </div>
+                        @error('service_name') <p class="text-xs text-rose-500 font-medium ml-1 mt-1">{{ $message }}</p> @enderror
                     </div>
+                </div>
 
-                    <div class="flex justify-end pt-4">
-                        <button type="submit"
-                            class="bg-gradient-to-r from-pink-500 to-rose-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg hover:from-pink-600 hover:to-rose-700 transition transform hover:-translate-y-0.5">
-                            Daftar Kunjungan
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="flex flex-col-reverse md:flex-row md:items-center justify-between gap-4 pt-6 border-t border-gray-50">
+                    <a href="{{ route('dashboard') }}"
+                        class="flex items-center justify-center px-6 py-3.5 rounded-xl text-gray-500 font-bold hover:bg-gray-100 hover:text-gray-700 transition-all active:scale-95 group">
+                        <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Batalkan Pendaftaran
+                    </a>
+
+                    <button type="submit"
+                        class="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-2xl font-black shadow-xl shadow-rose-200 hover:shadow-2xl hover:shadow-rose-300 transform hover:-translate-y-1 transition-all active:scale-95">
+                        Konfirmasi & Daftar Sekarang
+                    </button>
+                </div>
+            </form>
         </div>
+
+        <p class="text-center mt-8 text-gray-400 text-sm font-medium">
+            Butuh bantuan? <a href="#" class="text-pink-500 hover:underline">Hubungi Admin Klinik</a>
+        </p>
     </div>
+</div>
 @endsection

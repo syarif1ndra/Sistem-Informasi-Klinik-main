@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center">
-                        <span class="text-xl font-bold text-pink-600">🏥 Klinik Bidan</span>
+                        <span class="text-xl font-bold text-pink-600">🏥 Klinik Bidan Siti Hajar</span>
                     </a>
                 </div>
 
