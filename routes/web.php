@@ -51,6 +51,10 @@ Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bi
 
     // Realtime Queue specific for Bidan Board
     Route::get('/queues/table-data', [\App\Http\Controllers\Bidan\DashboardController::class, 'queueTableData'])->name('queues.tableData');
+
+    // Transactions
+    Route::resource('transactions', \App\Http\Controllers\Bidan\TransactionController::class);
+    Route::get('/transactions/{transaction}/print-struk', [\App\Http\Controllers\Bidan\TransactionController::class, 'printStruk'])->name('transactions.print_struk');
 });
 
 // Dokter Routes
