@@ -48,8 +48,7 @@
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider">Aksi
-                        (Real-time)</th>
+                    <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider">Aksi</th>
                 </tr>
             </thead>
             <tbody id="queue-table-body" class="bg-white divide-y divide-gray-200">

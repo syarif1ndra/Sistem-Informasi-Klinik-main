@@ -14,10 +14,7 @@
     </div>
 
     <div class="mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
-        <a href="{{ route('admin.patients.create') }}"
-            class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded">
-            + Tambah Pasien
-        </a>
+
         <div x-data="{ open: false }" class="relative z-10">
             <button @click="open = !open" @click.away="open = false" type="button"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2">
@@ -65,7 +62,7 @@
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Telepon</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan Terakhir</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan </th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Alamat</th>
                     <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider">Aksi</th>
                 </tr>
