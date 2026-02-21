@@ -35,6 +35,11 @@ class User extends Authenticatable
         return $this->hasRole('admin');
     }
 
+    public function isBidan(): bool
+    {
+        return $this->hasRole('bidan');
+    }
+
     public function patient()
     {
         return $this->hasOne(Patient::class);

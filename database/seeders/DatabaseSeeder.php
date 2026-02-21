@@ -23,11 +23,21 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-         User::create([
+        User::create([
             'name' => 'user ',
             'email' => 'user@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'user',
+        ]);
+
+        // =====================
+        // BIDAN USER
+        // =====================
+        User::create([
+            'name' => 'Bidan Utama',
+            'email' => 'bidan@klinik.com',
+            'password' => Hash::make('password'),
+            'role' => 'bidan',
         ]);
         // =====================
         // SERVICES (LAYANAN)

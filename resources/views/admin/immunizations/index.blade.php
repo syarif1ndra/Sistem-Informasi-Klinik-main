@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends($activeLayout ?? 'layouts.admin')
 
 @section('content')
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">

@@ -16,7 +16,13 @@ class EnsureUserRole
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->user()->role !== 'user') {
-            return redirect()->route('admin.dashboard');
+            if ($request->user()->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+            if ($request->user()->role === 'bidan') {
+                return redirect()->route('bidan.dashboard');
+            }
+            return redirect('/');
         }
 
         return $next($request);

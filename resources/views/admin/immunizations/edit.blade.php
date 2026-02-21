@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends($activeLayout ?? 'layouts.admin')
 
 @section('content')
     <div class="max-w-4xl mx-auto">

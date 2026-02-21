@@ -461,3 +461,24 @@ Condition MET: Calling + UserPatientID
 UserPatient Found: indra
 Updating EXISTING Patient ID: 3
 Linked Queue to Patient ID: 3
+
+[2026-02-21 15:43:06] Status Update Request: finished
+Queue ID: 2
+User Patient ID: 2
+Patient ID (Before): 2
+Condition NOT MET. Status: finished, UserPatientID: 2
+
+[2026-02-21 15:43:07] Status Update Request: finished
+Queue ID: 3
+User Patient ID: 3
+Patient ID (Before): 3
+Condition NOT MET. Status: finished, UserPatientID: 3
+
+[2026-02-21 15:43:09] Status Update Request: calling
+Queue ID: 4
+User Patient ID: 3
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: indra
+Updating EXISTING Patient ID: 3
+Linked Queue to Patient ID: 3

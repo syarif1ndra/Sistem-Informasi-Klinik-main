@@ -33,6 +33,8 @@ class AuthenticatedSessionController extends Controller
 
         if ($request->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
+        } elseif ($request->user()->isBidan()) {
+            return redirect()->route('bidan.dashboard');
         }
 
         return redirect()->route('dashboard');

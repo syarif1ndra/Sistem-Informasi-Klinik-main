@@ -45,13 +45,44 @@ Route::middleware('guest')->group(function () {
 Route::get('auth/google', [App\Http\Controllers\Auth\SocialController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [App\Http\Controllers\Auth\SocialController::class, 'handleGoogleCallback']);
 
-// Admin Routes (Protected by Breeze)
-Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Bidan Routes (Protected by Breeze)
+Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bidan.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Bidan\DashboardController::class, 'index'])->name('dashboard');
 
+    // Realtime Queue specific for Bidan Board
+    Route::get('/queues/table-data', [\App\Http\Controllers\Bidan\DashboardController::class, 'queueTableData'])->name('queues.tableData');
+});
+
+// Admin & Bidan Shared Routes
+Route::middleware([
+    'auth',
+    'verified',
+    \App\Http\Middleware\EnsureAdminOrBidanRole::class
+])->prefix('admin')->name('admin.')->group(function () {
     // Patient Exports
     Route::get('/patients/export/excel', [PatientController::class, 'exportExcel'])->name('patients.exportExcel');
     Route::get('/patients/export/pdf', [PatientController::class, 'exportPdf'])->name('patients.exportPdf');
+
+    // Resource Routes
+    Route::resource('patients', PatientController::class);
+    Route::get('/patients/{queue}/edit-visit', [PatientController::class, 'editVisit'])->name('patients.editVisit');
+    Route::put('/patients/{queue}/update-visit', [PatientController::class, 'updateVisit'])->name('patients.updateVisit');
+
+    // Birth Records
+    Route::get('/birth_records/export/excel', [BirthRecordController::class, 'exportExcel'])->name('birth_records.exportExcel');
+    Route::get('/birth_records/export/pdf', [BirthRecordController::class, 'exportPdf'])->name('birth_records.exportPdf');
+    Route::resource('birth_records', BirthRecordController::class);
+    Route::get('/birth_records/{birthRecord}/pdf', [BirthRecordController::class, 'generatePdf'])->name('birth_records.generatePdf');
+
+    // Immunizations
+    Route::get('/immunizations/export/excel', [ImmunizationController::class, 'exportExcel'])->name('immunizations.exportExcel');
+    Route::get('/immunizations/export/pdf', [ImmunizationController::class, 'exportPdf'])->name('immunizations.exportPdf');
+    Route::resource('immunizations', ImmunizationController::class);
+});
+
+// Admin Routes (Protected by Breeze)
+Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Queue Management
     Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
@@ -60,11 +91,6 @@ Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('ad
 
     // Services Management
     Route::resource('services', ServiceController::class);
-
-    // Resource Routes
-    Route::resource('patients', PatientController::class);
-    Route::get('/patients/{queue}/edit-visit', [PatientController::class, 'editVisit'])->name('patients.editVisit');
-    Route::put('/patients/{queue}/update-visit', [PatientController::class, 'updateVisit'])->name('patients.updateVisit');
     Route::resource('medicines', MedicineController::class);
     Route::resource('transactions', TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [TransactionController::class, 'printStruk'])->name('transactions.print_struk');
@@ -73,13 +99,6 @@ Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('ad
     Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::resource('users', UserController::class);
-    Route::get('/birth_records/export/excel', [BirthRecordController::class, 'exportExcel'])->name('birth_records.exportExcel');
-    Route::get('/birth_records/export/pdf', [BirthRecordController::class, 'exportPdf'])->name('birth_records.exportPdf');
-    Route::resource('birth_records', BirthRecordController::class);
-    Route::get('/birth_records/{birthRecord}/pdf', [BirthRecordController::class, 'generatePdf'])->name('birth_records.generatePdf');
-    Route::get('/immunizations/export/excel', [ImmunizationController::class, 'exportExcel'])->name('immunizations.exportExcel');
-    Route::get('/immunizations/export/pdf', [ImmunizationController::class, 'exportPdf'])->name('immunizations.exportPdf');
-    Route::resource('immunizations', ImmunizationController::class);
 });
 
 // User Dashboard

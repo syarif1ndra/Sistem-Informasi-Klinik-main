@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends($activeLayout ?? 'layouts.admin')
 
 @section('content')
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -92,15 +92,17 @@
                             @if($visit->patient)
                                 <a href="{{ route('admin.patients.editVisit', $visit) }}"
                                     class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
-                                <form action="{{ route('admin.patients.destroy', $visit->patient) }}" method="POST"
-                                    class="inline-block" id="delete-form-{{ $visit->patient->id }}"
-                                    onsubmit="event.preventDefault();">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button"
-                                        onclick="openDeleteModal(document.getElementById('delete-form-{{ $visit->patient->id }}'), '{{ $visit->patient->name }}')"
-                                        class="text-red-600 hover:text-red-900">Hapus</button>
-                                </form>
+                                @if(!auth()->user()->isBidan())
+                                    <form action="{{ route('admin.patients.destroy', $visit->patient) }}" method="POST"
+                                        class="inline-block" id="delete-form-{{ $visit->patient->id }}"
+                                        onsubmit="event.preventDefault();">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button"
+                                            onclick="openDeleteModal(document.getElementById('delete-form-{{ $visit->patient->id }}'), '{{ $visit->patient->name }}')"
+                                            class="text-red-600 hover:text-red-900">Hapus</button>
+                                    </form>
+                                @endif
                             @endif
                         </td>
                     </tr>

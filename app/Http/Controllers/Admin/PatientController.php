@@ -72,6 +72,10 @@ class PatientController extends Controller
 
     public function destroy(Patient $patient)
     {
+        if (auth()->user()->isBidan()) {
+            abort(403, 'Akses ditolak. Bidan tidak memiliki izin untuk menghapus data pasien.');
+        }
+
         $patient->delete();
         return redirect()->route('admin.patients.index')->with('success', 'Data pasien berhasil dihapus.');
     }
