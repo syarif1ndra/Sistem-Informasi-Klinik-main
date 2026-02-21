@@ -23,6 +23,10 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 if ($request->user()->isAdmin()) {
                     return redirect()->route('admin.dashboard');
+                } elseif ($request->user()->isBidan()) {
+                    return redirect()->route('bidan.dashboard');
+                } elseif ($request->user()->isDokter()) {
+                    return redirect()->route('dokter.dashboard');
                 }
                 return redirect()->route('dashboard');
             }

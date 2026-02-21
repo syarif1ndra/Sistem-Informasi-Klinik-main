@@ -25,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
 
             if (auth()->check() && auth()->user()->isBidan()) {
                 $layout = 'layouts.bidan';
+            } elseif (auth()->check() && auth()->user()->isDokter()) {
+                $layout = 'layouts.dokter';
             } elseif (auth()->check() && auth()->user()->isAdmin()) {
                 $layout = 'layouts.admin';
             }

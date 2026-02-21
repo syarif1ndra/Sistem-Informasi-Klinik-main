@@ -32,11 +32,17 @@ class AuthenticatedSessionController extends Controller
         Auth::logoutOtherDevices($request->string('password'));
 
         if ($request->user()->isAdmin()) {
+            \Illuminate\Support\Facades\Log::info("Admin login");
             return redirect()->route('admin.dashboard');
         } elseif ($request->user()->isBidan()) {
+            \Illuminate\Support\Facades\Log::info("Bidan login");
             return redirect()->route('bidan.dashboard');
+        } elseif ($request->user()->isDokter()) {
+            \Illuminate\Support\Facades\Log::info("Dokter login attempt redirecting to: " . route('dokter.dashboard'));
+            return redirect()->route('dokter.dashboard');
         }
 
+        \Illuminate\Support\Facades\Log::info("User login role: " . $request->user()->role);
         return redirect()->route('dashboard');
     }
 

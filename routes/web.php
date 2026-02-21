@@ -53,7 +53,22 @@ Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bi
     Route::get('/queues/table-data', [\App\Http\Controllers\Bidan\DashboardController::class, 'queueTableData'])->name('queues.tableData');
 });
 
-// Admin & Bidan Shared Routes
+// Dokter Routes
+Route::middleware(['auth', 'verified', 'role.dokter'])->prefix('dokter')->name('dokter.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Dokter\DashboardController::class, 'index'])->name('dashboard');
+
+    // Realtime Queue specific for Dokter Board
+    Route::get('/queues/table-data', [\App\Http\Controllers\Dokter\DashboardController::class, 'queueTableData'])->name('queues.tableData');
+
+    Route::get('/queues', [\App\Http\Controllers\Dokter\QueueController::class, 'index'])->name('queues.index');
+    Route::get('/queues/table-data-list', [\App\Http\Controllers\Dokter\QueueController::class, 'tableData'])->name('queues.tableDataList');
+    Route::patch('/queues/{queue}/status', [\App\Http\Controllers\Dokter\QueueController::class, 'updateStatus'])->name('queues.updateStatus');
+
+    Route::resource('transactions', \App\Http\Controllers\Dokter\TransactionController::class);
+    Route::get('/transactions/{transaction}/print-struk', [\App\Http\Controllers\Dokter\TransactionController::class, 'printStruk'])->name('transactions.print_struk');
+});
+
+// Admin, Bidan, & Dokter Shared Routes
 Route::middleware([
     'auth',
     'verified',
@@ -62,6 +77,11 @@ Route::middleware([
     // Patient Exports
     Route::get('/patients/export/excel', [PatientController::class, 'exportExcel'])->name('patients.exportExcel');
     Route::get('/patients/export/pdf', [PatientController::class, 'exportPdf'])->name('patients.exportPdf');
+
+    // Queue Management
+    Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
+    Route::get('/queues/table-data', [QueueController::class, 'tableData'])->name('queues.tableData');
+    Route::patch('/queues/{queue}/status', [QueueController::class, 'updateStatus'])->name('queues.updateStatus');
 
     // Resource Routes
     Route::resource('patients', PatientController::class);
@@ -84,21 +104,27 @@ Route::middleware([
 Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Queue Management
-    Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
-    Route::get('/queues/table-data', [QueueController::class, 'tableData'])->name('queues.tableData');
-    Route::patch('/queues/{queue}/status', [QueueController::class, 'updateStatus'])->name('queues.updateStatus');
-
     // Services Management
     Route::resource('services', ServiceController::class);
     Route::resource('medicines', MedicineController::class);
-    Route::resource('transactions', TransactionController::class);
-    Route::get('/transactions/{transaction}/print-struk', [TransactionController::class, 'printStruk'])->name('transactions.print_struk');
-    Route::resource('medical-records', MedicalRecordController::class);
+
     Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.exportExcel');
     Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::resource('users', UserController::class);
+});
+
+// Admin & Dokter Shared Routes (Additional capabilities for Dokter)
+Route::middleware([
+    'auth',
+    'verified',
+    // We can reuse EnsureAdminOrBidanRole here since we just updated it to also allow 'dokter'.
+    // A better name would technically be EnsureStaffRole, but to save refactoring time we will just use it.
+    \App\Http\Middleware\EnsureAdminOrBidanRole::class
+])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('transactions', TransactionController::class);
+    Route::get('/transactions/{transaction}/print-struk', [TransactionController::class, 'printStruk'])->name('transactions.print_struk');
+    Route::resource('medical-records', MedicalRecordController::class);
 });
 
 // User Dashboard

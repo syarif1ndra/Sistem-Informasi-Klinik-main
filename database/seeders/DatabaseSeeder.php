@@ -39,6 +39,16 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'bidan',
         ]);
+
+        // =====================
+        // DOKTER USER
+        // =====================
+        User::create([
+            'name' => 'Dokter Klinik',
+            'email' => 'dokter@klinik.com',
+            'password' => Hash::make('password'),
+            'role' => 'dokter',
+        ]);
         // =====================
         // SERVICES (LAYANAN)
         // =====================

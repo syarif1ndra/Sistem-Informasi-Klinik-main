@@ -22,6 +22,9 @@ class EnsureUserRole
             if ($request->user()->role === 'bidan') {
                 return redirect()->route('bidan.dashboard');
             }
+            if ($request->user()->role === 'dokter') {
+                return redirect()->route('dokter.dashboard');
+            }
             return redirect('/');
         }
 

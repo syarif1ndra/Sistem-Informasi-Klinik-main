@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureAdminOrBidanRole
+class EnsureDokterRole
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,12 @@ class EnsureAdminOrBidanRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!in_array($request->user()->role, ['admin', 'bidan', 'dokter'])) {
+        if (!$request->user() || !$request->user()->isDokter()) {
+            if ($request->user() && $request->user()->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            } elseif ($request->user() && $request->user()->isBidan()) {
+                return redirect()->route('bidan.dashboard');
+            }
             return redirect()->route('dashboard');
         }
 

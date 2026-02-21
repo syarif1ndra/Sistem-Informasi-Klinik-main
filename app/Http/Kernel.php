@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'role.user' => \App\Http\Middleware\EnsureUserRole::class,
         'role.admin' => \App\Http\Middleware\EnsureAdminRole::class,
         'role.bidan' => \App\Http\Middleware\EnsureBidanRole::class,
+        'role.dokter' => \App\Http\Middleware\EnsureDokterRole::class,
         'patient.data' => \App\Http\Middleware\EnsurePatientData::class,
     ];
 }
