@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.dokter')
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="billingSystem()">
@@ -14,7 +14,7 @@
                 </span>
                 Buat Transaksi / Kasir
             </h1>
-            <a href="{{ route('admin.transactions.index') }}"
+            <a href="{{ route('dokter.transactions.index') }}"
                 class="flex items-center gap-2 text-gray-500 hover:text-pink-600 transition duration-150">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
@@ -25,8 +25,9 @@
             </a>
         </div>
 
-        <form action="{{ route('admin.transactions.store') }}" method="POST" id="billingForm">
+        <form action="{{ route('dokter.transactions.update', $transaction->id) }}" method="POST" id="billingForm">
             @csrf
+            @method('PUT')
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Left Side: Selection -->
@@ -47,7 +48,7 @@
                                     class="w-full rounded-lg border-gray-300 shadow-sm transition p-3" required>
                                     <option value="">-- Pilih Pasien --</option>
                                     @foreach($patients as $patient)
-                                        <option value="{{ $patient->id }}">{{ $patient->name }} - {{ $patient->address }}
+                                        <option value="{{ $patient->id }}" {{ $transaction->patient_id == $patient->id ? 'selected' : '' }}>{{ $patient->name }} - {{ $patient->address }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -57,8 +58,19 @@
                             <select name="payment_method" x-model="paymentType"
                                 class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3"
                                 required>
-                                <option value="cash">Tunai / Umum</option>
-                                <option value="bpjs">BPJS Kesehatan</option>
+                                <option value="cash" {{ $transaction->payment_method == 'cash' ? 'selected' : '' }}>Tunai /
+                                    Umum</option>
+                                <option value="bpjs" {{ $transaction->payment_method == 'bpjs' ? 'selected' : '' }}>BPJS
+                                    Kesehatan</option>
+                            </select>
+
+                            <label class="block text-sm font-semibold text-gray-700 mt-4 mb-2">Status Pembayaran</label>
+                            <select name="status"
+                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3"
+                                required>
+                                <option value="unpaid" {{ $transaction->status == 'unpaid' ? 'selected' : '' }}>Belum Lunas
+                                </option>
+                                <option value="paid" {{ $transaction->status == 'paid' ? 'selected' : '' }}>Lunas</option>
                             </select>
                         </div>
                     </div>
@@ -215,13 +227,24 @@
 
     <script>
         function billingSystem() {
+            // Transform existing database items into the Alpine object format
+            const existingItems = @json($transaction->items->map(function ($item) {
+                return [
+                    'type' => $item->item_type == 'App\Models\Service' ? 'service' : 'medicine',
+                    'id' => $item->item_id,
+                    'name' => $item->name,
+                    'price' => (float) $item->price,
+                    'quantity' => (int) $item->quantity
+                ];
+            }));
+
             return {
-                paymentType: 'cash',
+                paymentType: '{{ $transaction->payment_method }}',
                 itemType: 'service',
                 selectedServiceId: '',
                 selectedMedicineId: '',
                 itemQuantity: 1, // Default quantity
-                items: [],
+                items: existingItems,
 
                 get total() {
                     // BPJS still calculates total, but maybe payment handling is different elsewhere.
@@ -296,7 +319,7 @@
     </style>
     <script>
         document.addEventListener('alpine:init', () => {
-            // TomSelect needs to be initialized after Alpine is ready, but also we can just run it directly on mount
+            // Placeholder
         });
 
         // Wait for Alpine to be ready and initialize Tom Select
@@ -311,7 +334,6 @@
                     create: false,
                     sortField: { field: 'text', direction: 'asc' },
                     onChange: function (value) {
-                        // Dispatch input event for Alpine's x-model
                         let el = document.getElementById('serviceSelect');
                         el.value = value;
                         el.dispatchEvent(new Event('input', { bubbles: true }));
@@ -323,7 +345,6 @@
                     create: false,
                     sortField: { field: 'text', direction: 'asc' },
                     onChange: function (value) {
-                        // Dispatch input event for Alpine's x-model
                         let el = document.getElementById('medicineSelect');
                         el.value = value;
                         el.dispatchEvent(new Event('input', { bubbles: true }));

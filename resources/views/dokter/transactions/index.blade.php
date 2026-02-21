@@ -12,9 +12,10 @@
             </button>
         </form>
     </div>
-    
+
     <div class="mb-4">
-        <a href="{{ route('dokter.transactions.create') }}" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+        <a href="{{ route('dokter.transactions.create') }}"
+            class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
             Tambah Transaksi
         </a>
     </div>
@@ -42,14 +43,17 @@
                             {{ $transaction->created_at->translatedFormat('d F Y, H:i') }} WIB
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ $transaction->patient->name }}</td>
+                            {{ $transaction->patient->name }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->payment_method == 'bpjs' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                            <span
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->payment_method == 'bpjs' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
                                 {{ $transaction->payment_method == 'bpjs' ? 'BPJS' : 'Tunai' }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp
-                            {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
+                            {{ number_format($transaction->total_amount, 0, ',', '.') }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span
                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->status == 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -59,25 +63,8 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <a href="{{ route('dokter.transactions.show', $transaction) }}"
                                 class="text-pink-600 hover:text-pink-900 mr-2">Detail</a>
-                            @if($transaction->status == 'unpaid')
-                                <form action="{{ route('dokter.transactions.update', $transaction) }}" method="POST"
-                                    class="inline-block">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="status" value="paid">
-                                    <button type="submit" class="text-green-600 hover:text-green-900 mr-2">Bayar</button>
-                                </form>
-                            @endif
-                            <form action="{{ route('dokter.transactions.destroy', $transaction) }}" method="POST"
-                                class="inline-block" 
-                                id="delete-form-{{ $transaction->id }}"
-                                onsubmit="event.preventDefault();">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" 
-                                    onclick="openDeleteModal(document.getElementById('delete-form-{{ $transaction->id }}'), 'Transaksi #{{ $transaction->id }}')"
-                                    class="text-red-600 hover:text-red-900">Hapus</button>
-                            </form>
+                            <a href="{{ route('dokter.transactions.edit', $transaction) }}"
+                                class="text-amber-600 hover:text-amber-900 mr-2">Edit</a>
                         </td>
                     </tr>
                 @empty

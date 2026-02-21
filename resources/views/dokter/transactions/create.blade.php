@@ -42,14 +42,16 @@
                         </div>
                         <div class="p-6">
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Pasien</label>
-                            <select name="patient_id"
-                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3"
-                                required>
-                                <option value="">-- Pilih Pasien --</option>
-                                @foreach($patients as $patient)
-                                    <option value="{{ $patient->id }}">{{ $patient->name }} - {{ $patient->address }}</option>
-                                @endforeach
-                            </select>
+                            <div wire:ignore>
+                                <select name="patient_id" x-ref="patientSelect" id="patientSelect"
+                                    class="w-full rounded-lg border-gray-300 shadow-sm transition p-3" required>
+                                    <option value="">-- Pilih Pasien --</option>
+                                    @foreach($patients as $patient)
+                                        <option value="{{ $patient->id }}">{{ $patient->name }} - {{ $patient->address }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
                             <label class="block text-sm font-semibold text-gray-700 mt-4 mb-2">Metode Pembayaran</label>
                             <select name="payment_method" x-model="paymentType"
@@ -90,27 +92,31 @@
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Item</label>
 
                                     <!-- Service Select -->
-                                    <select x-show="itemType === 'service'" x-model="selectedServiceId"
-                                        class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3">
-                                        <option value="">-- Pilih Layanan --</option>
-                                        @foreach($services as $service)
-                                            <option value="{{ $service->id }}" data-price="{{ $service->price }}">
-                                                {{ $service->name }} (Rp {{ number_format($service->price, 0, ',', '.') }})
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <div x-show="itemType === 'service'">
+                                        <select x-model="selectedServiceId" x-ref="serviceSelect" id="serviceSelect"
+                                            class="w-full rounded-lg border-gray-300 shadow-sm transition p-3">
+                                            <option value="">-- Pilih Layanan --</option>
+                                            @foreach($services as $service)
+                                                <option value="{{ $service->id }}" data-price="{{ $service->price }}">
+                                                    {{ $service->name }} (Rp {{ number_format($service->price, 0, ',', '.') }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     <!-- Medicine Select -->
-                                    <select x-show="itemType === 'medicine'" x-model="selectedMedicineId"
-                                        class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3">
-                                        <option value="">-- Pilih Obat --</option>
-                                        @foreach($medicines as $medicine)
-                                            <option value="{{ $medicine->id }}" data-price="{{ $medicine->price }}">
-                                                {{ $medicine->name }} (Stok: {{ $medicine->stock }}) (Rp
-                                                {{ number_format($medicine->price, 0, ',', '.') }})
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <div x-show="itemType === 'medicine'" style="display: none;">
+                                        <select x-model="selectedMedicineId" x-ref="medicineSelect" id="medicineSelect"
+                                            class="w-full rounded-lg border-gray-300 shadow-sm transition p-3">
+                                            <option value="">-- Pilih Obat --</option>
+                                            @foreach($medicines as $medicine)
+                                                <option value="{{ $medicine->id }}" data-price="{{ $medicine->price }}">
+                                                    {{ $medicine->name }} (Stok: {{ $medicine->stock }}) (Rp
+                                                    {{ number_format($medicine->price, 0, ',', '.') }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
@@ -272,5 +278,57 @@
                 }
             }
         }
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <style>
+        .ts-control {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border-color: #d1d5db;
+            font-size: 1rem;
+        }
+
+        .ts-control.focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 0 1px #ec4899;
+        }
+    </style>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            // Placeholder
+        });
+
+        // Wait for Alpine to be ready and initialize Tom Select
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                new TomSelect('#patientSelect', {
+                    create: false,
+                    sortField: { field: 'text', direction: 'asc' }
+                });
+
+                new TomSelect('#serviceSelect', {
+                    create: false,
+                    sortField: { field: 'text', direction: 'asc' },
+                    onChange: function (value) {
+                        let el = document.getElementById('serviceSelect');
+                        el.value = value;
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+
+                new TomSelect('#medicineSelect', {
+                    create: false,
+                    sortField: { field: 'text', direction: 'asc' },
+                    onChange: function (value) {
+                        let el = document.getElementById('medicineSelect');
+                        el.value = value;
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+            }, 100);
+        });
     </script>
 @endsection

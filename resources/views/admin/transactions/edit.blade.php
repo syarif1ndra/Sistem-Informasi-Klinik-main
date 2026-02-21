@@ -47,7 +47,7 @@
                                     class="w-full rounded-lg border-gray-300 shadow-sm transition p-3" required>
                                     <option value="">-- Pilih Pasien --</option>
                                     @foreach($patients as $patient)
-                                        <option value="{{ $patient->id }}">{{ $patient->name }} - {{ $patient->address }}
+                                        <option value="{{ $patient->id }}" {{ $transaction->patient_id == $patient->id ? 'selected' : '' }}>{{ $patient->name }} - {{ $patient->address }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -57,8 +57,19 @@
                             <select name="payment_method" x-model="paymentType"
                                 class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3"
                                 required>
-                                <option value="cash">Tunai / Umum</option>
-                                <option value="bpjs">BPJS Kesehatan</option>
+                                <option value="cash" {{ $transaction->payment_method == 'cash' ? 'selected' : '' }}>Tunai /
+                                    Umum</option>
+                                <option value="bpjs" {{ $transaction->payment_method == 'bpjs' ? 'selected' : '' }}>BPJS
+                                    Kesehatan</option>
+                            </select>
+
+                            <label class="block text-sm font-semibold text-gray-700 mt-4 mb-2">Status Pembayaran</label>
+                            <select name="status"
+                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3"
+                                required>
+                                <option value="unpaid" {{ $transaction->status == 'unpaid' ? 'selected' : '' }}>Belum Lunas
+                                </option>
+                                <option value="paid" {{ $transaction->status == 'paid' ? 'selected' : '' }}>Lunas</option>
                             </select>
                         </div>
                     </div>
@@ -215,13 +226,24 @@
 
     <script>
         function billingSystem() {
+            // Transform existing database items into the Alpine object format
+            const existingItems = @json($transaction->items->map(function ($item) {
+                return [
+                    'type' => $item->item_type == 'App\Models\Service' ? 'service' : 'medicine',
+                    'id' => $item->item_id,
+                    'name' => $item->name,
+                    'price' => (float) $item->price,
+                    'quantity' => (int) $item->quantity
+                ];
+            }));
+
             return {
-                paymentType: 'cash',
+                paymentType: '{{ $transaction->payment_method }}',
                 itemType: 'service',
                 selectedServiceId: '',
                 selectedMedicineId: '',
                 itemQuantity: 1, // Default quantity
-                items: [],
+                items: existingItems,
 
                 get total() {
                     // BPJS still calculates total, but maybe payment handling is different elsewhere.
