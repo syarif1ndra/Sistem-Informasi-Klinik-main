@@ -12,12 +12,17 @@ class BirthRecordController extends Controller
 
     public function index(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
-        $birthRecords = BirthRecord::whereDate('birth_date', $date)
-            ->latest()
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
+
+        $birthRecords = BirthRecord::whereBetween('birth_date', [$startDate, $endDate])
+            ->orderBy('birth_date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return view('admin.birth_records.index', compact('birthRecords', 'date'));
+        $birthRecords->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+
+        return view('admin.birth_records.index', compact('birthRecords', 'startDate', 'endDate'));
     }
 
     /**
@@ -153,18 +158,24 @@ class BirthRecordController extends Controller
     }
     public function exportExcel(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\BirthRecordsExport($date), 'data-kelahiran-' . $date . '.xlsx');
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\BirthRecordsExport($startDate, $endDate), 'data-kelahiran-' . $startDate . '-to-' . $endDate . '.xlsx');
     }
 
     public function exportPdf(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
-        $birthRecords = BirthRecord::whereDate('birth_date', $date)->latest()->get();
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
 
-        $pdf = Pdf::loadView('admin.birth_records.pdf', compact('birthRecords', 'date'));
+        $birthRecords = BirthRecord::whereBetween('birth_date', [$startDate, $endDate])
+            ->orderBy('birth_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $pdf = Pdf::loadView('admin.birth_records.pdf', compact('birthRecords', 'startDate', 'endDate'));
         $pdf->setPaper('A4', 'landscape');
 
-        return $pdf->download('data-kelahiran-' . $date . '.pdf');
+        return $pdf->download('data-kelahiran-' . $startDate . '-to-' . $endDate . '.pdf');
     }
 }

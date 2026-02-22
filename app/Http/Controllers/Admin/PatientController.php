@@ -16,16 +16,21 @@ class PatientController extends Controller
 {
     public function index(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
 
         // Fetch Queues (Visits) instead of Patients
         // We load patient relationship to display patient details
         $visits = Queue::with('patient')
-            ->whereDate('date', $date)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->orderBy('date', 'desc')
             ->orderBy('queue_number', 'asc')
             ->paginate(10);
 
-        return view('admin.patients.index', compact('visits', 'date'));
+        // Append query strings so pagination links work with filters
+        $visits->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+
+        return view('admin.patients.index', compact('visits', 'startDate', 'endDate'));
     }
 
     public function create()
@@ -116,22 +121,26 @@ class PatientController extends Controller
 
     public function exportExcel(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
-        return Excel::download(new PatientsExport($date), 'data-pasien-' . $date . '.xlsx');
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
+        return Excel::download(new PatientsExport($startDate, $endDate), 'data-pasien-' . $startDate . '-to-' . $endDate . '.xlsx');
     }
 
     public function exportPdf(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
+
         // Fetch Queues (Visits) instead of Patients
         $visits = Queue::with('patient')
-            ->whereDate('date', $date)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->orderBy('date', 'desc')
             ->orderBy('queue_number', 'asc')
             ->get();
 
-        $pdf = Pdf::loadView('admin.patients.pdf', compact('visits', 'date'));
+        $pdf = Pdf::loadView('admin.patients.pdf', compact('visits', 'startDate', 'endDate'));
         $pdf->setPaper('A4', 'landscape');
 
-        return $pdf->download('data-pasien-' . $date . '.pdf');
+        return $pdf->download('data-pasien-' . $startDate . '-to-' . $endDate . '.pdf');
     }
 }

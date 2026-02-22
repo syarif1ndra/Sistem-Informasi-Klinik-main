@@ -9,18 +9,24 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class ImmunizationsExport implements FromView, ShouldAutoSize
 {
-    protected $date;
+    protected $startDate;
+    protected $endDate;
 
-    public function __construct($date)
+    public function __construct($startDate, $endDate)
     {
-        $this->date = $date;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     public function view(): View
     {
         return view('admin.immunizations.excel', [
-            'immunizations' => Immunization::whereDate('immunization_date', $this->date)->latest()->get(),
-            'date' => $this->date
+            'immunizations' => Immunization::whereBetween('immunization_date', [$this->startDate, $this->endDate])
+                ->orderBy('immunization_date', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->get(),
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate
         ]);
     }
 }

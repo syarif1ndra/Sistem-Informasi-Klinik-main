@@ -13,12 +13,17 @@ class ImmunizationController extends Controller
      */
     public function index(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
-        $immunizations = Immunization::whereDate('immunization_date', $date)
-            ->latest()
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
+
+        $immunizations = Immunization::whereBetween('immunization_date', [$startDate, $endDate])
+            ->orderBy('immunization_date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('admin.immunizations.index', compact('immunizations', 'date'));
+        $immunizations->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+
+        return view('admin.immunizations.index', compact('immunizations', 'startDate', 'endDate'));
     }
 
     /**
@@ -100,18 +105,24 @@ class ImmunizationController extends Controller
     }
     public function exportExcel(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ImmunizationsExport($date), 'data-imunisasi-' . $date . '.xlsx');
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ImmunizationsExport($startDate, $endDate), 'data-imunisasi-' . $startDate . '-to-' . $endDate . '.xlsx');
     }
 
     public function exportPdf(Request $request)
     {
-        $date = $request->input('date', date('Y-m-d'));
-        $immunizations = Immunization::whereDate('immunization_date', $date)->latest()->get();
+        $startDate = $request->input('start_date', date('Y-m-d'));
+        $endDate = $request->input('end_date', date('Y-m-d'));
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.immunizations.pdf', compact('immunizations', 'date'));
+        $immunizations = Immunization::whereBetween('immunization_date', [$startDate, $endDate])
+            ->orderBy('immunization_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.immunizations.pdf', compact('immunizations', 'startDate', 'endDate'));
         $pdf->setPaper('A4', 'landscape');
 
-        return $pdf->download('data-imunisasi-' . $date . '.pdf');
+        return $pdf->download('data-imunisasi-' . $startDate . '-to-' . $endDate . '.pdf');
     }
 }

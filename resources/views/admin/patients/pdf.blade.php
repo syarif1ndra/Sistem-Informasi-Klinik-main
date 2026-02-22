@@ -46,7 +46,8 @@
     <div class="header">
         <h1>Bidan Siti Hajar</h1>
         <p>Jl. Raya, Merak Batin, Natar, Lampung</p>
-        <p>Laporan Data Pasien - {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</p>
+        <p>Laporan Data Pasien - {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
+            {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}</p>
     </div>
 
     <table>

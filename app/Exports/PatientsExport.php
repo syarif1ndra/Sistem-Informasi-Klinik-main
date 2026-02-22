@@ -9,18 +9,25 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class PatientsExport implements FromView, ShouldAutoSize
 {
-    protected $date;
+    protected $startDate;
+    protected $endDate;
 
-    public function __construct($date)
+    public function __construct($startDate, $endDate)
     {
-        $this->date = $date;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     public function view(): View
     {
         return view('admin.patients.excel', [
-            'visits' => Queue::with('patient')->whereDate('date', $this->date)->orderBy('queue_number', 'asc')->get(),
-            'date' => $this->date
+            'visits' => Queue::with('patient')
+                ->whereBetween('date', [$this->startDate, $this->endDate])
+                ->orderBy('date', 'desc')
+                ->orderBy('queue_number', 'asc')
+                ->get(),
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate
         ]);
     }
 }

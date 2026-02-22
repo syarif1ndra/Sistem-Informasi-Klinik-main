@@ -46,7 +46,8 @@
     <div class="header">
         <h1>Bidan Siti Hajar</h1>
         <p>Jl. Raya, Merak Batin, Natar, Lampung</p>
-        <p>Laporan Data Imunisasi - {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</p>
+        <p>Laporan Data Imunisasi - {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
+            {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}</p>
     </div>
 
     <table>
@@ -68,7 +69,8 @@
                     <td>{{ $record->parent_name }}</td>
                     <td>{{ $record->address }}</td>
                     <td style="text-align: center;">
-                        {{ \Carbon\Carbon::parse($record->immunization_date)->translatedFormat('d F Y') }}</td>
+                        {{ \Carbon\Carbon::parse($record->immunization_date)->translatedFormat('d F Y') }}
+                    </td>
                     <td>{{ $record->notes }}</td>
                 </tr>
             @endforeach

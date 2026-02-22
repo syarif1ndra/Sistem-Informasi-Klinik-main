@@ -5,7 +5,8 @@
         </tr>
         <tr>
             <th colspan="6" style="text-align: center; font-weight: bold;">Tanggal:
-                {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}
+                {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
+                {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
             </th>
         </tr>
         <tr></tr>

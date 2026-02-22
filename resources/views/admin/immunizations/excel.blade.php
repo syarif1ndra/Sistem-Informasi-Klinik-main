@@ -5,7 +5,9 @@
         </tr>
         <tr>
             <th colspan="7" style="text-align: center; font-weight: bold;">Tanggal:
-                {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</th>
+                {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
+                {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
+            </th>
         </tr>
         <tr></tr>
         <tr>
@@ -27,7 +29,8 @@
                 <td style="border: 1px solid #000000;">{{ $record->parent_name }}</td>
                 <td style="border: 1px solid #000000;">{{ $record->address }}</td>
                 <td style="border: 1px solid #000000; text-align: center;">
-                    {{ \Carbon\Carbon::parse($record->immunization_date)->translatedFormat('d F Y') }}</td>
+                    {{ \Carbon\Carbon::parse($record->immunization_date)->translatedFormat('d F Y') }}
+                </td>
                 <td style="border: 1px solid #000000;">{{ $record->notes }}</td>
             </tr>
         @endforeach
