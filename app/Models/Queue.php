@@ -51,9 +51,25 @@ class Queue extends Model
     {
         if (!$this->patient_id)
             return null;
-        return Transaction::with('items')
+
+        // Get all queues for this patient on this date, ordered by time created
+        $queues = self::where('patient_id', $this->patient_id)
+            ->whereDate('date', $this->date)
+            ->orderBy('created_at')
+            ->get();
+
+        // Find index of the current queue (0 = first visit of the day, 1 = second visit, etc)
+        $index = $queues->search(function ($q) {
+            return $q->id === $this->id; });
+
+        // Get all transactions for this patient on this date, logically in same chronological order
+        $transactions = Transaction::with('items')
             ->where('patient_id', $this->patient_id)
             ->whereDate('date', $this->date)
-            ->first();
+            ->orderBy('created_at')
+            ->get();
+
+        // Match the transaction to the exact visit index
+        return $transactions->get($index);
     }
 }
