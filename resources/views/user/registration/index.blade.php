@@ -147,7 +147,7 @@
                                                 <div class="tx-total">{{ number_format($registration->transaction_data->total_amount, 0, ',', '.') }}</div>
                                                 <div class="tx-status">{{ ucfirst($registration->transaction_data->status) }}</div>
                                                 <div class="tx-payment">{{ strtoupper($registration->transaction_data->payment_method) }}</div>
-                                                <div class="tx-items">
+                                                 <div class="tx-items">
                                                     @foreach($registration->transaction_data->items as $item)
                                                         <div class="flex justify-between text-sm py-2 border-b border-gray-100 last:border-0">
                                                             <div class="flex flex-col">
@@ -158,6 +158,7 @@
                                                         </div>
                                                     @endforeach
                                                 </div>
+                                                <div class="tx-notes">{{ $registration->transaction_data->notes }}</div>
                                             </div>
                                         @else
                                             <span
@@ -258,6 +259,14 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Notes -->
+                <div id="modal-notes-wrapper" class="mt-4 hidden">
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                        <p class="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-1">Catatan</p>
+                        <p id="modal-notes" class="text-sm text-gray-700 whitespace-pre-wrap"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -283,12 +292,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const status = container.querySelector('.tx-status').innerHTML;
         const payment = container.querySelector('.tx-payment').innerHTML;
         const itemsHtml = container.querySelector('.tx-items').innerHTML;
+        const notesEl = container.querySelector('.tx-notes');
+        const notes = notesEl ? notesEl.innerText.trim() : '';
 
         // Populate modal
         document.getElementById('modal-total').innerText = total;
         document.getElementById('modal-status').innerText = status;
         document.getElementById('modal-payment').innerText = payment;
         document.getElementById('modal-items-container').innerHTML = itemsHtml;
+
+        // Show/hide notes
+        const notesWrapper = document.getElementById('modal-notes-wrapper');
+        const notesText = document.getElementById('modal-notes');
+        if (notes) {
+            notesText.innerText = notes;
+            notesWrapper.classList.remove('hidden');
+        } else {
+            notesWrapper.classList.add('hidden');
+        }
 
         // Color status badge based on value
         const statusBadge = document.getElementById('modal-status');
