@@ -138,9 +138,15 @@
                                 class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-transparent hover:border-gray-200 transition-all">
                                 <div class="overflow-hidden">
                                     <p class="text-sm font-bold text-gray-800 truncate">
-                                        {{ $registration->service->name ?? 'Layanan Umum' }}</p>
+                                        {{ $registration->service_name ?? $registration->service->name ?? 'Layanan Umum' }}</p>
                                     <p class="text-[10px] text-gray-500 tracking-wide">
-                                        {{ \Carbon\Carbon::parse($registration->date)->isoFormat('D MMM Y') }}</p>
+                                        {{ \Carbon\Carbon::parse($registration->date)->isoFormat('D MMM Y') }}
+                                    </p>
+                                    @if($registration->complaint)
+                                        <p class="text-[10px] text-gray-500 truncate mt-1 max-w-[180px] sm:max-w-xs" title="{{ $registration->complaint }}">
+                                            <span class="font-semibold text-gray-400">Keluhan:</span> {{ $registration->complaint }}
+                                        </p>
+                                    @endif
                                 </div>
 
                                 @php
@@ -160,7 +166,7 @@
                             </div>
                         @empty
                             <div class="py-4 text-center">
-                                <p class="text-sm text-gray-400 italic">Belum ada riwayat pendaftaran.</p>
+                                <p class="text-sm text-gray-400 italic">Belum ada riwayat.</p>
                             </div>
                         @endforelse
                     </div>

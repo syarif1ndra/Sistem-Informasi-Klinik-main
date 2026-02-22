@@ -26,7 +26,8 @@
             <div class="text-center">
                 <p class="text-indigo-600 font-semibold mb-1">Tanggal</p>
                 <p class="text-2xl font-bold text-indigo-900">
-                    {{ \Carbon\Carbon::parse($today)->locale('id')->translatedFormat('l, d F Y') }}</p>
+                    {{ \Carbon\Carbon::parse($today)->locale('id')->translatedFormat('l, d F Y') }}
+                </p>
             </div>
         </div>
     </div>
@@ -63,6 +64,7 @@
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
                 </tr>
             </thead>
@@ -144,7 +146,7 @@
             },
             options: commonOptions
         });
-        
+
         // Polling functionality for realtime updates (similar to admin.queues)
         function fetchQueueTableData() {
             fetch('{{ route("bidan.queues.tableData") }}', {
@@ -152,11 +154,11 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('bidan-queue-table-body').innerHTML = html;
-            })
-            .catch(error => console.error('Error fetching realtime queue data:', error));
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('bidan-queue-table-body').innerHTML = html;
+                })
+                .catch(error => console.error('Error fetching realtime queue data:', error));
         }
 
         // Poll every 5 seconds

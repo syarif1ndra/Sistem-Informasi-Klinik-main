@@ -53,6 +53,7 @@
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
                 </tr>
             </thead>
