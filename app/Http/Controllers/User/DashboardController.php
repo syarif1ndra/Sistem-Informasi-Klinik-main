@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
         if ($patient) {
             $recentRegistrations = Queue::where('user_patient_id', $patient->id)
-                ->with('service')
+                ->with(['service'])
                 ->orderBy('created_at', 'desc')
                 ->take(5)
                 ->get();

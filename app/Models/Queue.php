@@ -46,4 +46,14 @@ class Queue extends Model
     {
         return $this->patient ? $this->patient->nik : ($this->userPatient ? $this->userPatient->nik : '-');
     }
+
+    public function getTransactionDataAttribute()
+    {
+        if (!$this->patient_id)
+            return null;
+        return Transaction::with('items')
+            ->where('patient_id', $this->patient_id)
+            ->whereDate('date', $this->date)
+            ->first();
+    }
 }
