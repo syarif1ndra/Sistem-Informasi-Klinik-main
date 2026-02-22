@@ -170,6 +170,14 @@
         <!-- You can add payment details here if recorded (Cash/Card, Change) -->
     </div>
 
+    @if($transaction->notes)
+        <div class="divider"></div>
+        <div class="info" style="margin-top: 4px;">
+            <div style="font-size:8pt; font-weight:bold;">Catatan:</div>
+            <div style="font-size:8pt; white-space:pre-wrap;">{{ $transaction->notes }}</div>
+        </div>
+    @endif
+
     <div class="footer">
         <p>Terima Kasih atas kunjungan Anda.</p>
         <p>Semoga lekas sembuh.</p>
