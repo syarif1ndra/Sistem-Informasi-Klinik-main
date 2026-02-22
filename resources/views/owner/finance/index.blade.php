@@ -45,7 +45,6 @@
                 class="bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-sm p-6 text-white transform hover:-translate-y-1 transition duration-300">
                 <p class="text-sm font-bold text-pink-100 uppercase mb-1">Estimasi Laba Bersih</p>
                 <h3 class="text-2xl font-black">Rp {{ number_format($labaBersih, 0, ',', '.') }}</h3>
-                <p class="text-xs text-pink-100 mt-1">Dipotong modal obat (Rp {{ number_format($modalObat, 0, ',', '.') }})
                 </p>
             </div>
         </div>
