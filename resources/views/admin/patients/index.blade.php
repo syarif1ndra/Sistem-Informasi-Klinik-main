@@ -120,7 +120,7 @@
                             @if($visit->patient)
                                 <a href="{{ route('admin.patients.editVisit', $visit) }}"
                                     class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
-                                @if(!auth()->user()->isBidan())
+                                @if(!auth()->user()->isBidan() && !auth()->user()->isDokter())
                                     <form action="{{ route('admin.patients.destroy', $visit->patient) }}" method="POST"
                                         class="inline-block" id="delete-form-{{ $visit->patient->id }}"
                                         onsubmit="event.preventDefault();">

@@ -77,8 +77,8 @@ class PatientController extends Controller
 
     public function destroy(Patient $patient)
     {
-        if (auth()->user()->isBidan()) {
-            abort(403, 'Akses ditolak. Bidan tidak memiliki izin untuk menghapus data pasien.');
+        if (auth()->user()->isBidan() || auth()->user()->isDokter()) {
+            abort(403, 'Akses ditolak. Bidan dan Dokter tidak memiliki izin untuk menghapus data pasien.');
         }
 
         $patient->delete();

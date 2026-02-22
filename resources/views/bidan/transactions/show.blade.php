@@ -31,7 +31,7 @@
                 class="bg-gradient-to-r from-pink-500 to-rose-600 px-8 py-6 flex flex-col md:flex-row justify-between items-center text-white">
                 <div>
                     <span class="text-pink-100 uppercase tracking-wider text-xs font-bold">ID Transaksi</span>
-                    <h2 class="text-3xl font-bold mt-1">#{{ $transaction->id }}</h2>
+                    <h2 class="text-3xl font-bold mt-1">{{ $transaction->id }}</h2>
                 </div>
                 <div class="mt-4 md:mt-0 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
                     <span
@@ -143,16 +143,6 @@
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row justify-end gap-3 print:hidden">
-                    <button
-                        onclick="window.open('{{ route('bidan.transactions.print_struk', $transaction->id) }}', '_blank', 'width=400,height=600')"
-                        class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        Cetak Struk
-                    </button>
 
                     @if($transaction->status == 'unpaid')
                         <form action="{{ route('bidan.transactions.update', $transaction) }}" method="POST">

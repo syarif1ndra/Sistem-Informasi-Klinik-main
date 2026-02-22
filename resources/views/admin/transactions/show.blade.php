@@ -31,7 +31,7 @@
                 class="bg-gradient-to-r from-pink-500 to-rose-600 px-8 py-6 flex flex-col md:flex-row justify-between items-center text-white">
                 <div>
                     <span class="text-pink-100 uppercase tracking-wider text-xs font-bold">ID Transaksi</span>
-                    <h2 class="text-3xl font-bold mt-1">#{{ $transaction->id }}</h2>
+                    <h2 class="text-3xl font-bold mt-1">{{ $transaction->id }}</h2>
                 </div>
                 <div class="mt-4 md:mt-0 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
                     <span

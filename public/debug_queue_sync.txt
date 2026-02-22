@@ -574,3 +574,136 @@ Queue ID: 2
 User Patient ID: 1
 Patient ID (Before): 1
 Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-22 12:33:27] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Creating NEW Patient...
+Created Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:28] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:29] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:29] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:30] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:30] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:30] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:30] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:31] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:31] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:31] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:31] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:31] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:33:32] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-22 12:37:46] Status Update Request: finished
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1

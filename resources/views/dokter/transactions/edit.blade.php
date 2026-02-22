@@ -227,16 +227,19 @@
 
     <script>
         function billingSystem() {
+            @php
+                $formattedItems = $transaction->items->map(function ($item) {
+                    return [
+                        'type' => $item->item_type == 'App\Models\Service' ? 'service' : 'medicine',
+                        'id' => $item->item_id,
+                        'name' => $item->name,
+                        'price' => (float) $item->price,
+                        'quantity' => (int) $item->quantity
+                    ];
+                });
+            @endphp
             // Transform existing database items into the Alpine object format
-            const existingItems = @json($transaction->items->map(function ($item) {
-                return [
-                    'type' => $item->item_type == 'App\Models\Service' ? 'service' : 'medicine',
-                    'id' => $item->item_id,
-                    'name' => $item->name,
-                    'price' => (float) $item->price,
-                    'quantity' => (int) $item->quantity
-                ];
-            }));
+            const existingItems = {!! json_encode($formattedItems) !!};
 
             return {
                 paymentType: '{{ $transaction->payment_method }}',
