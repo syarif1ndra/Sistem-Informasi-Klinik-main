@@ -568,3 +568,9 @@ Condition MET: Calling + UserPatientID
 UserPatient Found: user
 Updating EXISTING Patient ID: 1
 Linked Queue to Patient ID: 1
+
+[2026-02-22 09:35:13] Status Update Request: finished
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1

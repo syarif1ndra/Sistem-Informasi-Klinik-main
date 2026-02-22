@@ -5,14 +5,7 @@
         <h1 class="text-3xl font-bold text-gray-800">Manajemen Antrian</h1>
 
         <div class="flex items-center gap-4">
-            <a href="{{ route('public.queue_display') }}" target="_blank"
-                class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded shadow flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-                Buka Layar Antrian
-            </a>
+
             <form action="{{ route('admin.queues.index') }}" method="GET" class="flex items-center">
                 <input type="date" name="date" value="{{ $date }}"
                     class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2">

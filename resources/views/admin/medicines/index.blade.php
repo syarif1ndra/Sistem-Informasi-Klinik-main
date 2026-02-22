@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Manajemen Obat</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Manajemen Vaksin & Obat</h1>
         <a href="{{ route('admin.medicines.create') }}"
             class="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition">
             + Tambah Obat

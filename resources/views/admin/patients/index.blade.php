@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <h1 class="text-3xl font-bold text-gray-800">Daftar Pasien</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Manajemen Pasien</h1>
 
         <form action="{{ route('admin.patients.index') }}" method="GET" class="flex items-center">
             <input type="date" name="date" value="{{ $date }}"
