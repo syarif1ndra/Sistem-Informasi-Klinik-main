@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struk Pembayaran #{{ $transaction->id }}</title>
+    <title>Struk Pembayaran {{ $transaction->id }}</title>
     <style>
         @page {
             margin: 0;
@@ -121,7 +121,7 @@
     <div class="info">
         <div class="info-row">
             <span>No. Transaksi</span>
-            <span>#{{ $transaction->id }}</span>
+            <span>{{ $transaction->id }}</span>
         </div>
         <div class="info-row">
             <span>Tanggal</span>
