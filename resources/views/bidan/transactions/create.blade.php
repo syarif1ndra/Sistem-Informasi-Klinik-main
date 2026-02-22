@@ -202,8 +202,15 @@
                                 <span class="text-pink-600">Rp <span x-text="formatNumber(total)"></span></span>
                             </div>
 
+                            <div class="mt-4">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Catatan (Opsional)</label>
+                                <textarea name="notes" rows="3"
+                                    placeholder="Contoh: Pasien alergi penisilin, resep dari dr. Andi..."
+                                    class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm text-sm p-2">{{ old('notes') }}</textarea>
+                            </div>
+
                             <button type="submit" :disabled="items.length === 0"
-                                class="w-full mt-6 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold py-3.5 px-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+                                class="w-full mt-4 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold py-3.5 px-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
                                 Simpan Transaksi
                             </button>
                         </div>

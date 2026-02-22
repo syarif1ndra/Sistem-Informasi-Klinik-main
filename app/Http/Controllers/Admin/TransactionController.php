@@ -54,9 +54,10 @@ class TransactionController extends Controller
                 'patient_id' => $request->patient_id,
                 'payment_method' => $request->payment_method,
                 'date' => now(),
-                'status' => 'unpaid', // Default
-                'total_amount' => 0, // Will update later
+                'status' => 'unpaid',
+                'total_amount' => 0,
                 'processed_by' => auth()->id(),
+                'notes' => $request->notes,
             ]);
 
             foreach ($request->items as $itemData) {
@@ -205,6 +206,7 @@ class TransactionController extends Controller
                 'status' => $request->status,
                 'total_amount' => $totalAmount,
                 'processed_by' => auth()->id(),
+                'notes' => $request->notes,
             ]);
 
             DB::commit();

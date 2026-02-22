@@ -15,7 +15,9 @@ class Transaction extends Model
         'status',
         'payment_method',
         'date',
+        'notes',
     ];
+
 
     protected $casts = [
         'date' => 'datetime',
