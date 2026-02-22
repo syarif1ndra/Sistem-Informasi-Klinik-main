@@ -32,6 +32,11 @@ class Queue extends Model
         return $this->belongsTo(UserPatient::class);
     }
 
+    public function handledBy()
+    {
+        return $this->belongsTo(User::class, 'handled_by');
+    }
+
     public function service()
     {
         return $this->belongsTo(Service::class);
@@ -60,7 +65,8 @@ class Queue extends Model
 
         // Find index of the current queue (0 = first visit of the day, 1 = second visit, etc)
         $index = $queues->search(function ($q) {
-            return $q->id === $this->id; });
+            return $q->id === $this->id;
+        });
 
         // Get all transactions for this patient on this date, logically in same chronological order
         $transactions = Transaction::with('items')

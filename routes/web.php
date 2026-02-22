@@ -158,4 +158,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Owner Routes (Protected by Breeze and EnsureOwnerRole)
+Route::middleware(['auth', 'verified', 'role.owner'])->prefix('owner')->name('owner.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Owner\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/export/excel', [\App\Http\Controllers\Owner\DashboardController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/export/pdf', [\App\Http\Controllers\Owner\DashboardController::class, 'exportPdf'])->name('export.pdf');
+
+    // New Owner Features
+    Route::get('/reports', [\App\Http\Controllers\Owner\ReportController::class, 'index'])->name('reports');
+    Route::get('/staff-performance', [\App\Http\Controllers\Owner\StaffPerformanceController::class, 'index'])->name('staff.performance');
+    Route::get('/finance', [\App\Http\Controllers\Owner\FinanceController::class, 'index'])->name('finance');
+    Route::post('/finance/expense', [\App\Http\Controllers\Owner\FinanceController::class, 'storeExpense'])->name('finance.expense.store');
+    Route::delete('/finance/expense/{expense}', [\App\Http\Controllers\Owner\FinanceController::class, 'destroyExpense'])->name('finance.expense.destroy');
+});
+
 require __DIR__ . '/auth.php';

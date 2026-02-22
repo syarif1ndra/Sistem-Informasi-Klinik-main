@@ -14,6 +14,8 @@ class Medicine extends Model
         'category',
         'stock',
         'price',
+        'purchase_price', // Added purchase price
+        'expired_date',
         'description',
     ];
 }

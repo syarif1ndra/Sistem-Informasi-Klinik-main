@@ -40,6 +40,9 @@ class AuthenticatedSessionController extends Controller
         } elseif ($request->user()->isDokter()) {
             \Illuminate\Support\Facades\Log::info("Dokter login attempt redirecting to: " . route('dokter.dashboard'));
             return redirect()->route('dokter.dashboard');
+        } elseif ($request->user()->isOwner()) {
+            \Illuminate\Support\Facades\Log::info("Owner login");
+            return redirect()->route('owner.dashboard');
         }
 
         \Illuminate\Support\Facades\Log::info("User login role: " . $request->user()->role);

@@ -52,7 +52,11 @@ class QueueController extends Controller
         file_put_contents($logFile, $logData, FILE_APPEND);
 
         DB::transaction(function () use ($queue, $status, $logFile) {
-            $queue->update(['status' => $status]);
+            $dataToUpdate = ['status' => $status];
+            if (in_array($status, ['calling', 'called', 'finished'])) {
+                $dataToUpdate['handled_by'] = auth()->id();
+            }
+            $queue->update($dataToUpdate);
             $queue->touch(); // Force update updated_at timestamp so frontend realizes it was called again
 
             // Logic 1: When status becomes 'calling' (Button Panggil clicked)

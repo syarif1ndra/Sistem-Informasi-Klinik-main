@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'shift', // Added shift
         'google_id',
     ];
 
@@ -45,6 +46,16 @@ class User extends Authenticatable
         return $this->hasRole('dokter');
     }
 
+    public function isOwner(): bool
+    {
+        return $this->hasRole('owner');
+    }
+
+    public function isPerawat(): bool
+    {
+        return $this->hasRole('perawat');
+    }
+
     public function patient()
     {
         return $this->hasOne(Patient::class);
@@ -53,6 +64,16 @@ class User extends Authenticatable
     public function userPatient()
     {
         return $this->hasOne(UserPatient::class);
+    }
+
+    public function handledQueues()
+    {
+        return $this->hasMany(Queue::class, 'handled_by');
+    }
+
+    public function processedTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'processed_by');
     }
 
     /**
