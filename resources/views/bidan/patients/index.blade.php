@@ -49,7 +49,7 @@
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $queue->complaint ?? '-' }}</td>
                             <td class="px-6 py-4 text-center">
-                                <a href="{{ route('bidan.patients.show', $patient) }}"
+                                <a href="{{ route('bidan.patients.show', $patient) }}?queue_id={{ $queue->id }}"
                                     class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-pink-50 text-pink-700 rounded-lg border border-pink-200 hover:bg-pink-100 transition">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

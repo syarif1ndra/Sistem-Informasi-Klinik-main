@@ -88,6 +88,9 @@
                     <form id="formTambahSkrining" action="{{ route('dokter.patients.screenings.store', $patient) }}"
                         method="POST">
                         @csrf
+                        @if($activeQueue)
+                            <input type="hidden" name="queue_id" value="{{ $activeQueue->id }}">
+                        @endif
                         <div class="space-y-5">
 
                             {{-- Waktu --}}
@@ -161,7 +164,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">
-                                     ICD-10 <span class="text-gray-400 font-normal text-xs">(Opsional — bisa pilih lebih
+                                    ICD-10 <span class="text-gray-400 font-normal text-xs">(Opsional — bisa pilih lebih
                                         dari satu)</span>
                                 </label>
                                 <select name="icd10_codes[]" id="icd10SelectAdd" multiple style="width:100%">
@@ -198,7 +201,8 @@
                         <div>
                             <h2 class="text-lg font-bold text-gray-800">Edit Skrining &amp; Diagnosis</h2>
                             <p class="text-sm text-gray-400">
-                                {{ \Carbon\Carbon::parse($screening->examined_at)->translatedFormat('d M Y, H:i') }}</p>
+                                {{ \Carbon\Carbon::parse($screening->examined_at)->translatedFormat('d M Y, H:i') }}
+                            </p>
                         </div>
                         <button @click="openEditModal = false"
                             class="p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition">
@@ -287,7 +291,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">
-                                         ICD-10 <span class="text-gray-400 font-normal text-xs">(Opsional)</span>
+                                        ICD-10 <span class="text-gray-400 font-normal text-xs">(Opsional)</span>
                                     </label>
                                     <select name="icd10_codes[]" id="icd10SelectEdit{{ $screening->id }}" multiple
                                         style="width:100%">
@@ -324,8 +328,16 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if(session('error'))
+            <div class="mb-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ session('error') }}
+            </div>
+        @endif
 
-        {{-- Header --}}
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div>
                 <a href="{{ route('dokter.patients.index') }}"
@@ -337,6 +349,20 @@
                 </a>
                 <h1 class="text-3xl font-bold text-gray-800">Detail Pasien</h1>
             </div>
+            @if($activeQueue)
+                <div class="flex items-center gap-3 bg-white rounded-xl border border-pink-200 px-5 py-3 shadow-sm">
+                    <div class="text-center">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">No. Antrian</p>
+                        <p class="text-2xl font-black text-pink-600">{{ sprintf('%03d', $activeQueue->queue_number) }}</p>
+                    </div>
+                    <div class="w-px h-10 bg-gray-200"></div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Tanggal Kunjungan</p>
+                        <p class="text-sm font-semibold text-gray-700">
+                            {{ \Carbon\Carbon::parse($activeQueue->date)->translatedFormat('d M Y') }}</p>
+                    </div>
+                </div>
+            @endif
         </div>
 
         {{-- Info Pasien --}}
@@ -348,17 +374,19 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">NIK</p>
-                    <p class="text-gray-800 font-mono">{{ $patient->nik ?? '-' }}</p>
+                    <p class="text-800 font-mono">{{ $patient->nik ?? '-' }}</p>
                 </div>
                 <div>
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Tanggal Lahir</p>
                     <p class="text-gray-800">
-                        {{ $patient->dob ? \Carbon\Carbon::parse($patient->dob)->translatedFormat('d M Y') : '-' }}</p>
+                        {{ $patient->dob ? \Carbon\Carbon::parse($patient->dob)->translatedFormat('d M Y') : '-' }}
+                    </p>
                 </div>
                 <div>
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Jenis Kelamin</p>
                     <p class="text-gray-800">
-                        {{ $patient->gender === 'L' ? 'Laki-laki' : ($patient->gender === 'P' ? 'Perempuan' : '-') }}</p>
+                        {{ $patient->gender === 'L' ? 'Laki-laki' : ($patient->gender === 'P' ? 'Perempuan' : '-') }}
+                    </p>
                 </div>
                 <div>
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">No. HP</p>
@@ -375,13 +403,28 @@
         <div class="bg-white rounded-xl shadow overflow-hidden border-t-4 border-rose-500">
             <div class="flex flex-col md:flex-row justify-between items-center px-6 py-4 border-b border-gray-100 gap-3">
                 <h2 class="text-lg font-bold text-gray-800">Skrining &amp; Diagnosis</h2>
-                <button @click="openModal = true; $nextTick(() => $('#icd10SelectAdd').val(null).trigger('change'))"
-                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-xl font-semibold shadow hover:shadow-lg transform hover:-translate-y-0.5 transition-all text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Tambah Skrining &amp; Diagnosis
-                </button>
+                <div class="flex items-center gap-3">
+                    @if($screenings->isNotEmpty())
+                        <span
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-blue-50 text-blue-700 rounded-lg border border-blue-200">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Pasien ini sudah memiliki skrining
+                        </span>
+                    @elseif($activeQueue)
+                        <button @click="openModal = true; $nextTick(() => $('#icd10SelectAdd').val(null).trigger('change'))"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-xl font-semibold shadow hover:shadow-lg transform hover:-translate-y-0.5 transition-all text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Tambah Skrining &amp; Diagnosis
+                        </button>
+                    @else
+                        <span class="text-xs text-gray-400 italic">Tidak ada antrian aktif hari ini</span>
+                    @endif
+                </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -407,7 +450,8 @@
                                 <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
                                     {{ \Carbon\Carbon::parse($screening->examined_at)->translatedFormat('d M Y') }}
                                     <div class="text-xs text-gray-400">
-                                        {{ \Carbon\Carbon::parse($screening->examined_at)->format('H:i') }}</div>
+                                        {{ \Carbon\Carbon::parse($screening->examined_at)->format('H:i') }}
+                                    </div>
                                 </td>
                                 <td class="px-4 py-4 text-xs text-gray-600 space-y-0.5">
                                     @if($screening->blood_pressure)
@@ -440,7 +484,7 @@
                                             @endforeach
                                         </div>
                                     @else
-                                        <span class="text-xs text-gray-400 italic">Tidak ada  ICD-10</span>
+                                        <span class="text-xs text-gray-400 italic">Tidak ada ICD-10</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-4 text-sm text-gray-500">{{ $screening->examiner->name ?? '-' }}</td>
@@ -490,6 +534,6 @@
                     width: '100%'
                 });
             @endforeach
-        });
+                });
     </script>
 @endpush

@@ -33,11 +33,36 @@ class PatientController extends Controller
         return view('dokter.patients.index', compact('patients', 'startDate', 'endDate'));
     }
 
-    public function show(Patient $patient)
+    public function show(Request $request, Patient $patient)
     {
-        $screenings = $patient->screenings()->with(['icd10Codes', 'examiner'])->get();
-        $icd10Codes = Icd10Code::orderBy('code')->get();
-        return view('dokter.patients.show', compact('patient', 'screenings', 'icd10Codes'));
+        // Load the specific queue from query string (passed by index page)
+        $activeQueue = null;
+        if ($request->filled('queue_id')) {
+            $activeQueue = $patient->queues()
+                ->where('id', $request->integer('queue_id'))
+                ->where('assigned_practitioner_id', auth()->id())
+                ->first();
+        }
+
+        // Fallback: today's latest queue assigned to this practitioner
+        if (!$activeQueue) {
+            $activeQueue = $patient->queues()
+                ->where('assigned_practitioner_id', auth()->id())
+                ->whereDate('date', today())
+                ->latest()
+                ->first();
+        }
+
+        // Only show the screening for this specific queue (1 queue = 1 screening)
+        $screenings = $activeQueue
+            ? \App\Models\Screening::where('queue_id', $activeQueue->id)
+                ->with(['icd10Codes', 'examiner'])
+                ->get()
+            : collect();
+
+        $icd10Codes = \App\Models\Icd10Code::orderBy('code')->get();
+
+        return view('dokter.patients.show', compact('patient', 'screenings', 'icd10Codes', 'activeQueue'));
     }
 }
 

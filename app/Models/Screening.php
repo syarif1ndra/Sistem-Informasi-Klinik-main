@@ -11,6 +11,7 @@ class Screening extends Model
 
     protected $fillable = [
         'patient_id',
+        'queue_id',
         'examined_by',
         'examined_at',
         'height',
@@ -31,6 +32,11 @@ class Screening extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function queue()
+    {
+        return $this->belongsTo(Queue::class);
     }
 
     public function examiner()

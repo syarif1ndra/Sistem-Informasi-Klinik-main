@@ -19,6 +19,7 @@ class ScreeningController extends Controller
     public function store(Request $request, Patient $patient)
     {
         $validated = $request->validate([
+            'queue_id' => 'nullable|integer|exists:queues,id',
             'examined_at' => 'required|date',
             'height' => 'nullable|string|max:20',
             'weight' => 'nullable|string|max:20',
@@ -33,8 +34,18 @@ class ScreeningController extends Controller
             'icd10_codes.*' => 'integer|exists:icd10_codes,id',
         ]);
 
+        // Enforce 1 screening per queue
+        if (!empty($validated['queue_id'])) {
+            $exists = Screening::where('queue_id', $validated['queue_id'])->exists();
+            if ($exists) {
+                return redirect()->route('dokter.patients.show', $patient)
+                    ->with('error', 'Antrian ini sudah memiliki data skrining. Silakan edit data yang sudah ada.');
+            }
+        }
+
         $screening = Screening::create([
             'patient_id' => $patient->id,
+            'queue_id' => $validated['queue_id'] ?? null,
             'examined_by' => auth()->id(),
             'examined_at' => $validated['examined_at'],
             'height' => $validated['height'] ?? null,
