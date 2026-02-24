@@ -69,9 +69,22 @@ class TransactionController extends Controller
                 'payment_method' => $request->payment_method,
                 'date' => now(),
                 'status' => 'unpaid',
-                'total_amount' => 0,
                 'notes' => $request->notes,
                 'handled_by' => auth()->id(),
+                'total_amount' => 0,
+            ]);
+
+            // Automatically add Consultation Fee for Dokter
+            $konsultasiPrice = 80000;
+            $totalAmount += $konsultasiPrice;
+            TransactionItem::create([
+                'transaction_id' => $transaction->id,
+                'item_type' => 'App\Models\Service', // Treat as service
+                'item_id' => 0, // 0 or null depending on how strict the foreign key is, assuming 0/null works if it's not strictly constrained. Since it's a polymorphic-like or loose relation, 0 is fine.
+                'name' => 'Biaya Konsultasi',
+                'quantity' => 1,
+                'price' => $konsultasiPrice,
+                'subtotal' => $konsultasiPrice,
             ]);
 
             foreach ($request->items as $itemData) {
@@ -202,12 +215,24 @@ class TransactionController extends Controller
                 }
             }
 
-            // 2. Delete ALL old items
             TransactionItem::where('transaction_id', $transaction->id)->delete();
 
             // 3. Process new items and calculate total amount
             $totalAmount = 0;
             $medicineItems = [];
+
+            // Automatically add Consultation Fee for Dokter on update
+            $konsultasiPrice = 80000;
+            $totalAmount += $konsultasiPrice;
+            TransactionItem::create([
+                'transaction_id' => $transaction->id,
+                'item_type' => 'App\Models\Service',
+                'item_id' => 0,
+                'name' => 'Biaya Konsultasi',
+                'quantity' => 1,
+                'price' => $konsultasiPrice,
+                'subtotal' => $konsultasiPrice,
+            ]);
             foreach ($request->items as $itemData) {
                 $item = null;
                 $price = 0;

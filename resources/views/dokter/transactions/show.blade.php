@@ -108,26 +108,83 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($transaction->items as $item)
-                                <tr class="hover:bg-pink-50 transition">
+                            @php
+                                $konsultasi = $transaction->items->where('name', 'Biaya Konsultasi')->first();
+                                $layanan = $transaction->items->where('item_type', 'App\Models\Service')->where('name', '!=', 'Biaya Konsultasi');
+                                $obat = $transaction->items->where('item_type', 'App\Models\Medicine');
+                            @endphp
+
+                            <!-- Biaya Konsultasi -->
+                            @if($konsultasi)
+                                <tr class="hover:bg-pink-50 transition bg-pink-50/30">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
+                                        <div class="text-sm font-bold text-gray-900">{{ $konsultasi->name }}</div>
                                         <div
-                                            class="text-xs text-gray-500 inline-block px-2 py-0.5 rounded-full bg-gray-100 mt-1">
-                                            {{ $item->item_type == 'App\Models\Service' ? 'Layanan' : 'Obat' }}
+                                            class="text-xs text-pink-600 inline-block px-2 py-0.5 rounded-full bg-pink-100 mt-1 font-semibold">
+                                            Konsultasi Utama
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                        Rp {{ number_format($item->price, 0, ',', '.') }}
+                                        Rp {{ number_format($konsultasi->price, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                        {{ $item->quantity }}
+                                        {{ $konsultasi->quantity }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
-                                        Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                        Rp {{ number_format($konsultasi->subtotal, 0, ',', '.') }}
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endif
+
+                            <!-- Layanan Tambahan -->
+                            @if($layanan->count() > 0)
+                                <tr class="bg-gray-50/80 border-t border-b border-gray-100">
+                                    <td colspan="4"
+                                        class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50">
+                                        Layanan Tambahan</td>
+                                </tr>
+                                @foreach($layanan as $item)
+                                    <tr class="hover:bg-pink-50 transition">
+                                        <td class="px-6 py-4 whitespace-nowrap pl-8">
+                                            <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                            Rp {{ number_format($item->price, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                            {{ $item->quantity }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
+                                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+
+                            <!-- Obat & Vaksin -->
+                            @if($obat->count() > 0)
+                                <tr class="bg-gray-50/80 border-t border-b border-gray-100">
+                                    <td colspan="4"
+                                        class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50">
+                                        Obat & Vaksin</td>
+                                </tr>
+                                @foreach($obat as $item)
+                                    <tr class="hover:bg-pink-50 transition">
+                                        <td class="px-6 py-4 whitespace-nowrap pl-8">
+                                            <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                            Rp {{ number_format($item->price, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                            {{ $item->quantity }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
+                                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                         <tfoot class="bg-gray-50">
                             <tr>

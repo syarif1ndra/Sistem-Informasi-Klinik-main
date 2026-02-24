@@ -165,18 +165,48 @@
                                                 <div class="tx-payment">
                                                     {{ strtoupper($registration->transaction_data->payment_method) }}</div>
                                                 <div class="tx-items">
-                                                    @foreach($registration->transaction_data->items as $item)
-                                                        <div
-                                                            class="flex justify-between text-sm py-2 border-b border-gray-100 last:border-0">
+                                                    @php
+                                                        $konsultasi = $registration->transaction_data->items->where('name', 'Biaya Konsultasi')->first();
+                                                        $layanan = $registration->transaction_data->items->where('item_type', 'App\Models\Service')->where('name', '!=', 'Biaya Konsultasi');
+                                                        $obat = $registration->transaction_data->items->where('item_type', 'App\Models\Medicine');
+                                                    @endphp
+
+                                                    @if($konsultasi)
+                                                        <div class="text-[10px] font-bold text-gray-400 uppercase mt-2 mb-1">Konsultasi</div>
+                                                        <div class="flex justify-between text-sm py-1 border-b border-gray-100 last:border-0">
                                                             <div class="flex flex-col">
-                                                                <span class="font-bold text-gray-800">{{ $item->name }}</span>
-                                                                <span class="text-xs text-gray-500">{{ $item->quantity }}x Rp
-                                                                    {{ number_format($item->price, 0, ',', '.') }}</span>
+                                                                <span class="font-bold text-gray-800">{{ $konsultasi->name }}</span>
+                                                                <span class="text-xs text-gray-500">{{ $konsultasi->quantity }}x Rp {{ number_format($konsultasi->price, 0, ',', '.') }}</span>
                                                             </div>
-                                                            <span class="font-bold text-gray-800">Rp
-                                                                {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                                                            <span class="font-bold text-gray-800">Rp {{ number_format($konsultasi->subtotal, 0, ',', '.') }}</span>
                                                         </div>
-                                                    @endforeach
+                                                    @endif
+
+                                                    @if($layanan->count() > 0)
+                                                        <div class="text-[10px] font-bold text-gray-400 uppercase mt-2 mb-1">Layanan</div>
+                                                        @foreach($layanan as $item)
+                                                            <div class="flex justify-between text-sm py-1 border-b border-gray-100 last:border-0 pl-2">
+                                                                <div class="flex flex-col">
+                                                                    <span class="font-bold text-gray-800">{{ $item->name }}</span>
+                                                                    <span class="text-xs text-gray-500">{{ $item->quantity }}x Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                                                                </div>
+                                                                <span class="font-bold text-gray-800">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+
+                                                    @if($obat->count() > 0)
+                                                        <div class="text-[10px] font-bold text-gray-400 uppercase mt-2 mb-1">Obat & Vaksin</div>
+                                                        @foreach($obat as $item)
+                                                            <div class="flex justify-between text-sm py-1 border-b border-gray-100 last:border-0 pl-2">
+                                                                <div class="flex flex-col">
+                                                                    <span class="font-bold text-gray-800">{{ $item->name }}</span>
+                                                                    <span class="text-xs text-gray-500">{{ $item->quantity }}x Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                                                                </div>
+                                                                <span class="font-bold text-gray-800">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
                                                 </div>
                                                 <div class="tx-notes">{{ $registration->transaction_data->notes }}</div>
                                             </div>

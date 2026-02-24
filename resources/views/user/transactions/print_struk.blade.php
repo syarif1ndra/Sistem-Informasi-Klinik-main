@@ -144,14 +144,53 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($transaction->items as $item)
+            @php
+                $konsultasi = $transaction->items->where('name', 'Biaya Konsultasi')->first();
+                $layanan = $transaction->items->where('item_type', 'App\Models\Service')->where('name', '!=', 'Biaya Konsultasi');
+                $obat = $transaction->items->where('item_type', 'App\Models\Medicine');
+            @endphp
+
+            @if($konsultasi)
                 <tr>
-                    <td>{{ $item->name }}</td>
-                    <td class="text-right">{{ number_format($item->price, 0, ',', '.') }}</td>
-                    <td style="text-align: center;">{{ $item->quantity }}</td>
-                    <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                    <td colspan="4" style="font-size:8pt; font-weight:bold; border-bottom:1px solid #ccc;">Konsultasi</td>
                 </tr>
-            @endforeach
+                <tr>
+                    <td>{{ $konsultasi->name }}</td>
+                    <td class="text-right">{{ number_format($konsultasi->price, 0, ',', '.') }}</td>
+                    <td style="text-align: center;">{{ $konsultasi->quantity }}</td>
+                    <td class="text-right">{{ number_format($konsultasi->subtotal, 0, ',', '.') }}</td>
+                </tr>
+            @endif
+
+            @if($layanan->count() > 0)
+                <tr>
+                    <td colspan="4" style="font-size:8pt; font-weight:bold; border-bottom:1px solid #ccc; padding-top:4px;">
+                        Layanan</td>
+                </tr>
+                @foreach($layanan as $item)
+                    <tr>
+                        <td style="padding-left: 5px;">{{ $item->name }}</td>
+                        <td class="text-right">{{ number_format($item->price, 0, ',', '.') }}</td>
+                        <td style="text-align: center;">{{ $item->quantity }}</td>
+                        <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+            @endif
+
+            @if($obat->count() > 0)
+                <tr>
+                    <td colspan="4" style="font-size:8pt; font-weight:bold; border-bottom:1px solid #ccc; padding-top:4px;">
+                        Obat & Vaksin</td>
+                </tr>
+                @foreach($obat as $item)
+                    <tr>
+                        <td style="padding-left: 5px;">{{ $item->name }}</td>
+                        <td class="text-right">{{ number_format($item->price, 0, ',', '.') }}</td>
+                        <td style="text-align: center;">{{ $item->quantity }}</td>
+                        <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 
