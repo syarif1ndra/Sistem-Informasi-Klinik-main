@@ -19,7 +19,7 @@ class TransactionController extends Controller
         $date = $request->input('date', date('Y-m-d'));
         $transactions = Transaction::with('patient')
             ->whereDate('created_at', $date)
-            ->latest()
+            ->oldest()
             ->paginate(10);
 
         return view('admin.transactions.index', compact('transactions', 'date'));

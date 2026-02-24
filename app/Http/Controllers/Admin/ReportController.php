@@ -28,7 +28,7 @@ class ReportController extends Controller
         // Detailed Data
         $transactions = Transaction::with('patient')
             ->whereBetween('date', [$startDate, $endDate])
-            ->latest()
+            ->oldest()
             ->paginate(20);
 
         return view('admin.reports.index', compact('totalPatients', 'totalTransactions', 'totalVisits', 'transactions', 'month', 'year'));
@@ -51,7 +51,7 @@ class ReportController extends Controller
 
         $transactions = Transaction::with('patient')
             ->whereBetween('date', [$startDate, $endDate])
-            ->latest()
+            ->oldest()
             ->get();
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.reports.pdf', compact('transactions', 'month', 'year'));

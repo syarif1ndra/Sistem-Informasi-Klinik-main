@@ -35,7 +35,7 @@ class ReportController extends Controller
             'items' => function ($q) {
                 $q->where('item_type', 'App\Models\Service');
             }
-        ])->latest()->paginate(15);
+        ])->oldest()->paginate(15);
 
         $transactions->getCollection()->transform(function ($transaction) {
             if ($transaction->status === 'paid') {

@@ -21,7 +21,7 @@ class TransactionController extends Controller
         $transactions = Transaction::with('patient')
             ->where('handled_by', auth()->id())
             ->whereDate('created_at', $date)
-            ->latest()
+            ->oldest()
             ->paginate(10);
 
         return view('dokter.transactions.index', compact('transactions', 'date'));
