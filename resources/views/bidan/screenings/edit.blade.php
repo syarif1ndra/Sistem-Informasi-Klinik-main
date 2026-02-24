@@ -142,7 +142,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">
-                        Kode ICD-10 <span class="text-gray-400 font-normal">(Opsional, bisa pilih lebih dari satu)</span>
+                         ICD-10 <span class="text-gray-400 font-normal">(Opsional, bisa pilih lebih dari satu)</span>
                     </label>
                     <select name="icd10_codes[]" id="icd10Select" multiple style="width:100%">
                         @foreach($icd10Codes as $code)
