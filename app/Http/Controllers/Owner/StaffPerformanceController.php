@@ -13,7 +13,10 @@ class StaffPerformanceController extends Controller
     public function index(Request $request)
     {
         $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
-        $endDate = $request->input('end_date', Carbon::today()->endOfDay()->toDateString());
+        $endDate = $request->input('end_date', Carbon::today()->toDateString());
+
+        $startDateTime = Carbon::parse($startDate)->startOfDay();
+        $endDateTime = Carbon::parse($endDate)->endOfDay();
 
         // Medis (Dokter, Bidan)
         $medis = User::whereIn('role', ['dokter', 'bidan'])
@@ -27,12 +30,12 @@ class StaffPerformanceController extends Controller
         // Calculate revenue for each medis
         foreach ($medis as $staff) {
             $staff->revenue = \App\Models\Transaction::where('status', 'paid')
-                ->whereBetween('date', [$startDate, $endDate])
+                ->whereBetween('date', [$startDateTime, $endDateTime])
                 ->whereExists(function ($query) use ($staff) {
                     $query->select(DB::raw(1))
                         ->from('queues')
                         ->whereColumn('queues.patient_id', 'transactions.patient_id')
-                        ->whereColumn('queues.date', 'transactions.date')
+                        ->whereRaw('DATE(queues.date) = DATE(transactions.date)')
                         ->where('queues.handled_by', $staff->id);
                 })->sum('total_amount');
         }

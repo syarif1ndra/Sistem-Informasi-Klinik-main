@@ -17,26 +17,29 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
-        $endDate = $request->input('end_date', Carbon::today()->endOfDay()->toDateString());
+        $endDate = $request->input('end_date', Carbon::today()->toDateString());
+
+        $startDateTime = Carbon::parse($startDate)->startOfDay();
+        $endDateTime = Carbon::parse($endDate)->endOfDay();
 
         // Basic Metrics
-        $totalPasienHariIni = Queue::where('date', Carbon::today()->toDateString())->count();
+        $totalPasienHariIni = Queue::whereDate('date', Carbon::today())->count();
         $totalKunjunganBulanIni = Queue::whereMonth('date', Carbon::now()->month)
             ->whereYear('date', Carbon::now()->year)->count();
 
-        $totalPendapatanHariIni = Transaction::where('date', Carbon::today()->toDateString())
+        $totalPendapatanHariIni = Transaction::whereDate('date', Carbon::today())
             ->where('status', 'paid')->sum('total_amount');
 
         $totalPendapatanBulanIni = Transaction::whereMonth('date', Carbon::now()->month)
             ->whereYear('date', Carbon::now()->year)
             ->where('status', 'paid')->sum('total_amount');
 
-        $totalTransaksi = Transaction::whereBetween('date', [$startDate, $endDate])->count();
-        $totalDokterAktif = User::where('role', 'dokter')->count();
+        $totalTransaksi = Transaction::whereBetween('date', [$startDateTime, $endDateTime])->count();
+        $totalDokterAktif = User::whereIn('role', ['dokter', 'bidan'])->count();
 
         // Obat Terjual Filtered
-        $totalObatTerjual = TransactionItem::whereHas('transaction', function ($q) use ($startDate, $endDate) {
-            $q->whereBetween('date', [$startDate, $endDate])->where('status', 'paid');
+        $totalObatTerjual = TransactionItem::whereHas('transaction', function ($q) use ($startDateTime, $endDateTime) {
+            $q->whereBetween('date', [$startDateTime, $endDateTime])->where('status', 'paid');
         })->where('item_type', 'App\Models\Medicine')->sum('quantity');
 
         // Charts Data
@@ -91,12 +94,12 @@ class DashboardController extends Controller
 
         foreach ($topStaff as $staff) {
             $staff->revenue = \App\Models\Transaction::where('status', 'paid')
-                ->whereBetween('date', [$startDate, $endDate])
+                ->whereBetween('date', [$startDateTime, $endDateTime])
                 ->whereExists(function ($query) use ($staff) {
                     $query->select(DB::raw(1))
                         ->from('queues')
                         ->whereColumn('queues.patient_id', 'transactions.patient_id')
-                        ->whereColumn('queues.date', 'transactions.date')
+                        ->whereRaw('DATE(queues.date) = DATE(transactions.date)')
                         ->where('queues.handled_by', $staff->id);
                 })->sum('total_amount');
 
@@ -107,8 +110,8 @@ class DashboardController extends Controller
 
         // Layanan paling sering digunakan
         $topServices = TransactionItem::select('name', DB::raw('count(*) as total'))
-            ->whereHas('transaction', function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('date', [$startDate, $endDate]);
+            ->whereHas('transaction', function ($q) use ($startDateTime, $endDateTime) {
+                $q->whereBetween('date', [$startDateTime, $endDateTime]);
             })
             ->where('item_type', 'App\Models\Service')
             ->groupBy('name')
@@ -118,8 +121,8 @@ class DashboardController extends Controller
 
         // Obat terlaris
         $topMedicines = TransactionItem::select('name', DB::raw('sum(quantity) as total'))
-            ->whereHas('transaction', function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('date', [$startDate, $endDate]);
+            ->whereHas('transaction', function ($q) use ($startDateTime, $endDateTime) {
+                $q->whereBetween('date', [$startDateTime, $endDateTime]);
             })
             ->where('item_type', 'App\Models\Medicine')
             ->groupBy('name')
