@@ -51,3 +51,30 @@ Condition MET: Calling + UserPatientID
 UserPatient Found: Syarif Indra
 Updating EXISTING Patient ID: 1
 Linked Queue to Patient ID: 1
+
+[2026-02-24 18:43:02] Status Update Request: finished
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-24 18:43:03] Status Update Request: finished
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-24 18:43:04] Status Update Request: finished
+Queue ID: 3
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-24 18:43:06] Status Update Request: calling
+Queue ID: 4
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1

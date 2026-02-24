@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\Queue;
 use App\Models\Transaction;
 use App\Models\Medicine;
+use App\Models\TransactionItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -22,10 +23,13 @@ class DashboardController extends Controller
             $q->where('assigned_practitioner_id', auth()->id());
         })->count();
 
-        // Personal revenue
-        $personalRevenue = Transaction::where('handled_by', auth()->id())
-            ->where('status', 'paid')
-            ->sum('total_amount');
+        // Personal revenue (40% of Service items on paid transactions handled by this practitioner)
+        $personalRevenue = TransactionItem::whereHas('transaction', function ($q) {
+            $q->where('handled_by', auth()->id())
+                ->where('status', 'paid');
+        })
+            ->where('item_type', 'App\Models\Service')
+            ->sum('subtotal') * 0.4;
 
         // Queues assigned to this bidan today
         $recentQueues = Queue::with(['patient', 'userPatient'])

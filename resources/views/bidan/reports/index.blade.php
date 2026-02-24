@@ -43,7 +43,8 @@
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase">Tanggal</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase">Pasien</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase">Metode Bayar</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase">Total</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase">Tagihan Pasein</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase text-green-200">Pendapatan Anda</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase">Status</th>
                 </tr>
             </thead>
@@ -60,17 +61,20 @@
                         <td class="px-6 py-4 text-sm text-gray-900">
                             Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}
                         </td>
+                        <td class="px-6 py-4 text-sm font-bold text-green-600">
+                            Rp {{ number_format($transaction->practitioner_income, 0, ',', '.') }}
+                        </td>
                         <td class="px-6 py-4">
                             <span
                                 class="px-2 py-1 text-xs font-semibold rounded-full
-                                        {{ $transaction->status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                                {{ $transaction->status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                 {{ ucfirst($transaction->status) }}
                             </span>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-400 italic">Tidak ada transaksi.</td>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-400 italic">Tidak ada transaksi.</td>
                     </tr>
                 @endforelse
             </tbody>
