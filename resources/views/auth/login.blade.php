@@ -126,7 +126,7 @@
         <div class="mt-6 text-center">
             <p class="text-gray-600 text-sm">
                 Belum punya akun?
-                <a href="{{ route('register') }}" class="text-pink-600 hover:text-pink-700 font-semibold">
+                <a href="{{ route('user.register') }}" class="text-pink-600 hover:text-pink-700 font-semibold">
                     Daftar di sini
                 </a>
             </p>
