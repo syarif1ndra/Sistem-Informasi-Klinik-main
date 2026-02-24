@@ -29,6 +29,7 @@
             }
         }
     </script>
+    @stack('styles')
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
@@ -225,6 +226,7 @@
     </div>
 
     @yield('scripts')
+    @stack('scripts')
 </body>
 
 </html>

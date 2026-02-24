@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Dokter;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Models\Screening;
+use App\Models\Icd10Code;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
     public function index(Request $request)
     {
-        $startDate = $request->input('start_date', date('Y-m-01')); // default: awal bulan ini
+        $startDate = $request->input('start_date', date('Y-m-01'));
         $endDate = $request->input('end_date', date('Y-m-d'));
 
-        // Pasien yang antriannya ditugaskan ke dokter ini (by assigned_practitioner_id)
         $patients = Patient::whereHas('queues', function ($q) use ($startDate, $endDate) {
             $q->where('assigned_practitioner_id', auth()->id())
                 ->whereDate('date', '>=', $startDate)
@@ -31,4 +32,12 @@ class PatientController extends Controller
 
         return view('dokter.patients.index', compact('patients', 'startDate', 'endDate'));
     }
+
+    public function show(Patient $patient)
+    {
+        $screenings = $patient->screenings()->with(['icd10Codes', 'examiner'])->get();
+        $icd10Codes = Icd10Code::orderBy('code')->get();
+        return view('dokter.patients.show', compact('patient', 'screenings', 'icd10Codes'));
+    }
 }
+

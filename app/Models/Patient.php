@@ -40,4 +40,9 @@ class Patient extends Model
     {
         return $this->hasMany(Queue::class);
     }
+
+    public function screenings()
+    {
+        return $this->hasMany(Screening::class)->orderByDesc('examined_at');
+    }
 }

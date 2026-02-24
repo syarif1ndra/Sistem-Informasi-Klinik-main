@@ -32,6 +32,7 @@
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. HP</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Tanggal Antrian</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
+                    <th class="px-6 py-3 text-center text-xs font-bold uppercase tracking-wider">Aksi</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -47,11 +48,23 @@
                                 {{ \Carbon\Carbon::parse($queue->date)->translatedFormat('d M Y') }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $queue->complaint ?? '-' }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ route('dokter.patients.show', $patient) }}"
+                                    class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-pink-50 text-pink-700 rounded-lg border border-pink-200 hover:bg-pink-100 transition">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    Lihat Detail
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-6 text-center text-gray-400 italic">
+                        <td colspan="6" class="px-6 py-6 text-center text-gray-400 italic">
                             Tidak ada pasien yang ditugaskan untuk periode ini.
                         </td>
                     </tr>

@@ -58,6 +58,13 @@ Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bi
 
     // Patient List (filtered by handled_by)
     Route::get('/patients', [\App\Http\Controllers\Bidan\PatientController::class, 'index'])->name('patients.index');
+    Route::get('/patients/{patient}', [\App\Http\Controllers\Bidan\PatientController::class, 'show'])->name('patients.show');
+
+    // Screenings (Skrining & Diagnosis)
+    Route::get('/patients/{patient}/screenings/create', [\App\Http\Controllers\Bidan\ScreeningController::class, 'create'])->name('patients.screenings.create');
+    Route::post('/patients/{patient}/screenings', [\App\Http\Controllers\Bidan\ScreeningController::class, 'store'])->name('patients.screenings.store');
+    Route::get('/patients/{patient}/screenings/{screening}/edit', [\App\Http\Controllers\Bidan\ScreeningController::class, 'edit'])->name('patients.screenings.edit');
+    Route::put('/patients/{patient}/screenings/{screening}', [\App\Http\Controllers\Bidan\ScreeningController::class, 'update'])->name('patients.screenings.update');
 
     // Financial Report (filtered by handled_by)
     Route::get('/reports', [\App\Http\Controllers\Bidan\ReportController::class, 'index'])->name('reports.index');
@@ -79,6 +86,13 @@ Route::middleware(['auth', 'verified', 'role.dokter'])->prefix('dokter')->name('
 
     // Patient List (filtered by handled_by)
     Route::get('/patients', [\App\Http\Controllers\Dokter\PatientController::class, 'index'])->name('patients.index');
+    Route::get('/patients/{patient}', [\App\Http\Controllers\Dokter\PatientController::class, 'show'])->name('patients.show');
+
+    // Screenings (Skrining & Diagnosis)
+    Route::get('/patients/{patient}/screenings/create', [\App\Http\Controllers\Dokter\ScreeningController::class, 'create'])->name('patients.screenings.create');
+    Route::post('/patients/{patient}/screenings', [\App\Http\Controllers\Dokter\ScreeningController::class, 'store'])->name('patients.screenings.store');
+    Route::get('/patients/{patient}/screenings/{screening}/edit', [\App\Http\Controllers\Dokter\ScreeningController::class, 'edit'])->name('patients.screenings.edit');
+    Route::put('/patients/{patient}/screenings/{screening}', [\App\Http\Controllers\Dokter\ScreeningController::class, 'update'])->name('patients.screenings.update');
 
     // Financial Report (filtered by handled_by)
     Route::get('/reports', [\App\Http\Controllers\Dokter\ReportController::class, 'index'])->name('reports.index');
