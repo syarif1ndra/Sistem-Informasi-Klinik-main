@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Models\Queue;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -56,6 +57,9 @@ class PatientRegistrationController extends Controller
 
                 $lastQueue = Queue::where('date', date('Y-m-d'))->max('queue_number') ?? 0;
 
+                // Find default bidan to assign
+                $defaultBidan = User::where('role', 'bidan')->first();
+
                 return Queue::create([
                     'patient_id' => $patient->id,
                     'service_id' => $validated['service_id'],
@@ -63,7 +67,8 @@ class PatientRegistrationController extends Controller
                     'queue_number' => $lastQueue + 1,
                     'status' => 'waiting',
                     'date' => date('Y-m-d'),
-                    'complaint' => $request->complaint, // Save complaint if present
+                    'complaint' => $request->complaint,
+                    'assigned_practitioner_id' => $defaultBidan?->id,
                 ]);
             });
 

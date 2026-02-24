@@ -7,7 +7,7 @@
 
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <!-- Total Pasien Hari Ini -->
+        <!-- Total Pasien Ditangani -->
         <div
             class="bg-white rounded-lg shadow-lg p-6 flex items-center border-l-4 border-pink-500 transform hover:scale-105 transition duration-300">
             <div class="p-4 rounded-full bg-pink-100 text-pink-500 mr-4">
@@ -18,12 +18,12 @@
                 </svg>
             </div>
             <div>
-                <p class="text-gray-500 text-sm font-semibold">Total Pasien Hari Ini</p>
-                <p class="text-3xl font-bold text-gray-800">{{ $totalPatientsToday }}</p>
+                <p class="text-gray-500 text-sm font-semibold">Total Pasien Ditangani</p>
+                <p class="text-3xl font-bold text-gray-800">{{ $totalHandledPatients }}</p>
             </div>
         </div>
 
-        <!-- Total Pendapatan Bulan Ini -->
+        <!-- Pendapatan Pribadi -->
         <div
             class="bg-white rounded-lg shadow-lg p-6 flex items-center border-l-4 border-rose-500 transform hover:scale-105 transition duration-300">
             <div class="p-4 rounded-full bg-rose-100 text-rose-500 mr-4">
@@ -34,8 +34,8 @@
                 </svg>
             </div>
             <div>
-                <p class="text-gray-500 text-sm font-semibold">Total Pendapatan Bulan Ini</p>
-                <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($monthlyIncome, 0, ',', '.') }}</p>
+                <p class="text-gray-500 text-sm font-semibold">Total Pendapatan Pribadi</p>
+                <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($personalRevenue, 0, ',', '.') }}</p>
             </div>
         </div>
     </div>

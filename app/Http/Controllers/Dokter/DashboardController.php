@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dokter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Queue;
+use App\Models\Patient;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -17,28 +18,28 @@ class DashboardController extends Controller
     public function index()
     {
         $today = Carbon::today();
-        $thisMonth = Carbon::now()->month;
-        $thisYear = Carbon::now()->year;
 
-        // 1. Total Pasien Hari Ini (Dari Antrian)
-        $totalPatientsToday = Queue::whereDate('date', $today)->count();
+        // 1. Total Pasien Ditangani (via handled transactions)
+        $totalHandledPatients = Patient::whereHas('transactions', function ($q) {
+            $q->where('handled_by', auth()->id());
+        })->count();
 
-        // 2. Total Pendapatan Bulan Ini (Dari Transaksi berstatus lunas/selesai)
-        $monthlyIncome = Transaction::whereMonth('created_at', $thisMonth)
-            ->whereYear('created_at', $thisYear)
-            ->where('status', 'lunas')
+        // 2. Total Pendapatan Pribadi (dari transaksi yang saya tangani, status paid)
+        $personalRevenue = Transaction::where('handled_by', auth()->id())
+            ->where('status', 'paid')
             ->sum('total_amount');
 
-        // 3. Data Antrian Hari Ini (Untuk Tabel Real-time)
+        // 3. Data Antrian Hari Ini (Untuk Tabel Real-time) - assigned to this doctor
         $recentQueues = Queue::with(['patient', 'userPatient'])
             ->whereDate('date', $today)
-            ->orderBy('status', 'asc') // Menunggu dulu
+            ->where('assigned_practitioner_id', auth()->id())
+            ->orderBy('status', 'asc')
             ->orderBy('queue_number', 'asc')
             ->get();
 
         return view('dokter.dashboard', compact(
-            'totalPatientsToday',
-            'monthlyIncome',
+            'totalHandledPatients',
+            'personalRevenue',
             'recentQueues'
         ));
     }
@@ -52,6 +53,7 @@ class DashboardController extends Controller
 
         $queues = Queue::with(['patient', 'userPatient'])
             ->whereDate('date', $today)
+            ->where('assigned_practitioner_id', auth()->id())
             ->orderBy('status', 'asc')
             ->orderBy('queue_number', 'asc')
             ->get();
@@ -59,3 +61,4 @@ class DashboardController extends Controller
         return view('dokter.queues.partials.table', compact('queues'));
     }
 }
+

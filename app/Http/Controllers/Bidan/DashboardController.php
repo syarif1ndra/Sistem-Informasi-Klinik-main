@@ -17,12 +17,20 @@ class DashboardController extends Controller
     {
         $today = date('Y-m-d');
 
-        // Bidan specific stats: Only total patients today
-        $totalPatientsToday = Queue::whereDate('date', $today)->count();
+        // Personal stats: only patients handled by this bidan
+        $totalHandledPatients = Patient::whereHas('transactions', function ($q) {
+            $q->where('handled_by', auth()->id());
+        })->count();
 
-        // Queues for today (to display on the same real-time table)
+        // Personal revenue
+        $personalRevenue = Transaction::where('handled_by', auth()->id())
+            ->where('status', 'paid')
+            ->sum('total_amount');
+
+        // Queues assigned to this bidan today
         $recentQueues = Queue::with(['patient', 'userPatient'])
             ->whereDate('date', $today)
+            ->where('assigned_practitioner_id', auth()->id())
             ->orderBy('queue_number')
             ->get();
 
@@ -37,7 +45,8 @@ class DashboardController extends Controller
         $birthChart = $this->getMonthlyServiceCount('Persalinan');
 
         return view('bidan.dashboard', compact(
-            'totalPatientsToday',
+            'totalHandledPatients',
+            'personalRevenue',
             'recentQueues',
             'pregnancyChart',
             'immunizationChart',
@@ -80,6 +89,7 @@ class DashboardController extends Controller
         $today = date('Y-m-d');
         $recentQueues = Queue::with(['patient', 'userPatient'])
             ->whereDate('date', $today)
+            ->where('assigned_practitioner_id', auth()->id())
             ->orderBy('queue_number')
             ->get();
 

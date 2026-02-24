@@ -17,6 +17,7 @@ class TransactionController extends Controller
     {
         $date = $request->input('date', date('Y-m-d'));
         $transactions = Transaction::with('patient')
+            ->where('handled_by', auth()->id())
             ->whereDate('created_at', $date)
             ->latest()
             ->paginate(10);
@@ -26,9 +27,10 @@ class TransactionController extends Controller
 
     public function create()
     {
-        // Only get patients who have a queue for TODAY
+        // Only show patients whose today's queue is assigned to this practitioner
         $patients = Patient::whereHas('queues', function ($query) {
-            $query->where('date', date('Y-m-d'));
+            $query->where('date', date('Y-m-d'))
+                ->where('assigned_practitioner_id', auth()->id());
         })->get();
         $services = Service::all();
         $medicines = Medicine::all();
@@ -49,6 +51,16 @@ class TransactionController extends Controller
         try {
             DB::beginTransaction();
 
+            // Authorization: check if logged-in user is the assigned practitioner
+            $queue = \App\Models\Queue::where('patient_id', $request->patient_id)
+                ->where('date', date('Y-m-d'))
+                ->where('assigned_practitioner_id', auth()->id())
+                ->first();
+
+            if (!$queue) {
+                abort(403, 'Anda bukan praktisi yang ditugaskan untuk pasien ini.');
+            }
+
             $totalAmount = 0;
             $transaction = Transaction::create([
                 'patient_id' => $request->patient_id,
@@ -57,6 +69,7 @@ class TransactionController extends Controller
                 'status' => 'unpaid',
                 'total_amount' => 0,
                 'notes' => $request->notes,
+                'handled_by' => auth()->id(),
             ]);
 
             foreach ($request->items as $itemData) {

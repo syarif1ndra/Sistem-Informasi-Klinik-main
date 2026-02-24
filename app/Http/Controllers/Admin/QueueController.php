@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Queue;
 use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,24 +14,25 @@ class QueueController extends Controller
     public function index(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
-        // Load both patient (official) and userPatient (from user profile)
-        $queues = Queue::with(['patient', 'service', 'userPatient'])
+        $queues = Queue::with(['patient', 'service', 'userPatient', 'assignedPractitioner'])
             ->whereDate('date', $date)
             ->orderBy('queue_number')
             ->get();
+        $practitioners = User::whereIn('role', ['dokter', 'bidan'])->orderBy('role')->orderBy('name')->get();
 
-        return view('admin.queues.index', compact('queues', 'date'));
+        return view('admin.queues.index', compact('queues', 'date', 'practitioners'));
     }
 
     public function tableData(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
-        $queues = Queue::with(['patient', 'service', 'userPatient'])
+        $queues = Queue::with(['patient', 'service', 'userPatient', 'assignedPractitioner'])
             ->whereDate('date', $date)
             ->orderBy('queue_number')
             ->get();
+        $practitioners = User::whereIn('role', ['dokter', 'bidan'])->orderBy('role')->orderBy('name')->get();
 
-        return view('admin.queues.partials.table', compact('queues'));
+        return view('admin.queues.partials.table', compact('queues', 'practitioners'));
     }
 
     public function updateStatus(Request $request, Queue $queue)
@@ -124,5 +126,19 @@ class QueueController extends Controller
         return $request->wantsJson()
             ? response()->json(['success' => true, 'message' => 'Status antrian berhasil diperbarui.', 'status' => $status])
             : redirect()->route('admin.queues.index')->with('success', 'Status antrian berhasil diperbarui.');
+    }
+
+    public function update(Request $request, Queue $queue)
+    {
+        $request->validate([
+            'assigned_practitioner_id' => 'nullable|exists:users,id',
+        ]);
+
+        $queue->update([
+            'assigned_practitioner_id' => $request->assigned_practitioner_id ?: null,
+        ]);
+
+        return redirect()->route('admin.queues.index')
+            ->with('success', 'Praktisi yang ditugaskan berhasil diperbarui.');
     }
 }

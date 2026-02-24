@@ -55,6 +55,12 @@ Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bi
     // Transactions
     Route::resource('transactions', \App\Http\Controllers\Bidan\TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [\App\Http\Controllers\Bidan\TransactionController::class, 'printStruk'])->name('transactions.print_struk');
+
+    // Patient List (filtered by handled_by)
+    Route::get('/patients', [\App\Http\Controllers\Bidan\PatientController::class, 'index'])->name('patients.index');
+
+    // Financial Report (filtered by handled_by)
+    Route::get('/reports', [\App\Http\Controllers\Bidan\ReportController::class, 'index'])->name('reports.index');
 });
 
 // Dokter Routes
@@ -70,6 +76,12 @@ Route::middleware(['auth', 'verified', 'role.dokter'])->prefix('dokter')->name('
 
     Route::resource('transactions', \App\Http\Controllers\Dokter\TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [\App\Http\Controllers\Dokter\TransactionController::class, 'printStruk'])->name('transactions.print_struk');
+
+    // Patient List (filtered by handled_by)
+    Route::get('/patients', [\App\Http\Controllers\Dokter\PatientController::class, 'index'])->name('patients.index');
+
+    // Financial Report (filtered by handled_by)
+    Route::get('/reports', [\App\Http\Controllers\Dokter\ReportController::class, 'index'])->name('reports.index');
 });
 
 // Admin, Bidan, & Dokter Shared Routes
@@ -86,6 +98,7 @@ Route::middleware([
     Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
     Route::get('/queues/table-data', [QueueController::class, 'tableData'])->name('queues.tableData');
     Route::patch('/queues/{queue}/status', [QueueController::class, 'updateStatus'])->name('queues.updateStatus');
+    Route::put('/queues/{queue}', [QueueController::class, 'update'])->name('queues.update');
 
     // Resource Routes
     Route::resource('patients', PatientController::class);

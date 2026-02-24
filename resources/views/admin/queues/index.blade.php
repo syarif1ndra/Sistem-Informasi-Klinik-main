@@ -35,12 +35,11 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien
-                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Praktisi</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider">Aksi</th>
                 </tr>

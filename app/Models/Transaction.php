@@ -16,6 +16,8 @@ class Transaction extends Model
         'payment_method',
         'date',
         'notes',
+        'processed_by',
+        'handled_by',
     ];
 
 
@@ -31,6 +33,11 @@ class Transaction extends Model
     public function processedBy()
     {
         return $this->belongsTo(User::class, 'processed_by');
+    }
+
+    public function handledBy()
+    {
+        return $this->belongsTo(User::class, 'handled_by');
     }
 
     public function items()

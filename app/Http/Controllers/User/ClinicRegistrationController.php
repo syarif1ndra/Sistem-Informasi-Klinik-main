@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Queue;
 use App\Models\Service;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,17 +57,21 @@ class ClinicRegistrationController extends Controller
         $maxQueue = Queue::whereDate('date', $date)->max('queue_number');
         $queueNumber = $maxQueue ? $maxQueue + 1 : 1;
 
+        // Find default bidan to assign
+        $defaultBidan = User::where('role', 'bidan')->first();
+
         Queue::create([
-            'user_patient_id' => Auth::user()->userPatient->id, // Linked to UserPatient
-            'patient_id' => null, // Not yet verified/linked to official Patient
+            'user_patient_id' => Auth::user()->userPatient->id,
+            'patient_id' => null,
             'nik' => Auth::user()->userPatient->nik,
             'service_name' => $request->service_name,
-            'service_id' => null, // No longer linked to dynamic services
-            'bpjs_usage' => 0, // Default to 0 as payment method is removed
+            'service_id' => null,
+            'bpjs_usage' => 0,
             'date' => $date,
             'queue_number' => $queueNumber,
             'status' => 'waiting',
-            'complaint' => $request->complaint, // Save complaint
+            'complaint' => $request->complaint,
+            'assigned_practitioner_id' => $defaultBidan?->id,
         ]);
 
         return redirect()->route('user.registration.index')->with('success', 'Pendaftaran berhasil dibuat. Nomor Antrian Anda: ' . sprintf('%03d', $queueNumber));

@@ -18,6 +18,8 @@ class DashboardController extends Controller
             'today_queues' => Queue::where('date', date('Y-m-d'))->count(),
             'pending_transactions' => Transaction::where('status', 'unpaid')->count(),
             'low_stock_medicines' => Medicine::where('stock', '<', 20)->count(),
+            'today_revenue' => Transaction::whereDate('created_at', date('Y-m-d'))->where('status', 'paid')->sum('total_amount'),
+            'total_revenue' => Transaction::where('status', 'paid')->sum('total_amount'),
         ];
 
         $recentQueues = Queue::with(['patient', 'userPatient'])

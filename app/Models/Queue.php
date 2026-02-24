@@ -18,8 +18,9 @@ class Queue extends Model
         'bpjs_usage',
         'queue_number',
         'status',
-        'complaint', // Added complaint
+        'complaint',
         'date',
+        'assigned_practitioner_id',
     ];
 
     public function patient()
@@ -35,6 +36,11 @@ class Queue extends Model
     public function handledBy()
     {
         return $this->belongsTo(User::class, 'handled_by');
+    }
+
+    public function assignedPractitioner()
+    {
+        return $this->belongsTo(User::class, 'assigned_practitioner_id');
     }
 
     public function service()

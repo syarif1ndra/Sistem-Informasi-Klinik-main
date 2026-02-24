@@ -71,10 +71,23 @@
                         <div class="space-y-2">
                             <label for="date" class="block text-sm font-bold text-gray-700 ml-1">Tanggal Kunjungan</label>
                             <div class="relative group">
-                                <input type="date" name="date" id="date" value="{{ old('date', date('Y-m-d')) }}"
-                                    min="{{ date('Y-m-d') }}"
-                                    class="w-full pl-4 pr-4 py-3.5 bg-white rounded-xl border-2 border-gray-100 text-gray-700 font-semibold focus:ring-4 focus:ring-pink-500/10 focus:border-pink-500 transition-all outline-none"
+                                <select name="date" id="date"
+                                    class="w-full px-4 py-3.5 bg-white rounded-xl border-2 border-gray-100 text-gray-700 font-semibold appearance-none focus:ring-4 focus:ring-pink-500/10 focus:border-pink-500 transition-all outline-none"
                                     required>
+                                    <option value="{{ date('Y-m-d') }}" {{ old('date', date('Y-m-d')) == date('Y-m-d') ? 'selected' : '' }}>
+                                        Hari ini ({{ \Carbon\Carbon::today()->translatedFormat('d F Y') }})
+                                    </option>
+                                    <option value="{{ date('Y-m-d', strtotime('+1 day')) }}" {{ old('date') == date('Y-m-d', strtotime('+1 day')) ? 'selected' : '' }}>
+                                        Besok ({{ \Carbon\Carbon::tomorrow()->translatedFormat('d F Y') }})
+                                    </option>
+                                </select>
+                                <div
+                                    class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg>
+                                </div>
                             </div>
                             @error('date') <p class="text-xs text-rose-500 font-medium ml-1 mt-1">{{ $message }}</p>
                             @enderror

@@ -71,9 +71,19 @@ class User extends Authenticatable
         return $this->hasMany(Queue::class, 'handled_by');
     }
 
+    public function assignedQueues()
+    {
+        return $this->hasMany(Queue::class, 'assigned_practitioner_id');
+    }
+
     public function processedTransactions()
     {
         return $this->hasMany(Transaction::class, 'processed_by');
+    }
+
+    public function handledTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'handled_by');
     }
 
     /**

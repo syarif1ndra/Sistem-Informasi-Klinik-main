@@ -17,8 +17,23 @@
                 </svg>
             </div>
             <div>
-                <p class="text-gray-500 text-sm font-semibold">Total Pasien Hari Ini</p>
-                <p class="text-3xl font-bold text-gray-800">{{ $totalPatientsToday }}</p>
+                <p class="text-gray-500 text-sm font-semibold">Total Pasien Ditangani</p>
+                <p class="text-3xl font-bold text-gray-800">{{ $totalHandledPatients }}</p>
+            </div>
+        </div>
+
+        <div
+            class="bg-white rounded-lg shadow-lg p-6 flex items-center border-l-4 border-green-500 transform hover:scale-105 transition duration-300">
+            <div class="p-3 rounded-full bg-green-100 text-green-500 mr-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-gray-500 text-sm font-semibold">Total Pendapatan Pribadi</p>
+                <p class="text-3xl font-bold text-gray-800">Rp {{ number_format($personalRevenue, 0, ',', '.') }}</p>
             </div>
         </div>
 
@@ -53,10 +68,10 @@
         </div>
     </div>
 
-    <!-- Today's Patient Queue Table -->
+    <!-- Today's Patient Queue Table (Assigned to me) -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-            <h3 class="text-xl font-bold text-gray-800">Daftar Antrian Hari Ini</h3>
+            <h3 class="text-xl font-bold text-gray-800">Antrian Saya Hari Ini</h3>
         </div>
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
