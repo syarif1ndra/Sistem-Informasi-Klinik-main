@@ -13,8 +13,8 @@ class QueueController extends Controller
     public function index(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
-        // Load both patient (official) and userPatient (from user profile)
         $queues = Queue::with(['patient', 'service', 'userPatient'])
+            ->where('assigned_practitioner_id', auth()->id())
             ->whereDate('date', $date)
             ->orderBy('queue_number')
             ->get();
@@ -26,6 +26,7 @@ class QueueController extends Controller
     {
         $date = $request->input('date', date('Y-m-d'));
         $queues = Queue::with(['patient', 'service', 'userPatient'])
+            ->where('assigned_practitioner_id', auth()->id())
             ->whereDate('date', $date)
             ->orderBy('queue_number')
             ->get();

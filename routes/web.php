@@ -52,6 +52,10 @@ Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bi
     // Realtime Queue specific for Bidan Board
     Route::get('/queues/table-data', [\App\Http\Controllers\Bidan\DashboardController::class, 'queueTableData'])->name('queues.tableData');
 
+    // Bidan Queue Management (filtered by assigned_practitioner_id)
+    Route::get('/queues', [\App\Http\Controllers\Bidan\QueueController::class, 'index'])->name('queues.index');
+    Route::get('/queues/table-data-list', [\App\Http\Controllers\Bidan\QueueController::class, 'tableData'])->name('queues.tableDataList');
+
     // Transactions
     Route::resource('transactions', \App\Http\Controllers\Bidan\TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [\App\Http\Controllers\Bidan\TransactionController::class, 'printStruk'])->name('transactions.print_struk');
