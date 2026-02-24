@@ -55,6 +55,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'owner',
         ]);
+        User::create([
+            'name' => 'Apoteker Klinik',
+            'email' => 'apoteker@klinik.com',
+            'password' => Hash::make('password'),
+            'role' => 'apoteker',
+        ]);
+
         // =====================
         // SERVICES (LAYANAN)
         // =====================
@@ -240,6 +247,13 @@ class DatabaseSeeder extends Seeder
         Faq::create([
             'question' => 'Kapan bayi harus imunisasi?',
             'answer' => 'Imunisasi diberikan sesuai jadwal nasional dari lahir.'
+        ]);
+
+        // =====================
+        // CALL EXTRA SEEDERS
+        // =====================
+        $this->call([
+            Icd10CodeSeeder::class,
         ]);
     }
 }

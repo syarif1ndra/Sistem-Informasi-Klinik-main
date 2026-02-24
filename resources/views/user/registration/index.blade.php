@@ -118,18 +118,18 @@
                                     <td class="px-8 py-6 whitespace-nowrap text-right">
                                         @if($registration->status === 'waiting')
                                             <form action="{{ route('user.registration.cancel', $registration) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pendaftaran ini?');"
+                                                onsubmit="event.preventDefault(); openCancelModal(this.action);"
                                                 class="inline">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit"
-                                                    class="inline-flex items-center px-4 py-2 bg-white border-2 border-rose-100 text-rose-500 text-xs font-black rounded-xl hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all active:scale-90 group/btn shadow-sm shadow-rose-50">
-                                                    <svg class="w-3.5 h-3.5 mr-1.5 text-rose-400 group-hover/btn:text-white"
+                                                    class="inline-flex items-center px-4 py-2 bg-white text-rose-500 text-[10px] font-black tracking-widest uppercase rounded-xl border border-rose-200 hover:bg-rose-50 hover:border-rose-300 hover:text-rose-600 transition-all active:scale-95 shadow-sm">
+                                                    <svg class="w-3.5 h-3.5 mr-1.5"
                                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                                             d="M6 18L18 6M6 6l12 12"></path>
                                                     </svg>
-                                                    BATALKAN
+                                                    Batalkan
                                                 </button>
                                             </form>
                                         @elseif($registration->transaction_data)
@@ -270,11 +270,65 @@
             </div>
         </div>
     </div>
+
+    <!-- Cancel Confirmation Modal Structure -->
+    <div id="cancelModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0 opacity-0 pointer-events-none transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onclick="closeCancelModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-auto transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-black text-gray-800 mb-2">Batalkan Pendaftaran?</h3>
+                <p class="text-sm text-gray-500 mb-6">Apakah Anda yakin ingin membatalkan pendaftaran dengan layanan ini? Tindakan ini tidak dapat diurungkan.</p>
+                <form id="globalCancelForm" method="POST" action="">
+                    @csrf
+                    @method('PATCH')
+                    <div class="flex gap-3">
+                        <button type="button" onclick="closeCancelModal()" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors">
+                            Kembali
+                        </button>
+                        <button type="submit" class="flex-1 px-4 py-3 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 shadow-md shadow-rose-200 transition-colors">
+                            Ya, Batalkan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const cancelModal = document.getElementById('cancelModal');
+    const cancelModalContent = cancelModal ? cancelModal.querySelector('.transform') : null;
+    
+    window.openCancelModal = function(actionUrl) {
+        document.getElementById('globalCancelForm').action = actionUrl;
+        cancelModal.classList.remove('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+            cancelModalContent.classList.remove('scale-95');
+            cancelModalContent.classList.add('scale-100');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeCancelModal = function() {
+        cancelModalContent.classList.remove('scale-100');
+        cancelModalContent.classList.add('scale-95');
+        setTimeout(() => {
+            cancelModal.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'auto';
+        }, 150);
+    };
+
     const modal = document.getElementById('transactionModal');
     if (!modal) return;
     
