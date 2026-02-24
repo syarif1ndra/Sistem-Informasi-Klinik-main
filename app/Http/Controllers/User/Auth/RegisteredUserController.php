@@ -26,27 +26,6 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Validate Google reCAPTCHA
-        $recaptcha_response = $request->input('g-recaptcha-response');
-
-        if (is_null($recaptcha_response)) {
-            return back()->withErrors(['g-recaptcha-response' => 'Please complete the reCAPTCHA to proceed.'])->withInput();
-        }
-
-        $url = "https://www.google.com/recaptcha/api/siteverify";
-        $body = [
-            'secret' => config('services.recaptcha.secret_key'),
-            'response' => $recaptcha_response,
-            'remoteip' => $request->ip(),
-        ];
-
-        $response = \Illuminate\Support\Facades\Http::asForm()->post($url, $body);
-        $result = json_decode($response->body());
-
-        if (!$result->success) {
-            return back()->withErrors(['g-recaptcha-response' => 'reCAPTCHA verification failed. Please try again.'])->withInput();
-        }
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,

@@ -1,5 +1,4 @@
 <x-guest-layout>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- Session Status -->
     @if ($errors->any())
         <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
@@ -72,17 +71,6 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-
-            <!-- reCAPTCHA -->
-            <div class="flex justify-center mb-4">
-                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-            </div>
-
-            @if ($errors->has('g-recaptcha-response'))
-                <span class="text-red-600 text-sm block text-center mb-4">
-                    {{ $errors->first('g-recaptcha-response') }}
-                </span>
-            @endif
 
             <!-- Actions -->
             <div class="space-y-3">

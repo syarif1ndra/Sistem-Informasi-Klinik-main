@@ -118,8 +118,10 @@
                         <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit($visit->patient->address ?? '-', 30) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             @if($visit->patient)
+                                <a href="{{ route('admin.patients.show', ['patient' => $visit->patient_id, 'queue_id' => $visit->id]) }}"
+                                    class="text-indigo-600 hover:text-indigo-900 mr-2">Detail</a>
                                 <a href="{{ route('admin.patients.editVisit', $visit) }}"
-                                    class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
+                                    class="text-amber-600 hover:text-amber-900 mr-2">Edit</a>
                                 @if(!auth()->user()->isBidan() && !auth()->user()->isDokter())
                                     <form action="{{ route('admin.patients.destroy', $visit->patient) }}" method="POST"
                                         class="inline-block" id="delete-form-{{ $visit->patient->id }}"

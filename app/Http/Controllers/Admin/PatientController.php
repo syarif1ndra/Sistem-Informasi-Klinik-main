@@ -10,7 +10,8 @@ use App\Exports\PatientsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-use App\Models\Queue; // Add this
+use App\Models\Queue;
+use App\Models\Screening;
 
 class PatientController extends Controller
 {
@@ -57,6 +58,30 @@ class PatientController extends Controller
     public function edit(Patient $patient)
     {
         return view('admin.patients.edit', compact('patient'));
+    }
+
+    public function show(Request $request, Patient $patient)
+    {
+        $activeQueue = null;
+        if ($request->filled('queue_id')) {
+            $activeQueue = $patient->queues()
+                ->where('id', $request->integer('queue_id'))
+                ->first();
+        }
+
+        if ($activeQueue) {
+            $screenings = Screening::where('queue_id', $activeQueue->id)
+                ->with(['icd10Codes', 'examiner'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $screenings = Screening::whereIn('queue_id', $patient->queues()->pluck('id'))
+                ->with(['icd10Codes', 'examiner'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        return view('admin.patients.show', compact('patient', 'screenings', 'activeQueue'));
     }
 
     public function update(Request $request, Patient $patient)

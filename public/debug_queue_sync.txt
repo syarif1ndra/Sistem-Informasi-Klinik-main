@@ -8,3 +8,18 @@ UserPatient Found: Syarif Indra
 Creating NEW Patient...
 Created Patient ID: 1
 Linked Queue to Patient ID: 1
+
+[2026-02-24 13:03:11] Status Update Request: calling
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: Syarif Indra
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-24 13:03:12] Status Update Request: finished
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1

@@ -29,7 +29,6 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            'g-recaptcha-response' => ['nullable'],
         ];
     }
 
@@ -41,36 +40,6 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-
-        // Validate Google reCAPTCHA
-        $recaptcha_response = $this->input('g-recaptcha-response');
-
-        if (is_null($recaptcha_response)) {
-            // Check if we are in local environment, if so, skip recaptcha
-            if (app()->environment('local')) {
-                // Skip
-            } else {
-                throw ValidationException::withMessages([
-                    'g-recaptcha-response' => 'Please complete the reCAPTCHA to proceed.',
-                ]);
-            }
-        }
-
-        $url = "https://www.google.com/recaptcha/api/siteverify";
-        $body = [
-            'secret' => config('services.recaptcha.secret_key'),
-            'response' => $recaptcha_response,
-            'remoteip' => $this->ip(),
-        ];
-
-        $response = \Illuminate\Support\Facades\Http::asForm()->post($url, $body);
-        $result = json_decode($response->body());
-
-        if (!$result->success) {
-            throw ValidationException::withMessages([
-                'g-recaptcha-response' => 'reCAPTCHA verification failed. Please try again.',
-            ]);
-        }
 
         if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
