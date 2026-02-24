@@ -40,9 +40,18 @@
                             <div>
                                 <label for="category"
                                     class="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
-                                <input type="text" name="category" id="category"
+                                <select name="category" id="category"
                                     class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
-                                    placeholder="Contoh: Analgetik" required>
+                                    required>
+                                    <option value="" disabled selected>Pilih Kategori</option>
+                                    <option value="Tablet">Tablet</option>
+                                    <option value="Kapsul">Kapsul</option>
+                                    <option value="Sirup">Sirup</option>
+                                    <option value="Vaksin">Vaksin</option>
+                                    <option value="Salep">Salep</option>
+                                    <option value="Injeksi">Injeksi</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
                             </div>
                         </div>
 

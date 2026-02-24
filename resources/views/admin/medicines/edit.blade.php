@@ -41,9 +41,24 @@
                             <div>
                                 <label for="category"
                                     class="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
-                                <input type="text" name="category" id="category" value="{{ $medicine->category }}"
+                                <select name="category" id="category"
                                     class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition duration-200 p-2.5"
                                     required>
+                                    <option value="Tablet" {{ $medicine->category == 'Tablet' ? 'selected' : '' }}>Tablet
+                                    </option>
+                                    <option value="Kapsul" {{ $medicine->category == 'Kapsul' ? 'selected' : '' }}>Kapsul
+                                    </option>
+                                    <option value="Sirup" {{ $medicine->category == 'Sirup' ? 'selected' : '' }}>Sirup
+                                    </option>
+                                    <option value="Vaksin" {{ $medicine->category == 'Vaksin' ? 'selected' : '' }}>Vaksin
+                                    </option>
+                                    <option value="Salep" {{ $medicine->category == 'Salep' ? 'selected' : '' }}>Salep
+                                    </option>
+                                    <option value="Injeksi" {{ $medicine->category == 'Injeksi' ? 'selected' : '' }}>Injeksi
+                                    </option>
+                                    <option value="Lainnya" {{ !in_array($medicine->category, ['Tablet', 'Kapsul', 'Sirup', 'Vaksin', 'Salep', 'Injeksi']) ? 'selected' : '' }}>Lainnya
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
