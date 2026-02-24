@@ -49,6 +49,12 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'dokter',
         ]);
+        User::create([
+            'name' => 'Owner Klinik',
+            'email' => 'owner@klinik.com',
+            'password' => Hash::make('password'),
+            'role' => 'owner',
+        ]);
         // =====================
         // SERVICES (LAYANAN)
         // =====================

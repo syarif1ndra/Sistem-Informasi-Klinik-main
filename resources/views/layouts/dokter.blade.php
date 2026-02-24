@@ -55,6 +55,10 @@
             </div>
 
             <nav class="flex-1 mt-6 px-4 space-y-2 overflow-y-auto">
+                <div class="pt-2 pb-1">
+                    <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Utama</p>
+                </div>
+
                 {{-- DASHBOARD DOKTER --}}
                 <a href="{{ route('dokter.dashboard') }}"
                     class="flex items-center px-4 py-3 rounded-lg transition duration-200
@@ -64,11 +68,11 @@
                             d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                         </path>
                     </svg>
-                    <span class="font-medium">Dashboard Dokter</span>
+                    <span class="font-medium">Dashboard</span>
                 </a>
 
-                <div class="pt-4 pb-2">
-                    <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Akses Dokter</p>
+                <div class="pt-4 pb-1">
+                    <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Pelayanan Pasien</p>
                 </div>
 
                 {{-- ANTRIAN --}}
@@ -80,9 +84,22 @@
                             d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
                         </path>
                     </svg>
-                    <span class="font-medium">Antrian</span>
+                    <span class="font-medium">Antrian Pemeriksaan</span>
                 </a>
 
+                {{-- PASIEN SAYA --}}
+                <a href="{{ route('dokter.patients.index') }}"
+                    class="flex items-center px-4 py-3 rounded-lg transition duration-200 {{ request()->routeIs('dokter.patients*') ? 'bg-pink-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span class="font-medium">Data Pasien </span>
+                </a>
+
+                <div class="pt-4 pb-1">
+                    <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Administrasi</p>
+                </div>
 
                 {{-- TRANSAKSI --}}
                 <a href="{{ route('dokter.transactions.index') }}"
@@ -94,16 +111,6 @@
                         </path>
                     </svg>
                     <span class="font-medium">Transaksi</span>
-                </a>
-
-                {{-- PASIEN SAYA --}}
-                <a href="{{ route('dokter.patients.index') }}"
-                    class="flex items-center px-4 py-3 rounded-lg transition duration-200 {{ request()->routeIs('dokter.patients*') ? 'bg-pink-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                    <span class="font-medium">Pasien </span>
                 </a>
 
                 {{-- LAPORAN KEUANGAN --}}
