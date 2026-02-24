@@ -21,7 +21,7 @@ class StaffPerformanceController extends Controller
         // Medis (Dokter, Bidan)
         $medis = User::whereIn('role', ['dokter', 'bidan'])
             ->withCount([
-                'handledQueues as total_pasien' => function ($query) use ($startDate, $endDate) {
+                'assignedQueues as total_pasien' => function ($query) use ($startDate, $endDate) {
                     $query->whereBetween('date', [$startDate, $endDate])->where('status', 'finished');
                 }
             ])
@@ -36,7 +36,7 @@ class StaffPerformanceController extends Controller
                         ->from('queues')
                         ->whereColumn('queues.patient_id', 'transactions.patient_id')
                         ->whereRaw('DATE(queues.date) = DATE(transactions.date)')
-                        ->where('queues.handled_by', $staff->id);
+                        ->where('queues.assigned_practitioner_id', $staff->id);
                 })->sum('total_amount');
         }
 

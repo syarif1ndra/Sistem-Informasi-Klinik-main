@@ -59,7 +59,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $staff->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ $staff->role }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-pink-600">
-                                    {{ $staff->total_pasien }} px
+                                    {{ $staff->total_pasien }} pasien
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-emerald-600">Rp
                                     {{ number_format($staff->revenue, 0, ',', '.') }}

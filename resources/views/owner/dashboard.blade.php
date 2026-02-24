@@ -145,7 +145,7 @@
                         </div>
                         <h3 class="text-md font-bold text-gray-900 tracking-tight">Staf Medis Teratas</h3>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1 pl-12">Berdasarkan kontribusi px terbanyak</p>
+                    <p class="text-xs text-gray-400 mt-1 pl-12">Berdasarkan kontribusi pasien terbanyak</p>
                 </div>
                 
                 <div class="space-y-4">
@@ -159,7 +159,7 @@
                                     <span class="text-sm font-bold text-gray-800 group-hover:text-pink-600 transition truncate max-w-[120px]">
                                         {{ $staff->staff_name }}
                                     </span>
-                                    <span class="text-xs font-medium text-gray-400">{{ $staff->total }} px ditangani</span>
+                                    <span class="text-xs font-medium text-gray-400">{{ $staff->total }} pasien ditangani</span>
                                 </div>
                             </div>
                             <span class="px-3 py-1 bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-700 text-xs font-bold rounded-xl whitespace-nowrap shadow-sm border border-emerald-100">

@@ -23,11 +23,11 @@ class DashboardController extends Controller
         $endDateTime = Carbon::parse($endDate)->endOfDay();
 
         // Basic Metrics
-        $totalPasienHariIni = Queue::whereDate('date', Carbon::today())->count();
+        $totalPasienHariIni = Queue::whereDate('date', Carbon::today()->toDateString())->count();
         $totalKunjunganBulanIni = Queue::whereMonth('date', Carbon::now()->month)
             ->whereYear('date', Carbon::now()->year)->count();
 
-        $totalPendapatanHariIni = Transaction::whereDate('date', Carbon::today())
+        $totalPendapatanHariIni = Transaction::whereDate('date', Carbon::today()->toDateString())
             ->where('status', 'paid')->sum('total_amount');
 
         $totalPendapatanBulanIni = Transaction::whereMonth('date', Carbon::now()->month)
@@ -86,7 +86,7 @@ class DashboardController extends Controller
         // Staf Medis Teraktif (Dokter, Bidan)
         $topStaff = User::whereIn('role', ['dokter', 'bidan'])
             ->withCount([
-                'handledQueues as total' => function ($query) use ($startDate, $endDate) {
+                'assignedQueues as total' => function ($query) use ($startDate, $endDate) {
                     $query->whereBetween('date', [$startDate, $endDate])->where('status', 'finished');
                 }
             ])
@@ -100,7 +100,7 @@ class DashboardController extends Controller
                         ->from('queues')
                         ->whereColumn('queues.patient_id', 'transactions.patient_id')
                         ->whereRaw('DATE(queues.date) = DATE(transactions.date)')
-                        ->where('queues.handled_by', $staff->id);
+                        ->where('queues.assigned_practitioner_id', $staff->id);
                 })->sum('total_amount');
 
             $staff->staff_name = $staff->name;
