@@ -61,13 +61,9 @@
                             </select>
 
                             <label class="block text-sm font-semibold text-gray-700 mt-4 mb-2">Status Pembayaran</label>
-                            <select name="status"
-                                class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3"
-                                required>
-                                <option value="unpaid" {{ $transaction->status == 'unpaid' ? 'selected' : '' }}>Belum Lunas
-                                </option>
-                                <option value="paid" {{ $transaction->status == 'paid' ? 'selected' : '' }}>Lunas</option>
-                            </select>
+                            <div class="w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-gray-700 font-medium select-none">
+                                {{ $transaction->status == 'paid' ? 'Lunas' : 'Belum Lunas' }}
+                            </div>
                         </div>
                     </div>
 

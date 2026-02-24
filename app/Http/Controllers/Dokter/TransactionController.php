@@ -184,11 +184,6 @@ class TransactionController extends Controller
 
     public function update(Request $request, Transaction $transaction)
     {
-        // Simple status update logic (fallback)
-        if ($request->has('status') && !$request->has('items')) {
-            $transaction->update(['status' => $request->status]);
-            return back()->with('success', 'Transaction updated.');
-        }
 
         // Full edit update logic
         $request->validate([
@@ -198,7 +193,6 @@ class TransactionController extends Controller
             'items.*.type' => 'required|in:service,medicine',
             'items.*.id' => 'required',
             'items.*.quantity' => 'required|integer|min:1',
-            'status' => 'required|in:unpaid,paid',
         ]);
 
         try {
@@ -321,7 +315,6 @@ class TransactionController extends Controller
             $transaction->update([
                 'patient_id' => $request->patient_id,
                 'payment_method' => $request->payment_method,
-                'status' => $request->status,
                 'total_amount' => $totalAmount,
                 'notes' => $request->notes,
             ]);
