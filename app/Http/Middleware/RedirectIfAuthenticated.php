@@ -27,6 +27,8 @@ class RedirectIfAuthenticated
                     return redirect()->route('bidan.dashboard');
                 } elseif ($request->user()->isDokter()) {
                     return redirect()->route('dokter.dashboard');
+                } elseif ($request->user()->isOwner()) {
+                    return redirect()->route('owner.dashboard');
                 }
                 return redirect()->route('dashboard');
             }

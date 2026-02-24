@@ -39,6 +39,16 @@ class SocialController extends Controller
 
                 Auth::login($user);
 
+                if ($user->isAdmin()) {
+                    return redirect()->route('admin.dashboard');
+                } elseif ($user->isBidan()) {
+                    return redirect()->route('bidan.dashboard');
+                } elseif ($user->isDokter()) {
+                    return redirect()->route('dokter.dashboard');
+                } elseif ($user->isOwner()) {
+                    return redirect()->route('owner.dashboard');
+                }
+
                 return redirect()->route('dashboard');
             } else {
                 // Create new user

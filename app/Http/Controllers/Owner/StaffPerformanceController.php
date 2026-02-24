@@ -15,8 +15,8 @@ class StaffPerformanceController extends Controller
         $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
         $endDate = $request->input('end_date', Carbon::today()->endOfDay()->toDateString());
 
-        // Medis (Dokter, Bidan, Perawat)
-        $medis = User::whereIn('role', ['dokter', 'bidan', 'perawat'])
+        // Medis (Dokter, Bidan)
+        $medis = User::whereIn('role', ['dokter', 'bidan'])
             ->withCount([
                 'handledQueues as total_pasien' => function ($query) use ($startDate, $endDate) {
                     $query->whereBetween('date', [$startDate, $endDate])->where('status', 'finished');

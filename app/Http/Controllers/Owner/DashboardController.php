@@ -80,19 +80,30 @@ class DashboardController extends Controller
         }
 
         // Top Data (Filtered by date)
-        // Staf Medis Teraktif (Dokter, Bidan, Perawat)
-        $topStaff = Queue::with('handledBy')
-            ->select('handled_by', DB::raw('count(*) as total'))
-            ->whereBetween('date', [$startDate, $endDate])
-            ->whereNotNull('handled_by')
-            ->groupBy('handled_by')
-            ->orderByDesc('total')
-            ->limit(5)
-            ->get()
-            ->map(function ($q) {
-                $q->staff_name = $q->handledBy ? $q->handledBy->name : 'Unknown';
-                return $q;
-            });
+        // Staf Medis Teraktif (Dokter, Bidan)
+        $topStaff = User::whereIn('role', ['dokter', 'bidan'])
+            ->withCount([
+                'handledQueues as total' => function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('date', [$startDate, $endDate])->where('status', 'finished');
+                }
+            ])
+            ->get();
+
+        foreach ($topStaff as $staff) {
+            $staff->revenue = \App\Models\Transaction::where('status', 'paid')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->whereExists(function ($query) use ($staff) {
+                    $query->select(DB::raw(1))
+                        ->from('queues')
+                        ->whereColumn('queues.patient_id', 'transactions.patient_id')
+                        ->whereColumn('queues.date', 'transactions.date')
+                        ->where('queues.handled_by', $staff->id);
+                })->sum('total_amount');
+
+            $staff->staff_name = $staff->name;
+        }
+
+        $topStaff = $topStaff->sortByDesc('total')->take(5);
 
         // Layanan paling sering digunakan
         $topServices = TransactionItem::select('name', DB::raw('count(*) as total'))

@@ -6,7 +6,7 @@
             class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Kinerja Pegawai</h1>
-                <p class="text-gray-500 mt-1">Monitoring performa Tenaga Medis (Dokter, Bidan, Perawat)</p>
+                <p class="text-gray-500 mt-1">Monitoring performa Tenaga Medis (Dokter, Bidan)</p>
             </div>
             <form method="GET" action="{{ route('owner.staff.performance') }}"
                 class="flex flex-wrap items-end gap-3 w-full md:w-auto">
@@ -37,7 +37,7 @@
                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900">Kinerja Tenaga Medis (Dokter, Bidan, Perawat)</h3>
+                <h3 class="text-lg font-bold text-gray-900">Kinerja Tenaga Medis (Dokter, Bidan)</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -46,8 +46,6 @@
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Role
-                            </th>
-                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Shift
                             </th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Pasien Ditangani</th>
@@ -60,9 +58,6 @@
                             <tr class="hover:bg-gray-50 transition duration-150">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $staff->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ $staff->role }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                                    {{ $staff->shift ?? '-' }}
-                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-pink-600">
                                     {{ $staff->total_pasien }} px
                                 </td>
@@ -72,7 +67,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-10 text-center text-gray-500">Belum ada data tenaga medis.</td>
+                                <td colspan="4" class="px-6 py-10 text-center text-gray-500">Belum ada data tenaga medis.</td>
                             </tr>
                         @endforelse
                     </tbody>

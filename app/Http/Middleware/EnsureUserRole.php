@@ -25,6 +25,9 @@ class EnsureUserRole
             if ($request->user()->role === 'dokter') {
                 return redirect()->route('dokter.dashboard');
             }
+            if ($request->user()->role === 'owner') {
+                return redirect()->route('owner.dashboard');
+            }
             return redirect('/');
         }
 
