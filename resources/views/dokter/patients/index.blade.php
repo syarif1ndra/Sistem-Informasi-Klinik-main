@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <h1 class="text-3xl font-bold text-gray-800">Pasien Saya</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Pasien </h1>
     </div>
 
     {{-- Date Filter --}}
@@ -27,41 +27,31 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                 <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. HP</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Tanggal Antrian</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
                     <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($patients as $patient)
                     @foreach($patient->queues as $queue)
                         <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-700 font-bold">
+                                {{ sprintf('%03d', $queue->queue_number) }}
+                            </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $patient->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $patient->phone ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">
                                 {{ \Carbon\Carbon::parse($queue->date)->translatedFormat('d M Y') }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-700 font-bold">
-                                {{ sprintf('%03d', $queue->queue_number) }}
-                            </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $queue->complaint ?? '-' }}</td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full
-                                                            {{ $queue->status === 'finished' ? 'bg-green-100 text-green-800' : '' }}
-                                                            {{ $queue->status === 'waiting' ? 'bg-gray-100 text-gray-700' : '' }}
-                                                            {{ $queue->status === 'calling' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                                            {{ $queue->status === 'cancelled' ? 'bg-red-100 text-red-700' : '' }}">
-                                    {{ ucfirst($queue->status) }}
-                                </span>
-                            </td>
                         </tr>
                     @endforeach
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-6 text-center text-gray-400 italic">
+                        <td colspan="5" class="px-6 py-6 text-center text-gray-400 italic">
                             Tidak ada pasien yang ditugaskan untuk periode ini.
                         </td>
                     </tr>
