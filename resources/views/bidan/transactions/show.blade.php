@@ -85,7 +85,7 @@
                             <div class="text-lg font-semibold text-gray-900">
                                 <span
                                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->payment_method == 'bpjs' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
-                                    {{ $transaction->payment_method == 'bpjs' ? 'BPJS Kesehatan' : 'Tunai / Umum' }}
+                                    {{ $transaction->payment_method == 'bpjs' ? 'BPJS Kesehatan' : 'Umum' }}
                                 </span>
                             </div>
                         </div>

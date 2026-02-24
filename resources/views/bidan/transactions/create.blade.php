@@ -56,7 +56,7 @@
                             <select name="payment_method" x-model="paymentType"
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:border-pink-500 focus:ring-pink-500 bg-gray-50 pointer-events-none"
                                 readonly>
-                                <option value="cash" selected>Tunai / Umum</option>
+                                <option value="cash" selected>Umum</option>
                             </select>
                         </div>
                     </div>

@@ -133,7 +133,7 @@
         </div>
         <div class="info-row">
             <span>Metode Bayar</span>
-            <span>{{ $transaction->payment_method == 'bpjs' ? 'BPJS' : 'Tunai' }}</span>
+            <span>{{ $transaction->payment_method == 'bpjs' ? 'BPJS' : 'Umum' }}</span>
         </div>
     </div>
 
