@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\Medicine;
 use App\Models\Patient;
 use App\Models\TransactionItem;
+use App\Models\Prescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -132,6 +133,15 @@ class TransactionController extends Controller
         // Simple status update logic (fallback)
         if ($request->has('status') && !$request->has('items')) {
             $transaction->update(['status' => $request->status]);
+
+            // Auto-complete prescription if transaction is paid
+            if ($request->status === 'paid') {
+                $prescription = Prescription::where('transaction_id', $transaction->id)->first();
+                if ($prescription && in_array($prescription->status, ['diproses', 'siap_diambil'])) {
+                    $prescription->update(['status' => 'selesai']);
+                }
+            }
+
             return back()->with('success', 'Transaction updated.');
         }
 
@@ -208,6 +218,14 @@ class TransactionController extends Controller
                 'processed_by' => auth()->id(),
                 'notes' => $request->notes,
             ]);
+
+            // Auto-complete prescription if transaction is paid
+            if ($request->status === 'paid') {
+                $prescription = Prescription::where('transaction_id', $transaction->id)->first();
+                if ($prescription && in_array($prescription->status, ['diproses', 'siap_diambil'])) {
+                    $prescription->update(['status' => 'selesai']);
+                }
+            }
 
             DB::commit();
             return redirect()->route('admin.transactions.index')->with('success', 'Transaction updated successfully.');

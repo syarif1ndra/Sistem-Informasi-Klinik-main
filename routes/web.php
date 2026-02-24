@@ -204,4 +204,22 @@ Route::middleware(['auth', 'verified', 'role.owner'])->prefix('owner')->name('ow
     Route::delete('/finance/expense/{expense}', [\App\Http\Controllers\Owner\FinanceController::class, 'destroyExpense'])->name('finance.expense.destroy');
 });
 
+// Apoteker Routes (Protected by Breeze and EnsureApotekerRole)
+Route::middleware(['auth', 'verified', 'role.apoteker'])->prefix('apoteker')->name('apoteker.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Apoteker\DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('prescriptions', \App\Http\Controllers\Apoteker\PrescriptionController::class)->only(['index', 'show']);
+    Route::patch('/prescriptions/{prescription}/status', [\App\Http\Controllers\Apoteker\PrescriptionController::class, 'updateStatus'])->name('prescriptions.update_status');
+    Route::get('/prescriptions/{prescription}/etiket/{item}', [\App\Http\Controllers\Apoteker\PrescriptionController::class, 'printEtiket'])->name('prescriptions.print_etiket');
+
+    // Medicines
+    Route::resource('medicines', \App\Http\Controllers\Apoteker\MedicineController::class);
+    Route::post('/medicines/{medicine}/add-stock', [\App\Http\Controllers\Apoteker\MedicineController::class, 'addStock'])->name('medicines.add_stock');
+    Route::post('/medicines/{medicine}/adjust-stock', [\App\Http\Controllers\Apoteker\MedicineController::class, 'adjustStock'])->name('medicines.adjust_stock');
+
+    // Reports
+    Route::get('/reports', [\App\Http\Controllers\Apoteker\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export/excel', [\App\Http\Controllers\Apoteker\ReportController::class, 'exportExcel'])->name('reports.export_excel');
+    Route::get('/reports/export/pdf', [\App\Http\Controllers\Apoteker\ReportController::class, 'exportPdf'])->name('reports.export_pdf');
+});
+
 require __DIR__ . '/auth.php';

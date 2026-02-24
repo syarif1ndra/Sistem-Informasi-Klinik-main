@@ -47,6 +47,8 @@ class SocialController extends Controller
                     return redirect()->route('dokter.dashboard');
                 } elseif ($user->isOwner()) {
                     return redirect()->route('owner.dashboard');
+                } elseif ($user->isApoteker()) {
+                    return redirect()->route('apoteker.dashboard');
                 }
 
                 return redirect()->route('dashboard');

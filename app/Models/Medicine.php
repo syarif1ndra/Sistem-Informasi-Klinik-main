@@ -13,9 +13,15 @@ class Medicine extends Model
         'name',
         'category',
         'stock',
+        'min_stock', // Added min_stock
         'price',
         'purchase_price', // Added purchase price
         'expired_date',
         'description',
     ];
+
+    public function stockLogs()
+    {
+        return $this->hasMany(StockLog::class);
+    }
 }

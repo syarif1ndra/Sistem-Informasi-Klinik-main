@@ -29,6 +29,8 @@ class RedirectIfAuthenticated
                     return redirect()->route('dokter.dashboard');
                 } elseif ($request->user()->isOwner()) {
                     return redirect()->route('owner.dashboard');
+                } elseif ($request->user()->isApoteker()) {
+                    return redirect()->route('apoteker.dashboard');
                 }
                 return redirect()->route('dashboard');
             }

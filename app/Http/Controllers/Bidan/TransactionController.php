@@ -8,6 +8,8 @@ use App\Models\Service;
 use App\Models\Medicine;
 use App\Models\Patient;
 use App\Models\TransactionItem;
+use App\Models\Prescription;
+use App\Models\PrescriptionItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -99,10 +101,38 @@ class TransactionController extends Controller
                         'subtotal' => $subtotal,
                     ]);
 
-                    // Deduct stock if item is medicine
+                    // If item is medicine, we DO NOT deduct stock here anymore.
+                    // Instead, we will create a prescription record after the loop
                     if ($itemData['type'] === 'medicine') {
-                        $item->decrement('stock', $itemData['quantity']);
+                        // Store the medicine data temporarily to build the prescription
+                        $medicineItems[] = [
+                            'medicine_id' => $item->id,
+                            'quantity' => $itemData['quantity'],
+                            'dosage' => $itemData['dosage'] ?? null,
+                            'instructions' => $itemData['instructions'] ?? null,
+                        ];
                     }
+                }
+            }
+
+            // Create Prescription if there are medicines
+            if (!empty($medicineItems)) {
+                $prescription = Prescription::create([
+                    'patient_id' => $request->patient_id,
+                    'practitioner_id' => auth()->id(),
+                    'transaction_id' => $transaction->id,
+                    'status' => 'menunggu',
+                    'notes' => $request->prescription_notes ?? null,
+                ]);
+
+                foreach ($medicineItems as $medItem) {
+                    PrescriptionItem::create([
+                        'prescription_id' => $prescription->id,
+                        'medicine_id' => $medItem['medicine_id'],
+                        'quantity' => $medItem['quantity'],
+                        'dosage' => $medItem['dosage'],
+                        'instructions' => $medItem['instructions'],
+                    ]);
                 }
             }
 
@@ -177,6 +207,7 @@ class TransactionController extends Controller
 
             // 3. Process new items and calculate total amount
             $totalAmount = 0;
+            $newMedicineItems = [];
             foreach ($request->items as $itemData) {
                 $item = null;
                 $price = 0;
@@ -204,14 +235,64 @@ class TransactionController extends Controller
                         'subtotal' => $subtotal,
                     ]);
 
-                    // Deduct stock if item is medicine
+                    // If item is medicine, we DO NOT deduct stock here anymore.
+                    // We collect it to recreate the prescription
                     if ($itemData['type'] === 'medicine' || $itemData['type'] === 'App\Models\Medicine') {
-                        $item->decrement('stock', $itemData['quantity']);
+                        $newMedicineItems[] = [
+                            'medicine_id' => $item->id,
+                            'quantity' => $itemData['quantity'],
+                            'dosage' => $itemData['dosage'] ?? null,
+                            'instructions' => $itemData['instructions'] ?? null,
+                        ];
                     }
                 }
             }
 
-            // 4. Update core transaction record
+            // 4. Handle Prescription updates
+            $existingPrescription = Prescription::where('transaction_id', $transaction->id)->first();
+
+            if (!empty($newMedicineItems)) {
+                if ($existingPrescription) {
+                    // Update existing prescription items
+                    PrescriptionItem::where('prescription_id', $existingPrescription->id)->delete();
+                    foreach ($newMedicineItems as $medItem) {
+                        PrescriptionItem::create([
+                            'prescription_id' => $existingPrescription->id,
+                            'medicine_id' => $medItem['medicine_id'],
+                            'quantity' => $medItem['quantity'],
+                            'dosage' => $medItem['dosage'],
+                            'instructions' => $medItem['instructions'],
+                        ]);
+                    }
+                    if ($existingPrescription->status === 'selesai' || $existingPrescription->status === 'diproses') {
+                        $existingPrescription->update(['status' => 'menunggu']); // reset status for apoteker review
+                    }
+                } else {
+                    // Create new prescription
+                    $prescription = Prescription::create([
+                        'patient_id' => $request->patient_id,
+                        'practitioner_id' => auth()->id(),
+                        'transaction_id' => $transaction->id,
+                        'status' => 'menunggu',
+                    ]);
+                    foreach ($newMedicineItems as $medItem) {
+                        PrescriptionItem::create([
+                            'prescription_id' => $prescription->id,
+                            'medicine_id' => $medItem['medicine_id'],
+                            'quantity' => $medItem['quantity'],
+                            'dosage' => $medItem['dosage'],
+                            'instructions' => $medItem['instructions'],
+                        ]);
+                    }
+                }
+            } else {
+                // If no medicines in the updated transaction, delete the prescription if it exists
+                if ($existingPrescription) {
+                    $existingPrescription->delete();
+                }
+            }
+
+            // 5. Update core transaction record
             $transaction->update([
                 'patient_id' => $request->patient_id,
                 'payment_method' => $request->payment_method,
