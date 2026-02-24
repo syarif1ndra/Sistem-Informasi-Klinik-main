@@ -71,7 +71,7 @@
     <!-- Today's Patient Queue Table (Assigned to me) -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-            <h3 class="text-xl font-bold text-gray-800">Antrian Saya Hari Ini</h3>
+            <h3 class="text-xl font-bold text-gray-800">Antrian Hari Ini</h3>
         </div>
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">

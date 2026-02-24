@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <h1 class="text-3xl font-bold text-gray-800">Antrian Saya</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Antrian </h1>
 
         <div class="flex items-center gap-4">
             <form action="{{ route('bidan.queues.index') }}" method="GET" class="flex items-center">

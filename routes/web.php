@@ -114,6 +114,7 @@ Route::middleware([
 
     // Queue Management
     Route::get('/queues', [QueueController::class, 'index'])->name('queues.index');
+    Route::post('/queues', [QueueController::class, 'store'])->name('queues.store');
     Route::get('/queues/table-data', [QueueController::class, 'tableData'])->name('queues.tableData');
     Route::patch('/queues/{queue}/status', [QueueController::class, 'updateStatus'])->name('queues.updateStatus');
     Route::put('/queues/{queue}', [QueueController::class, 'update'])->name('queues.update');

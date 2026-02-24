@@ -19,8 +19,15 @@ class QueueController extends Controller
             ->orderBy('queue_number')
             ->get();
         $practitioners = User::whereIn('role', ['dokter', 'bidan'])->orderBy('role')->orderBy('name')->get();
+        $services = [
+            'Periksa Kehamilan',
+            'Persalinan',
+            'Keluarga Berencana',
+            'Kesehatan Ibu dan Anak',
+            'Imunisasi'
+        ];
 
-        return view('admin.queues.index', compact('queues', 'date', 'practitioners'));
+        return view('admin.queues.index', compact('queues', 'date', 'practitioners', 'services'));
     }
 
     public function tableData(Request $request)
@@ -33,6 +40,63 @@ class QueueController extends Controller
         $practitioners = User::whereIn('role', ['dokter', 'bidan'])->orderBy('role')->orderBy('name')->get();
 
         return view('admin.queues.partials.table', compact('queues', 'practitioners'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'nik' => 'nullable|string|max:20',
+            'dob' => 'nullable|date',
+            'gender' => 'nullable|in:L,P',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'complaint' => 'nullable|string',
+            'assigned_practitioner_id' => 'nullable|exists:users,id',
+            'service_name' => 'required|string|in:Periksa Kehamilan,Persalinan,Keluarga Berencana,Kesehatan Ibu dan Anak,Imunisasi',
+            'date' => 'required|date',
+        ]);
+
+        // Upsert patient by NIK (or create new if no NIK / not found)
+        $patient = null;
+        if (!empty($validated['nik'])) {
+            $patient = Patient::where('nik', $validated['nik'])->first();
+        }
+        if (!$patient) {
+            $patient = Patient::create([
+                'name' => $validated['name'],
+                'nik' => $validated['nik'] ?? null,
+                'dob' => $validated['dob'] ?? null,
+                'gender' => $validated['gender'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
+            ]);
+        } else {
+            // Update contact info
+            $patient->update([
+                'phone' => $validated['phone'] ?? $patient->phone,
+                'address' => $validated['address'] ?? $patient->address,
+            ]);
+        }
+
+        // Auto-generate next queue number for selected date
+        $lastNumber = Queue::whereDate('date', $validated['date'])->max('queue_number') ?? 0;
+        $nextNumber = $lastNumber + 1;
+
+        Queue::create([
+            'patient_id' => $patient->id,
+            'nik' => $validated['nik'] ?? null,
+            'queue_number' => $nextNumber,
+            'date' => $validated['date'],
+            'status' => 'waiting',
+            'complaint' => $validated['complaint'] ?? null,
+            'assigned_practitioner_id' => $validated['assigned_practitioner_id'] ?? null,
+            'service_name' => $validated['service_name'],
+            'service_id' => null,
+        ]);
+
+        return redirect()->route('admin.queues.index', ['date' => $validated['date']])
+            ->with('success', 'Antrian berhasil ditambahkan. No. ' . sprintf('%03d', $nextNumber));
     }
 
     public function updateStatus(Request $request, Queue $queue)
