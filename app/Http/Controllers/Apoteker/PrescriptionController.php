@@ -60,7 +60,7 @@ class PrescriptionController extends Controller
                             'medicine_id' => $medicine->id,
                             'type' => 'keluar',
                             'quantity' => $item->quantity,
-                            'description' => "Resep #{$prescription->id} untuk pasien {$prescription->patient->name}"
+                            'description' => "Resep {$prescription->id} untuk pasien {$prescription->patient->name}"
                         ]);
                     }
                 }
@@ -77,7 +77,7 @@ class PrescriptionController extends Controller
                             'medicine_id' => $medicine->id,
                             'type' => 'masuk',
                             'quantity' => $item->quantity,
-                            'description' => "Batal Resep #{$prescription->id}"
+                            'description' => "Batal Resep {$prescription->id}"
                         ]);
                     }
                 }

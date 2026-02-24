@@ -123,7 +123,7 @@
                                     {{ $log->quantity > 0 ? '+' : '' }}{{ $log->quantity }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-sm">
-                                    {{ $log->description ?: '-' }}
+                                    {{ Str::replace('Resep #', 'Resep ', $log->description) ?: '-' }}
                                 </td>
                             </tr>
                         @empty
