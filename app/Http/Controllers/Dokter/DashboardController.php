@@ -19,9 +19,9 @@ class DashboardController extends Controller
     {
         $today = Carbon::today();
 
-        // 1. Total Pasien Ditangani (via handled transactions)
-        $totalHandledPatients = Patient::whereHas('transactions', function ($q) {
-            $q->where('handled_by', auth()->id());
+        // 1. Total Pasien (yang pernah antre ke dokter ini)
+        $totalHandledPatients = Patient::whereHas('queues', function ($q) {
+            $q->where('assigned_practitioner_id', auth()->id());
         })->count();
 
         // 2. Total Pendapatan Pribadi (dari transaksi yang saya tangani, status paid)

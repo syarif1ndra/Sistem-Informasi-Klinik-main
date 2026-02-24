@@ -18,8 +18,8 @@ class DashboardController extends Controller
         $today = date('Y-m-d');
 
         // Personal stats: only patients handled by this bidan
-        $totalHandledPatients = Patient::whereHas('transactions', function ($q) {
-            $q->where('handled_by', auth()->id());
+        $totalHandledPatients = Patient::whereHas('queues', function ($q) {
+            $q->where('assigned_practitioner_id', auth()->id());
         })->count();
 
         // Personal revenue
