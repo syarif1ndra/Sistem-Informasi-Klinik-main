@@ -113,32 +113,28 @@ class MedicineController extends Controller
     public function adjustStock(Request $request, Medicine $medicine)
     {
         $request->validate([
-            'actual_stock' => 'required|integer|min:0',
+            'quantity' => 'required|integer|min:1',
             'description' => 'required|string',
         ]);
 
-        $currentStock = $medicine->stock;
-        $actualStock = $request->actual_stock;
-        $difference = $actualStock - $currentStock;
-
-        if ($difference == 0) {
-            return back()->with('info', 'Tidak ada selisih, stok tidak berubah.');
+        if ($medicine->stock < $request->quantity) {
+            return back()->with('error', 'Jumlah penyesuaian melebihi stok saat ini');
         }
 
         try {
             DB::beginTransaction();
 
-            $medicine->update(['stock' => $actualStock]);
+            $medicine->decrement('stock', $request->quantity);
 
             StockLog::create([
                 'medicine_id' => $medicine->id,
                 'type' => 'penyesuaian',
-                'quantity' => $difference,
-                'description' => $request->description . " (Sistem: $currentStock -> Fisik: $actualStock)"
+                'quantity' => $request->quantity,
+                'description' => $request->description
             ]);
 
             DB::commit();
-            return back()->with('success', 'Stok berhasil disesuaikan.');
+            return back()->with('success', 'Stok berhasil disesuaikan (dikurangi).');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal menyesuaikan stok: ' . $e->getMessage());

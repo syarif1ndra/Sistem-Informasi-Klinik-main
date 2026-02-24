@@ -369,10 +369,9 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Stok Fisik Saat Ini (Hasil
-                                Opname)</label>
-                            <input type="number" id="adjustStockCurrent" name="actual_stock" required min="0"
-                                class="w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 font-bold text-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Pengurangan (Rusak, Expired, dll)</label>
+                            <input type="number" id="adjustStockCurrent" name="quantity" required min="1"
+                                class="w-full rounded-lg border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 font-bold text-lg" placeholder="Contoh: 5">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Alasan Penyesuaian</label>
@@ -428,8 +427,7 @@
             var form = document.getElementById('adjustStockForm');
             form.action = '/apoteker/medicines/' + id + '/adjust-stock';
             document.getElementById('adjustStockName').value = name + ' (Tercatat: ' + currentStock + ')';
-            // Suggest remaining the same conceptually
-            document.getElementById('adjustStockCurrent').value = currentStock;
+            document.getElementById('adjustStockCurrent').value = '';
             openModal('adjustStockModal');
         }
     </script>
