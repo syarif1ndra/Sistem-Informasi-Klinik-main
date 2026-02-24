@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Queue;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,5 +93,23 @@ class ClinicRegistrationController extends Controller
         $queue->update(['status' => 'cancelled']);
 
         return redirect()->back()->with('success', 'Pendaftaran berhasil dibatalkan.');
+    }
+
+    public function printStruk(Transaction $transaction)
+    {
+        if (!Auth::user()->userPatient) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        // Verify that this transaction belongs to a patient that the user has registered
+        $isValid = Queue::where('user_patient_id', Auth::user()->userPatient->id)
+            ->where('patient_id', $transaction->patient_id)
+            ->exists();
+
+        if (!$isValid) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        return view('user.transactions.print_struk', compact('transaction'));
     }
 }

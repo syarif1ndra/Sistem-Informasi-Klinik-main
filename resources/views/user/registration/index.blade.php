@@ -118,14 +118,13 @@
                                     <td class="px-8 py-6 whitespace-nowrap text-right">
                                         @if($registration->status === 'waiting')
                                             <form action="{{ route('user.registration.cancel', $registration) }}" method="POST"
-                                                onsubmit="event.preventDefault(); openCancelModal(this.action);"
-                                                class="inline">
+                                                onsubmit="event.preventDefault(); openCancelModal(this.action);" class="inline">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit"
                                                     class="inline-flex items-center px-4 py-2 bg-white text-rose-500 text-[10px] font-black tracking-widest uppercase rounded-xl border border-rose-200 hover:bg-rose-50 hover:border-rose-300 hover:text-rose-600 transition-all active:scale-95 shadow-sm">
-                                                    <svg class="w-3.5 h-3.5 mr-1.5"
-                                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                                             d="M6 18L18 6M6 6l12 12"></path>
                                                     </svg>
@@ -133,28 +132,49 @@
                                                 </button>
                                             </form>
                                         @elseif($registration->transaction_data)
-                                            <button type="button" 
+                                            <button type="button"
                                                 onclick="openTransactionModal({{ $registration->transaction_data->id }})"
                                                 class="inline-flex items-center px-4 py-2 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-emerald-500 hover:text-white transition-all active:scale-90 group/btn shadow-sm">
-                                                <svg class="w-4 h-4 mr-1.5 text-emerald-500 group-hover/btn:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                <svg class="w-4 h-4 mr-1.5 text-emerald-500 group-hover/btn:text-white" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                    </path>
                                                 </svg>
                                                 Lihat Struk
                                             </button>
-                                            
+
+                                            <a href="{{ route('user.registration.transactions.print_struk', $registration->transaction_data->id) }}"
+                                                target="_blank"
+                                                class="inline-flex items-center px-4 py-2 bg-pink-50 text-pink-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-pink-500 hover:text-white transition-all active:scale-90 shadow-sm ml-2 group/print">
+                                                <svg class="w-4 h-4 mr-1.5 text-pink-500 group-hover/print:text-white" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M17 17v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2h2m3-4h6a2 2 0 012 2v6m-6 0H9m12 0a2 2 0 012 2v4a2 2 0 01-2 2H9a2 2 0 01-2-2">
+                                                    </path>
+                                                </svg>
+                                                Cetak Struk
+                                            </a>
+
                                             <!-- Hidden data for this transaction -->
                                             <div id="tx-data-{{ $registration->transaction_data->id }}" class="hidden">
-                                                <div class="tx-total">{{ number_format($registration->transaction_data->total_amount, 0, ',', '.') }}</div>
+                                                <div class="tx-total">
+                                                    {{ number_format($registration->transaction_data->total_amount, 0, ',', '.') }}
+                                                </div>
                                                 <div class="tx-status">{{ ucfirst($registration->transaction_data->status) }}</div>
-                                                <div class="tx-payment">{{ strtoupper($registration->transaction_data->payment_method) }}</div>
-                                                 <div class="tx-items">
+                                                <div class="tx-payment">
+                                                    {{ strtoupper($registration->transaction_data->payment_method) }}</div>
+                                                <div class="tx-items">
                                                     @foreach($registration->transaction_data->items as $item)
-                                                        <div class="flex justify-between text-sm py-2 border-b border-gray-100 last:border-0">
+                                                        <div
+                                                            class="flex justify-between text-sm py-2 border-b border-gray-100 last:border-0">
                                                             <div class="flex flex-col">
                                                                 <span class="font-bold text-gray-800">{{ $item->name }}</span>
-                                                                <span class="text-xs text-gray-500">{{ $item->quantity }}x Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                                                                <span class="text-xs text-gray-500">{{ $item->quantity }}x Rp
+                                                                    {{ number_format($item->price, 0, ',', '.') }}</span>
                                                             </div>
-                                                            <span class="font-bold text-gray-800">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                                                            <span class="font-bold text-gray-800">Rp
+                                                                {{ number_format($item->subtotal, 0, ',', '.') }}</span>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -201,21 +221,26 @@
             </p>
         </div>
     </div>
-    
+
     <!-- Transaction Modal Structure -->
-    <div id="transactionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="transactionModal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0 opacity-0 pointer-events-none transition-opacity duration-300">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onclick="closeTransactionModal()"></div>
-        
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onclick="closeTransactionModal()">
+        </div>
+
         <!-- Modal Content -->
-        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md mx-auto transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[90vh]">
-            
+        <div
+            class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md mx-auto transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[90vh]">
+
             <!-- Header -->
             <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
                         </svg>
                     </div>
                     <div>
@@ -223,20 +248,26 @@
                         <p class="text-xs font-semibold text-gray-400">Rincian Obat & Tindakan</p>
                     </div>
                 </div>
-                <button onclick="closeTransactionModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-rose-100 hover:text-rose-600 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button onclick="closeTransactionModal()"
+                    class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-rose-100 hover:text-rose-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
                 </button>
             </div>
 
             <!-- Body (Scrollable) -->
             <div class="p-6 overflow-y-auto flex-grow">
-                
+
                 <!-- Status & Payment Method Badges -->
                 <div class="flex gap-2 mb-6">
-                    <span id="modal-status" class="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-600">
+                    <span id="modal-status"
+                        class="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-600">
                         STATUS
                     </span>
-                    <span id="modal-payment" class="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-50 text-blue-600">
+                    <span id="modal-payment"
+                        class="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-50 text-blue-600">
                         PAYMENT
                     </span>
                 </div>
@@ -272,28 +303,35 @@
     </div>
 
     <!-- Cancel Confirmation Modal Structure -->
-    <div id="cancelModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="cancelModal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0 opacity-0 pointer-events-none transition-opacity duration-300">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onclick="closeCancelModal()"></div>
-        
+
         <!-- Modal Content -->
-        <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-auto transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
+        <div
+            class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm mx-auto transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
             <div class="p-6 text-center">
                 <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                        </path>
                     </svg>
                 </div>
                 <h3 class="text-xl font-black text-gray-800 mb-2">Batalkan Pendaftaran?</h3>
-                <p class="text-sm text-gray-500 mb-6">Apakah Anda yakin ingin membatalkan pendaftaran dengan layanan ini? Tindakan ini tidak dapat diurungkan.</p>
+                <p class="text-sm text-gray-500 mb-6">Apakah Anda yakin ingin membatalkan pendaftaran dengan layanan ini?
+                    Tindakan ini tidak dapat diurungkan.</p>
                 <form id="globalCancelForm" method="POST" action="">
                     @csrf
                     @method('PATCH')
                     <div class="flex gap-3">
-                        <button type="button" onclick="closeCancelModal()" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors">
+                        <button type="button" onclick="closeCancelModal()"
+                            class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors">
                             Kembali
                         </button>
-                        <button type="submit" class="flex-1 px-4 py-3 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 shadow-md shadow-rose-200 transition-colors">
+                        <button type="submit"
+                            class="flex-1 px-4 py-3 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 shadow-md shadow-rose-200 transition-colors">
                             Ya, Batalkan
                         </button>
                     </div>
@@ -305,110 +343,110 @@
 @endsection
 
 @section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const cancelModal = document.getElementById('cancelModal');
-    const cancelModalContent = cancelModal ? cancelModal.querySelector('.transform') : null;
-    
-    window.openCancelModal = function(actionUrl) {
-        document.getElementById('globalCancelForm').action = actionUrl;
-        cancelModal.classList.remove('opacity-0', 'pointer-events-none');
-        setTimeout(() => {
-            cancelModalContent.classList.remove('scale-95');
-            cancelModalContent.classList.add('scale-100');
-        }, 10);
-        document.body.style.overflow = 'hidden';
-    };
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cancelModal = document.getElementById('cancelModal');
+            const cancelModalContent = cancelModal ? cancelModal.querySelector('.transform') : null;
 
-    window.closeCancelModal = function() {
-        cancelModalContent.classList.remove('scale-100');
-        cancelModalContent.classList.add('scale-95');
-        setTimeout(() => {
-            cancelModal.classList.add('opacity-0', 'pointer-events-none');
-            document.body.style.overflow = 'auto';
-        }, 150);
-    };
+            window.openCancelModal = function (actionUrl) {
+                document.getElementById('globalCancelForm').action = actionUrl;
+                cancelModal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    cancelModalContent.classList.remove('scale-95');
+                    cancelModalContent.classList.add('scale-100');
+                }, 10);
+                document.body.style.overflow = 'hidden';
+            };
 
-    const modal = document.getElementById('transactionModal');
-    if (!modal) return;
-    
-    const modalContent = modal.querySelector('.transform');
-    
-    window.openTransactionModal = function(txId) {
-        // Fetch data from hidden divs
-        const container = document.getElementById(`tx-data-${txId}`);
-        if(!container) {
-            console.error('Data container not found for txId:', txId);
-            return;
-        }
+            window.closeCancelModal = function () {
+                cancelModalContent.classList.remove('scale-100');
+                cancelModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    cancelModal.classList.add('opacity-0', 'pointer-events-none');
+                    document.body.style.overflow = 'auto';
+                }, 150);
+            };
 
-        const total = container.querySelector('.tx-total').innerHTML;
-        const status = container.querySelector('.tx-status').innerHTML;
-        const payment = container.querySelector('.tx-payment').innerHTML;
-        const itemsHtml = container.querySelector('.tx-items').innerHTML;
-        const notesEl = container.querySelector('.tx-notes');
-        const notes = notesEl ? notesEl.innerText.trim() : '';
+            const modal = document.getElementById('transactionModal');
+            if (!modal) return;
 
-        // Populate modal
-        document.getElementById('modal-total').innerText = total;
-        document.getElementById('modal-status').innerText = status;
-        document.getElementById('modal-payment').innerText = payment;
-        document.getElementById('modal-items-container').innerHTML = itemsHtml;
+            const modalContent = modal.querySelector('.transform');
 
-        // Show/hide notes
-        const notesWrapper = document.getElementById('modal-notes-wrapper');
-        const notesText = document.getElementById('modal-notes');
-        if (notes) {
-            notesText.innerText = notes;
-            notesWrapper.classList.remove('hidden');
-        } else {
-            notesWrapper.classList.add('hidden');
-        }
+            window.openTransactionModal = function (txId) {
+                // Fetch data from hidden divs
+                const container = document.getElementById(`tx-data-${txId}`);
+                if (!container) {
+                    console.error('Data container not found for txId:', txId);
+                    return;
+                }
 
-        // Color status badge based on value
-        const statusBadge = document.getElementById('modal-status');
-        if(status.toLowerCase() === 'paid') {
-            statusBadge.className = 'inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700';
-            statusBadge.innerText = 'LUNAS';
-        } else {
-            statusBadge.className = 'inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-700';
-            statusBadge.innerText = 'BELUM LUNAS';
-        }
+                const total = container.querySelector('.tx-total').innerHTML;
+                const status = container.querySelector('.tx-status').innerHTML;
+                const payment = container.querySelector('.tx-payment').innerHTML;
+                const itemsHtml = container.querySelector('.tx-items').innerHTML;
+                const notesEl = container.querySelector('.tx-notes');
+                const notes = notesEl ? notesEl.innerText.trim() : '';
 
-        // Show Modal
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        setTimeout(() => {
-            modalContent.classList.remove('scale-95');
-            modalContent.classList.add('scale-100');
-        }, 10);
-        
-        // Prevent body scroll
-        document.body.style.overflow = 'hidden';
-    };
+                // Populate modal
+                document.getElementById('modal-total').innerText = total;
+                document.getElementById('modal-status').innerText = status;
+                document.getElementById('modal-payment').innerText = payment;
+                document.getElementById('modal-items-container').innerHTML = itemsHtml;
 
-    window.closeTransactionModal = function() {
-        modalContent.classList.remove('scale-100');
-        modalContent.classList.add('scale-95');
-        
-        setTimeout(() => {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            document.body.style.overflow = 'auto'; // Restore scroll
-        }, 150);
-    };
-    
-    // Listen for Escape key to close modal
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && !modal.classList.contains('opacity-0')) {
-            window.closeTransactionModal();
-        }
-    });
+                // Show/hide notes
+                const notesWrapper = document.getElementById('modal-notes-wrapper');
+                const notesText = document.getElementById('modal-notes');
+                if (notes) {
+                    notesText.innerText = notes;
+                    notesWrapper.classList.remove('hidden');
+                } else {
+                    notesWrapper.classList.add('hidden');
+                }
 
-    // Make sure clicking backdrop closes modal
-    modal.addEventListener('click', function(event) {
-        if (event.target === modal || event.target.closest('.backdrop-blur-sm')) {
-            window.closeTransactionModal();
-        }
-    });
-});
-</script>
+                // Color status badge based on value
+                const statusBadge = document.getElementById('modal-status');
+                if (status.toLowerCase() === 'paid') {
+                    statusBadge.className = 'inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700';
+                    statusBadge.innerText = 'LUNAS';
+                } else {
+                    statusBadge.className = 'inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-700';
+                    statusBadge.innerText = 'BELUM LUNAS';
+                }
+
+                // Show Modal
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }, 10);
+
+                // Prevent body scroll
+                document.body.style.overflow = 'hidden';
+            };
+
+            window.closeTransactionModal = function () {
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+
+                setTimeout(() => {
+                    modal.classList.add('opacity-0', 'pointer-events-none');
+                    document.body.style.overflow = 'auto'; // Restore scroll
+                }, 150);
+            };
+
+            // Listen for Escape key to close modal
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !modal.classList.contains('opacity-0')) {
+                    window.closeTransactionModal();
+                }
+            });
+
+            // Make sure clicking backdrop closes modal
+            modal.addEventListener('click', function (event) {
+                if (event.target === modal || event.target.closest('.backdrop-blur-sm')) {
+                    window.closeTransactionModal();
+                }
+            });
+        });
+    </script>
 @endsection
