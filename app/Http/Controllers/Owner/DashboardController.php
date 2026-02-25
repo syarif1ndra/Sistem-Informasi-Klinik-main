@@ -86,22 +86,17 @@ class DashboardController extends Controller
         // Staf Medis Teraktif (Dokter, Bidan)
         $topStaff = User::whereIn('role', ['dokter', 'bidan'])
             ->withCount([
-                'assignedQueues as total' => function ($query) use ($startDate, $endDate) {
-                    $query->whereBetween('date', [$startDate, $endDate])->where('status', 'finished');
+                'handledTransactions as total' => function ($query) use ($startDateTime, $endDateTime) {
+                    $query->whereBetween('date', [$startDateTime, $endDateTime]);
                 }
             ])
             ->get();
 
         foreach ($topStaff as $staff) {
-            $staff->revenue = \App\Models\Transaction::where('status', 'paid')
+            $staff->revenue = \App\Models\Transaction::where('handled_by', $staff->id)
+                ->where('status', 'paid')
                 ->whereBetween('date', [$startDateTime, $endDateTime])
-                ->whereExists(function ($query) use ($staff) {
-                    $query->select(DB::raw(1))
-                        ->from('queues')
-                        ->whereColumn('queues.patient_id', 'transactions.patient_id')
-                        ->whereRaw('DATE(queues.date) = DATE(transactions.date)')
-                        ->where('queues.assigned_practitioner_id', $staff->id);
-                })->sum('total_amount');
+                ->sum('total_amount');
 
             $staff->staff_name = $staff->name;
         }
@@ -114,6 +109,7 @@ class DashboardController extends Controller
                 $q->whereBetween('date', [$startDateTime, $endDateTime]);
             })
             ->where('item_type', 'App\Models\Service')
+            ->where('name', '!=', 'Biaya Konsultasi')
             ->groupBy('name')
             ->orderByDesc('total')
             ->limit(5)
@@ -181,7 +177,9 @@ class DashboardController extends Controller
             ->whereHas('transaction', function ($q) use ($startDate, $endDate) {
                 $q->whereBetween('date', [$startDate, $endDate]);
             })
-            ->where('item_type', 'App\Models\Service')->groupBy('name')->orderByDesc('total')->limit(5)->get();
+            ->where('item_type', 'App\Models\Service')
+            ->where('name', '!=', 'Biaya Konsultasi')
+            ->groupBy('name')->orderByDesc('total')->limit(5)->get();
 
         $topMedicines = TransactionItem::select('name', DB::raw('sum(quantity) as total'))
             ->whereHas('transaction', function ($q) use ($startDate, $endDate) {
