@@ -38,6 +38,7 @@ class SocialController extends Controller
                 }
 
                 Auth::login($user);
+                request()->session()->regenerate();
 
                 if ($user->isAdmin()) {
                     return redirect()->route('admin.dashboard');
@@ -64,6 +65,7 @@ class SocialController extends Controller
                 ]);
 
                 Auth::login($newUser);
+                request()->session()->regenerate();
 
                 return redirect()->route('dashboard');
             }

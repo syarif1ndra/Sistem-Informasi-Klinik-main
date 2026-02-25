@@ -11,7 +11,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'bidan', 'dokter', 'owner', 'perawat', 'user', 'apoteker') NOT NULL DEFAULT 'user'");
+        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'bidan', 'dokter', 'owner', 'user', 'apoteker') NOT NULL DEFAULT 'user'");
     }
 
     /**
@@ -20,6 +20,6 @@ return new class extends Migration {
     public function down(): void
     {
         // Revert without apoteker
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'bidan', 'dokter', 'owner', 'perawat', 'user') NOT NULL DEFAULT 'user'");
+        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'bidan', 'dokter', 'owner',  'user') NOT NULL DEFAULT 'user'");
     }
 };
