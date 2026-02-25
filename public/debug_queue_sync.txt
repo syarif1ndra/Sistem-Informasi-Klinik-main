@@ -32,3 +32,24 @@ Condition MET: Calling + UserPatientID
 UserPatient Found: user
 Updating EXISTING Patient ID: 1
 Linked Queue to Patient ID: 1
+
+[2026-02-25 23:46:36] Status Update Request: finished
+Queue ID: 2
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1
+
+[2026-02-25 23:46:42] Status Update Request: calling
+Queue ID: 3
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Updating EXISTING Patient ID: 1
+Linked Queue to Patient ID: 1
+
+[2026-02-25 23:46:47] Status Update Request: finished
+Queue ID: 3
+User Patient ID: 1
+Patient ID (Before): 1
+Condition NOT MET. Status: finished, UserPatientID: 1

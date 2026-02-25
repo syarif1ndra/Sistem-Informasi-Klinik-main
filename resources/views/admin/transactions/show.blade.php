@@ -88,161 +88,172 @@
                                     {{ $transaction->payment_method == 'bpjs' ? 'BPJS Kesehatan' : 'Umum' }}
                                 </span>
                             </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Praktisi
+                                    Medis</label>
+                                <div class="text-lg font-semibold text-gray-900">
+                                    {{ $transaction->handledBy ? $transaction->handledBy->name : '-' }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Items Table -->
-                <div class="overflow-hidden rounded-lg border border-gray-200 mb-8">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    Item</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    Harga</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    Qty</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @php
-                                $konsultasi = $transaction->items->where('name', 'Biaya Konsultasi')->first();
-                                $layanan = $transaction->items->where('item_type', 'App\Models\Service')->where('name', '!=', 'Biaya Konsultasi');
-                                $obat = $transaction->items->where('item_type', 'App\Models\Medicine');
-                            @endphp
-
-                            <!-- Biaya Konsultasi -->
-                            @if($konsultasi)
-                                <tr class="hover:bg-pink-50 transition bg-pink-50/30">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-bold text-gray-900">{{ $konsultasi->name }}</div>
-                                        <div
-                                            class="text-xs text-pink-600 inline-block px-2 py-0.5 rounded-full bg-pink-100 mt-1 font-semibold">
-                                            Konsultasi Utama
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                        Rp {{ number_format($konsultasi->price, 0, ',', '.') }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                        {{ $konsultasi->quantity }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
-                                        Rp {{ number_format($konsultasi->subtotal, 0, ',', '.') }}
-                                    </td>
+                    <!-- Items Table -->
+                    <div class="overflow-hidden rounded-lg border border-gray-200 mb-8">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Item</th>
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Harga</th>
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Qty</th>
+                                    <th
+                                        class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                        Subtotal</th>
                                 </tr>
-                            @endif
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @php
+                                    $konsultasi = $transaction->items->where('name', 'Biaya Konsultasi')->first();
+                                    $layanan = $transaction->items->where('item_type', 'App\Models\Service')->where('name', '!=', 'Biaya Konsultasi');
+                                    $obat = $transaction->items->where('item_type', 'App\Models\Medicine');
+                                @endphp
 
-                            <!-- Layanan Tambahan -->
-                            @if($layanan->count() > 0)
-                                <tr class="bg-gray-50/80 border-t border-b border-gray-100">
-                                    <td colspan="4"
-                                        class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50">
-                                        Layanan Tambahan</td>
-                                </tr>
-                                @foreach($layanan as $item)
-                                    <tr class="hover:bg-pink-50 transition">
-                                        <td class="px-6 py-4 whitespace-nowrap pl-8">
-                                            <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
+                                <!-- Biaya Konsultasi -->
+                                @if($konsultasi)
+                                    <tr class="hover:bg-pink-50 transition bg-pink-50/30">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-bold text-gray-900">{{ $konsultasi->name }}</div>
+                                            <div
+                                                class="text-xs text-pink-600 inline-block px-2 py-0.5 rounded-full bg-pink-100 mt-1 font-semibold">
+                                                Konsultasi Utama
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                            Rp {{ number_format($item->price, 0, ',', '.') }}
+                                            Rp {{ number_format($konsultasi->price, 0, ',', '.') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                            {{ $item->quantity }}
+                                            {{ $konsultasi->quantity }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
-                                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                            Rp {{ number_format($konsultasi->subtotal, 0, ',', '.') }}
                                         </td>
                                     </tr>
-                                @endforeach
-                            @endif
+                                @endif
 
-                            <!-- Obat & Vaksin -->
-                            @if($obat->count() > 0)
-                                <tr class="bg-gray-50/80 border-t border-b border-gray-100">
-                                    <td colspan="4"
-                                        class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50">
-                                        Obat & Vaksin</td>
+                                <!-- Layanan Tambahan -->
+                                @if($layanan->count() > 0)
+                                    <tr class="bg-gray-50/80 border-t border-b border-gray-100">
+                                        <td colspan="4"
+                                            class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50">
+                                            Layanan Tambahan</td>
+                                    </tr>
+                                    @foreach($layanan as $item)
+                                        <tr class="hover:bg-pink-50 transition">
+                                            <td class="px-6 py-4 whitespace-nowrap pl-8">
+                                                <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                                Rp {{ number_format($item->price, 0, ',', '.') }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                                {{ $item->quantity }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
+                                                Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+
+                                <!-- Obat & Vaksin -->
+                                @if($obat->count() > 0)
+                                    <tr class="bg-gray-50/80 border-t border-b border-gray-100">
+                                        <td colspan="4"
+                                            class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50">
+                                            Obat & Vaksin</td>
+                                    </tr>
+                                    @foreach($obat as $item)
+                                        <tr class="hover:bg-pink-50 transition">
+                                            <td class="px-6 py-4 whitespace-nowrap pl-8">
+                                                <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                                Rp {{ number_format($item->price, 0, ',', '.') }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                                {{ $item->quantity }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
+                                                Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                            <tfoot class="bg-gray-50">
+                                <tr>
+                                    <td colspan="3" class="px-6 py-4 text-right font-bold text-gray-500">Total Tagihan</td>
+                                    <td
+                                        class="px-6 py-4 text-right font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-rose-600">
+                                        Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}
+                                    </td>
                                 </tr>
-                                @foreach($obat as $item)
-                                    <tr class="hover:bg-pink-50 transition">
-                                        <td class="px-6 py-4 whitespace-nowrap pl-8">
-                                            <div class="text-sm font-medium text-gray-900">{{ $item->name }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                            Rp {{ number_format($item->price, 0, ',', '.') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                            {{ $item->quantity }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-800">
-                                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                        <tfoot class="bg-gray-50">
-                            <tr>
-                                <td colspan="3" class="px-6 py-4 text-right font-bold text-gray-500">Total Tagihan</td>
-                                <td
-                                    class="px-6 py-4 text-right font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-rose-600">
-                                    Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-                @if($transaction->notes)
-                    <div class="mb-8 p-6 bg-amber-50 rounded-xl border border-amber-200">
-                        <h3 class="text-sm font-bold text-amber-800 uppercase tracking-wide mb-2 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Catatan
-                        </h3>
-                        <p class="text-gray-700 text-sm whitespace-pre-wrap">{{ $transaction->notes }}</p>
+                            </tfoot>
+                        </table>
                     </div>
-                @endif
 
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row justify-end gap-3 print:hidden">
-                    <button
-                        onclick="window.open('{{ route('admin.transactions.print_struk', $transaction->id) }}', '_blank', 'width=400,height=600')"
-                        class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        Cetak Struk
-                    </button>
-
-                    @if($transaction->status == 'unpaid')
-                        <form action="{{ route('admin.transactions.update', $transaction) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="status" value="paid">
-                            <button type="submit"
-                                class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none transition transform hover:-translate-y-0.5 shadow-lg hover:shadow-green-500/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    @if($transaction->notes)
+                        <div class="mb-8 p-6 bg-amber-50 rounded-xl border border-amber-200">
+                            <h3 class="text-sm font-bold text-amber-800 uppercase tracking-wide mb-2 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                                Tandai Lunas
-                            </button>
-                        </form>
+                                Catatan
+                            </h3>
+                            <p class="text-gray-700 text-sm whitespace-pre-wrap">{{ $transaction->notes }}</p>
+                        </div>
                     @endif
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row justify-end gap-3 print:hidden">
+                        <button
+                            onclick="window.open('{{ route('admin.transactions.print_struk', $transaction->id) }}', '_blank', 'width=400,height=600')"
+                            class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                            Cetak Struk
+                        </button>
+
+                        @if($transaction->status == 'unpaid')
+                            <form action="{{ route('admin.transactions.update', $transaction) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="paid">
+                                <button type="submit"
+                                    class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none transition transform hover:-translate-y-0.5 shadow-lg hover:shadow-green-500/30">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Tandai Lunas
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 @endsection

@@ -17,7 +17,7 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
-        $transactions = Transaction::with('patient')
+        $transactions = Transaction::with(['patient', 'handledBy'])
             ->whereDate('created_at', $date)
             ->oldest()
             ->paginate(10);
@@ -109,13 +109,13 @@ class TransactionController extends Controller
 
     public function show(Transaction $transaction)
     {
-        $transaction->load(['patient', 'items']);
+        $transaction->load(['patient', 'items', 'handledBy']);
         return view('admin.transactions.show', compact('transaction'));
     }
 
     public function printStruk(Transaction $transaction)
     {
-        $transaction->load(['patient', 'items', 'patient.medicalRecords']);
+        $transaction->load(['patient', 'items', 'patient.medicalRecords', 'handledBy']);
         return view('admin.transactions.print_struk', compact('transaction'));
     }
 
