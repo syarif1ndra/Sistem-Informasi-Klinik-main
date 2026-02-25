@@ -54,7 +54,7 @@
                 <td>{{ $trx->created_at->format('Y-m-d H:i') }}</td>
                 <td>{{ $trx->patient->name ?? '-' }}</td>
                 <td>{{ strtoupper($trx->payment_method) }}</td>
-                <td>{{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
                 <td>{{ $trx->status == 'paid' ? 'LUNAS' : 'BELUM LUNAS' }}</td>
             </tr>
         @endforeach

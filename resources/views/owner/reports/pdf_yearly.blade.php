@@ -97,13 +97,7 @@
             </tr>
             <tr>
                 <td style="border: none; padding: 2px 10px 2px 0;"><strong>Total Pendapatan (Lunas):</strong></td>
-                <td style="border: none; padding: 2px 0;">
-                    @if(isset($isExcel) && $isExcel)
-                        {{ $totalRevenue }}
-                    @else
-                        Rp {{ number_format($totalRevenue, 0, ',', '.') }}
-                    @endif
-                </td>
+                <td style="border: none; padding: 2px 0;">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</td>
             </tr>
         </table>
     </div>
@@ -123,13 +117,7 @@
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ \Carbon\Carbon::create()->month($trx->label_month)->translatedFormat('F') }}</td>
                     <td class="text-center">{{ $trx->total_count }}</td>
-                    <td class="text-right">
-                        @if(isset($isExcel) && $isExcel)
-                            {{ $trx->total_revenue }}
-                        @else
-                            Rp {{ number_format($trx->total_revenue, 0, ',', '.') }}
-                        @endif
-                    </td>
+                    <td class="text-right">Rp {{ number_format($trx->total_revenue, 0, ',', '.') }}</td>
                 </tr>
             @empty
                 <tr>
