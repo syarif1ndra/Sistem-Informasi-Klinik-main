@@ -22,11 +22,13 @@ class PatientProfileController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'nik' => 'required|string|unique:user_patients,nik',
+            'nik' => 'required|digits:16|unique:user_patients,nik',
             'dob' => 'required|date',
             'gender' => 'required|in:L,P',
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
+        ], [
+            'nik.digits' => 'NIK harus berjumlah 16 angka.'
         ]);
 
         $patient = new UserPatient($request->all());
@@ -51,11 +53,13 @@ class PatientProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'nik' => 'required|string|unique:user_patients,nik,' . $patient->id,
+            'nik' => 'required|digits:16|unique:user_patients,nik,' . $patient->id,
             'dob' => 'required|date',
             'gender' => 'required|in:L,P',
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
+        ], [
+            'nik.digits' => 'NIK harus berjumlah 16 angka.'
         ]);
 
         $patient->update($request->all());

@@ -59,6 +59,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('apoteker');
     }
 
+    /**
+     * Determine if the user has verified their email address.
+     * Override to automatically verify non-user roles (Admin, Dokter, Bidan, dll).
+     *
+     * @return bool
+     */
+    public function hasVerifiedEmail()
+    {
+        if ($this->role !== 'user') {
+            return true;
+        }
+        return !is_null($this->email_verified_at);
+    }
+
     public function patient()
     {
         return $this->hasOne(Patient::class);

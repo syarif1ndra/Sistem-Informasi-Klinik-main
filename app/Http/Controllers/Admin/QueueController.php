@@ -46,7 +46,7 @@ class QueueController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'nik' => 'nullable|string|max:20',
+            'nik' => 'nullable|digits:16',
             'dob' => 'nullable|date',
             'gender' => 'nullable|in:L,P',
             'phone' => 'nullable|string|max:20',
@@ -55,6 +55,8 @@ class QueueController extends Controller
             'assigned_practitioner_id' => 'nullable|exists:users,id',
             'service_name' => 'required|string|in:Periksa Kehamilan,Persalinan,Keluarga Berencana,Kesehatan Ibu dan Anak,Imunisasi',
             'date' => 'required|date',
+        ], [
+            'nik.digits' => 'NIK harus berjumlah 16 angka.'
         ]);
 
         // Upsert patient by NIK (or create new if no NIK / not found)
