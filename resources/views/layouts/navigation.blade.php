@@ -30,7 +30,7 @@
                             :active="request()->routeIs('admin.transactions.*')">
                             {{ __('Transaksi') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('admin.reports.index')" :active="request()->routeIs('admin.reports.*')">
+                        <x-nav-link :href="route('admin.reports')" :active="request()->routeIs('admin.reports.*')">
                             {{ __('Laporan') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.birth_records.index')"

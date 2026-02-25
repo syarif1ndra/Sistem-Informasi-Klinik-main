@@ -149,7 +149,7 @@
                     <p class="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Lainnya</p>
                 </div>
 
-                <a href="{{ route('admin.reports.index') }}"
+                <a href="{{ route('admin.reports') }}"
                     class="flex items-center px-4 py-3 rounded-lg transition duration-200 {{ request()->routeIs('admin.reports*') ? 'bg-pink-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

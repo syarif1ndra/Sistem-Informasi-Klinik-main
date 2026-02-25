@@ -3,60 +3,93 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Patient;
-use App\Models\Transaction;
-use App\Models\MedicalRecord;
-use App\Models\Queue;
 use Illuminate\Http\Request;
-use DateTime;
+use App\Models\Transaction;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $month = $request->input('month', date('m'));
-        $year = $request->input('year', date('Y'));
+        $type = $request->input('type', 'daily'); // daily, monthly, yearly
+        $status = $request->input('status', 'all');
+        $practitionerId = $request->input('practitioner_id', 'all');
 
-        $startDate = "$year-$month-01";
-        $endDate = date("Y-m-t", strtotime($startDate));
+        $practitioners = User::whereIn('role', ['dokter', 'bidan'])->get();
 
-        // Report Data
-        $totalPatients = Patient::whereBetween('created_at', ["$startDate 00:00:00", "$endDate 23:59:59"])->count();
-        $totalTransactions = Transaction::whereBetween('date', [$startDate, $endDate])->sum('total_amount');
-        $totalVisits = Queue::whereBetween('date', [$startDate, $endDate])->count();
+        $query = Transaction::with(['patient', 'processedBy', 'handledBy']);
 
-        // Detailed Data
-        $transactions = Transaction::with('patient')
-            ->whereBetween('date', [$startDate, $endDate])
-            ->oldest()
-            ->paginate(20);
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
 
-        return view('admin.reports.index', compact('totalPatients', 'totalTransactions', 'totalVisits', 'transactions', 'month', 'year'));
-    }
-    public function exportExcel(Request $request)
-    {
-        $month = $request->input('month', date('m'));
-        $year = $request->input('year', date('Y'));
+        if ($practitionerId !== 'all') {
+            $query->where('handled_by', $practitionerId);
+        }
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ReportExport($month, $year), 'laporan-bulanan-' . $month . '-' . $year . '.xlsx');
-    }
+        if ($type === 'monthly') {
+            $month = $request->input('month', Carbon::today()->format('Y-m'));
 
-    public function exportPdf(Request $request)
-    {
-        $month = $request->input('month', date('m'));
-        $year = $request->input('year', date('Y'));
+            // Extract Year and Month carefully since SQLite vs MySQL DATE logic differ
+            $date = Carbon::createFromFormat('Y-m', $month);
+            $query->whereYear('date', $date->year)->whereMonth('date', $date->month);
 
-        $startDate = "$year-$month-01";
-        $endDate = date("Y-m-t", strtotime($startDate));
+            $transactions = $query->orderBy('date', 'asc')->get();
 
-        $transactions = Transaction::with('patient')
-            ->whereBetween('date', [$startDate, $endDate])
-            ->oldest()
-            ->get();
+            $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
+            $totalTransactions = $transactions->count();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.reports.pdf', compact('transactions', 'month', 'year'));
-        $pdf->setPaper('A4', 'portrait');
+            if ($request->has('export') && $request->export === 'pdf') {
+                $pdf = Pdf::loadView('admin.reports.pdf_monthly', compact('transactions', 'month', 'status', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+                $pdf->setPaper('A4', 'portrait');
+                return $pdf->download('laporan-bulanan-admin-' . $month . '.pdf');
+            }
 
-        return $pdf->download('laporan-bulanan-' . $month . '-' . $year . '.pdf');
+            return view('admin.reports.monthly', compact('transactions', 'month', 'status', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+
+        } elseif ($type === 'yearly') {
+            $year = $request->input('year', Carbon::today()->format('Y'));
+
+            $query->whereYear('date', $year);
+
+            // Grouping by Month in standard SQL
+            $transactions = $query->select(
+                DB::raw('MONTH(date) as label_month'),
+                DB::raw('COUNT(*) as total_count'),
+                DB::raw('SUM(CASE WHEN status = "paid" THEN total_amount ELSE 0 END) as total_revenue')
+            )
+                ->groupBy('label_month')
+                ->orderBy('label_month', 'asc')
+                ->get();
+
+            $totalRevenue = $transactions->sum('total_revenue');
+            $totalTransactions = $transactions->sum('total_count');
+
+            if ($request->has('export') && $request->export === 'pdf') {
+                $pdf = Pdf::loadView('admin.reports.pdf_yearly', compact('transactions', 'year', 'status', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+                $pdf->setPaper('A4', 'portrait');
+                return $pdf->download('laporan-tahunan-admin-' . $year . '.pdf');
+            }
+
+            return view('admin.reports.yearly', compact('transactions', 'year', 'status', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+
+        } else {
+            // Default Daily Type Detail Data
+            $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
+            $endDate = $request->input('end_date', Carbon::today()->toDateString());
+
+            $query->whereDate('date', '>=', $startDate)
+                ->whereDate('date', '<=', $endDate);
+
+            $transactions = $query->orderBy('created_at', 'asc')->get();
+
+            $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
+            $totalTransactions = $transactions->count();
+
+            return view('admin.reports.index', compact('transactions', 'startDate', 'endDate', 'status', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+        }
     }
 }

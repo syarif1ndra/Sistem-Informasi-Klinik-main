@@ -144,9 +144,9 @@ Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('ad
     Route::resource('services', ServiceController::class);
     Route::resource('medicines', MedicineController::class);
 
-    Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.exportExcel');
-    Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('export.pdf');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
     Route::resource('users', UserController::class);
 });
 
