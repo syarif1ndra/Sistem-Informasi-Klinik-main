@@ -21,23 +21,18 @@ class StaffPerformanceController extends Controller
         // Medis (Dokter, Bidan)
         $medis = User::whereIn('role', ['dokter', 'bidan'])
             ->withCount([
-                'assignedQueues as total_pasien' => function ($query) use ($startDate, $endDate) {
-                    $query->whereBetween('date', [$startDate, $endDate])->where('status', 'finished');
+                'handledTransactions as total_pasien' => function ($query) use ($startDateTime, $endDateTime) {
+                    $query->whereBetween('date', [$startDateTime, $endDateTime]);
                 }
             ])
             ->get();
 
         // Calculate revenue for each medis
         foreach ($medis as $staff) {
-            $staff->revenue = \App\Models\Transaction::where('status', 'paid')
+            $staff->revenue = \App\Models\Transaction::where('handled_by', $staff->id)
+                ->where('status', 'paid')
                 ->whereBetween('date', [$startDateTime, $endDateTime])
-                ->whereExists(function ($query) use ($staff) {
-                    $query->select(DB::raw(1))
-                        ->from('queues')
-                        ->whereColumn('queues.patient_id', 'transactions.patient_id')
-                        ->whereRaw('DATE(queues.date) = DATE(transactions.date)')
-                        ->where('queues.assigned_practitioner_id', $staff->id);
-                })->sum('total_amount');
+                ->sum('total_amount');
         }
 
         return view('owner.staff.index', compact('medis', 'startDate', 'endDate'));
