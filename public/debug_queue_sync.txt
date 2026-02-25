@@ -1,0 +1,10 @@
+
+[2026-02-25 10:18:08] Status Update Request: calling
+Queue ID: 1
+User Patient ID: 1
+Patient ID (Before): NULL
+Condition MET: Calling + UserPatientID
+UserPatient Found: user
+Creating NEW Patient...
+Created Patient ID: 1
+Linked Queue to Patient ID: 1
