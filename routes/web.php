@@ -165,11 +165,11 @@ Route::middleware([
 
 // User Dashboard
 Route::get('/dashboard', [UserDashboardController::class, 'index'])
-    ->middleware(['auth', 'verified', 'role.user'])
+    ->middleware(['auth', 'role.user'])
     ->name('dashboard');
 
 // Patient Profile Routes
-Route::middleware(['auth', 'verified', 'role.user'])->prefix('user/patient')->name('user.patient.')->group(function () {
+Route::middleware(['auth', 'role.user'])->prefix('user/patient')->name('user.patient.')->group(function () {
     Route::get('/create', [UserPatientProfileController::class, 'create'])->name('create');
     Route::post('/', [UserPatientProfileController::class, 'store'])->name('store');
     Route::get('/edit', [UserPatientProfileController::class, 'edit'])->name('edit');
@@ -177,7 +177,7 @@ Route::middleware(['auth', 'verified', 'role.user'])->prefix('user/patient')->na
 });
 
 // Clinic Registration Routes (Protected by EnsurePatientData)
-Route::middleware(['auth', 'verified', 'role.user', 'patient.data'])->prefix('user/registration')->name('user.registration.')->group(function () {
+Route::middleware(['auth', 'role.user', 'patient.data'])->prefix('user/registration')->name('user.registration.')->group(function () {
     Route::get('/', [UserClinicRegistrationController::class, 'index'])->name('index');
     Route::get('/create', [UserClinicRegistrationController::class, 'create'])->name('create');
     Route::post('/', [UserClinicRegistrationController::class, 'store'])->name('store');
