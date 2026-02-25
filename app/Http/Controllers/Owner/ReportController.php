@@ -157,8 +157,8 @@ class ReportController extends Controller
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();
 
-            // Note: Reuse pdf_monthly
-            $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            // Note: Reuse pdf_daily
+            $pdf = Pdf::loadView('owner.reports.pdf_daily', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-harian-' . $startDate . '-to-' . $endDate . '.pdf');
         }

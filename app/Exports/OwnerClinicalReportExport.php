@@ -92,11 +92,10 @@ class OwnerClinicalReportExport implements FromView, ShouldAutoSize, WithStyles
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();
 
-            return view('owner.reports.pdf_monthly', [
+            return view('owner.reports.pdf_daily', [
                 'transactions' => $transactions,
                 'startDate' => $this->startDate,
                 'endDate' => $this->endDate,
-                'month' => $this->month,
                 'practitionerId' => $this->practitionerId,
                 'practitioners' => $practitioners,
                 'type' => $this->type,

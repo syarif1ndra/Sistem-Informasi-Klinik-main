@@ -156,11 +156,8 @@ class ReportController extends Controller
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();
 
-            // Note: Admin didn't have a daily PDF view before, but we must return something.
-            // Let's reuse pdf_monthly for now or create a new one. To be safe, let's load pdf_monthly and pass startDate/endDate.
-            // Wait, previously the "Export PDF" button on the index page was probably calling this.
-            // Let's create `admin.reports.pdf` or just use pdf_monthly since it's the exact same table structure.
-            $pdf = Pdf::loadView('admin.reports.pdf_monthly', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            // Note: Use pdf_daily
+            $pdf = Pdf::loadView('admin.reports.pdf_daily', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-harian-admin-' . $startDate . '-to-' . $endDate . '.pdf');
         }
