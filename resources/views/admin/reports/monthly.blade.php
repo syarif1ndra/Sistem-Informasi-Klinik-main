@@ -39,21 +39,16 @@
                         @endforeach
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status"
-                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
-                        <option value="all" {{ $status == 'all' ? 'selected' : '' }}>Semua</option>
-                        <option value="paid" {{ $status == 'paid' ? 'selected' : '' }}>Lunas</option>
-                        <option value="unpaid" {{ $status == 'unpaid' ? 'selected' : '' }}>Belum Lunas</option>
-                    </select>
-                </div>
                 <div class="flex items-center space-x-2">
                     <button type="submit"
                         class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition shadow-sm h-[38px]">
                         Filter
                     </button>
-                    <button type="submit" name="export" value="pdf"
+                    <a href="{{ route('admin.reports.exportExcel', request()->all()) }}"
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition shadow-sm h-[38px] flex items-center gap-2">
+                        Excel
+                    </a>
+                    <a href="{{ route('admin.reports.exportPdf', request()->all()) }}"
                         class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition shadow-sm h-[38px] flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">

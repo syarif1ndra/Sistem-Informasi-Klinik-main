@@ -71,6 +71,8 @@ Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bi
     Route::put('/patients/{patient}/screenings/{screening}', [\App\Http\Controllers\Bidan\ScreeningController::class, 'update'])->name('patients.screenings.update');
 
     // Financial Report (filtered by handled_by)
+    Route::get('/reports/export/excel', [\App\Http\Controllers\Bidan\ReportController::class, 'exportExcel'])->name('reports.exportExcel');
+    Route::get('/reports/export/pdf', [\App\Http\Controllers\Bidan\ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [\App\Http\Controllers\Bidan\ReportController::class, 'index'])->name('reports.index');
 });
 
@@ -99,6 +101,8 @@ Route::middleware(['auth', 'verified', 'role.dokter'])->prefix('dokter')->name('
     Route::put('/patients/{patient}/screenings/{screening}', [\App\Http\Controllers\Dokter\ScreeningController::class, 'update'])->name('patients.screenings.update');
 
     // Financial Report (filtered by handled_by)
+    Route::get('/reports/export/excel', [\App\Http\Controllers\Dokter\ReportController::class, 'exportExcel'])->name('reports.exportExcel');
+    Route::get('/reports/export/pdf', [\App\Http\Controllers\Dokter\ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [\App\Http\Controllers\Dokter\ReportController::class, 'index'])->name('reports.index');
 });
 
@@ -144,8 +148,8 @@ Route::middleware(['auth', 'verified', 'role.admin'])->prefix('admin')->name('ad
     Route::resource('services', ServiceController::class);
     Route::resource('medicines', MedicineController::class);
 
-    Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('export.excel');
-    Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('export.pdf');
+    Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.exportExcel');
+    Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports');
     Route::resource('users', UserController::class);
 });
@@ -158,6 +162,8 @@ Route::middleware([
     // A better name would technically be EnsureStaffRole, but to save refactoring time we will just use it.
     \App\Http\Middleware\EnsureAdminOrBidanRole::class
 ])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/patients/export/excel', [\App\Http\Controllers\Admin\PatientController::class, 'exportExcel'])->name('patients.exportExcel');
+    Route::get('/patients/export/pdf', [\App\Http\Controllers\Admin\PatientController::class, 'exportPdf'])->name('patients.exportPdf');
     Route::resource('transactions', TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [TransactionController::class, 'printStruk'])->name('transactions.print_struk');
     Route::resource('medical-records', MedicalRecordController::class);
@@ -198,6 +204,8 @@ Route::middleware(['auth', 'verified', 'role.owner'])->prefix('owner')->name('ow
     Route::get('/export/pdf', [\App\Http\Controllers\Owner\DashboardController::class, 'exportPdf'])->name('export.pdf');
 
     // New Owner Features
+    Route::get('/reports/export/excel', [\App\Http\Controllers\Owner\ReportController::class, 'exportExcel'])->name('reports.exportExcel');
+    Route::get('/reports/export/pdf', [\App\Http\Controllers\Owner\ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [\App\Http\Controllers\Owner\ReportController::class, 'index'])->name('reports');
     Route::get('/staff-performance', [\App\Http\Controllers\Owner\StaffPerformanceController::class, 'index'])->name('staff.performance');
     Route::get('/finance', [\App\Http\Controllers\Owner\FinanceController::class, 'index'])->name('finance');

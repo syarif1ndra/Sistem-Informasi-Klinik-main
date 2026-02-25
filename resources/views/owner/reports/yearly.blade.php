@@ -39,21 +39,16 @@
                         @endforeach
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status"
-                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
-                        <option value="all" {{ $status == 'all' ? 'selected' : '' }}>Semua</option>
-                        <option value="paid" {{ $status == 'paid' ? 'selected' : '' }}>Lunas</option>
-                        <option value="unpaid" {{ $status == 'unpaid' ? 'selected' : '' }}>Belum Lunas</option>
-                    </select>
-                </div>
                 <div class="flex items-center space-x-2">
                     <button type="submit"
                         class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition shadow-sm h-[38px]">
                         Filter
                     </button>
-                    <button type="submit" name="export" value="pdf"
+                    <a href="{{ route('owner.reports.exportExcel', request()->all()) }}"
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition shadow-sm h-[38px] flex items-center gap-2">
+                        Excel
+                    </a>
+                    <a href="{{ route('owner.reports.exportPdf', request()->all()) }}"
                         class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition shadow-sm h-[38px] flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -61,7 +56,7 @@
                                 d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Cetak PDF
-                    </button>
+                    </a>
                 </div>
             </form>
         </div>

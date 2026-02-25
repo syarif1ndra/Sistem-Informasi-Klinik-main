@@ -7,11 +7,14 @@
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Laporan Lengkap (Admin)</h1>
                 <p class="text-gray-500 mt-1">Detail transaksi klinik berdasarkan periode</p>
-                
+
                 <div class="mt-4 flex space-x-4 border-b border-gray-200">
-                    <a href="{{ route('admin.reports', ['type' => 'daily']) }}" class="border-b-2 border-pink-500 py-2 px-1 text-sm font-medium text-pink-600">Harian (Detail)</a>
-                    <a href="{{ route('admin.reports', ['type' => 'monthly']) }}" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">Bulanan</a>
-                    <a href="{{ route('admin.reports', ['type' => 'yearly']) }}" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">Tahunan</a>
+                    <a href="{{ route('admin.reports', ['type' => 'daily']) }}"
+                        class="border-b-2 border-pink-500 py-2 px-1 text-sm font-medium text-pink-600">Harian (Detail)</a>
+                    <a href="{{ route('admin.reports', ['type' => 'monthly']) }}"
+                        class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">Bulanan</a>
+                    <a href="{{ route('admin.reports', ['type' => 'yearly']) }}"
+                        class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">Tahunan</a>
                 </div>
             </div>
             <form method="GET" action="{{ route('admin.reports') }}"
@@ -32,17 +35,9 @@
                         class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
                         <option value="all" {{ $practitionerId == 'all' ? 'selected' : '' }}>Semua Praktisi</option>
                         @foreach ($practitioners as $p)
-                            <option value="{{ $p->id }}" {{ $practitionerId == $p->id ? 'selected' : '' }}>{{ $p->name }} ({{ ucfirst($p->role) }})</option>
+                            <option value="{{ $p->id }}" {{ $practitionerId == $p->id ? 'selected' : '' }}>{{ $p->name }}
+                                ({{ ucfirst($p->role) }})</option>
                         @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status"
-                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
-                        <option value="all" {{ $status == 'all' ? 'selected' : '' }}>Semua</option>
-                        <option value="paid" {{ $status == 'paid' ? 'selected' : '' }}>Lunas</option>
-                        <option value="unpaid" {{ $status == 'unpaid' ? 'selected' : '' }}>Belum Lunas</option>
                     </select>
                 </div>
                 <button type="submit"
@@ -50,12 +45,12 @@
                     Filter
                 </button>
                 <div class="flex gap-2 ml-auto md:ml-2">
-                    <a href="{{ route('admin.export.excel', request()->all()) }}"
+                    <a href="{{ route('admin.reports.exportExcel', request()->all()) }}"
                         class="bg-green-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition flex items-center justify-center shadow-sm h-[38px]"
                         title="Export Excel">
                         Excel
                     </a>
-                    <a href="{{ route('admin.export.pdf', request()->all()) }}"
+                    <a href="{{ route('admin.reports.exportPdf', request()->all()) }}"
                         class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition flex items-center justify-center shadow-sm h-[38px]"
                         title="Export PDF">
                         PDF
@@ -105,7 +100,8 @@
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Pasien
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Praktisi
+                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                Praktisi
                             </th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total
                             </th>
@@ -120,7 +116,8 @@
                             <tr class="hover:bg-gray-50 transition duration-150">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $trx->id }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $trx->created_at->translatedFormat('d M Y H:i') }}</td>
+                                    {{ $trx->created_at->translatedFormat('d M Y H:i') }}
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-semibold text-gray-900">{{ $trx->patient->name ?? '-' }}</div>
                                 </td>
@@ -128,7 +125,8 @@
                                     {{ $trx->handledBy->name ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-gray-900">Rp
-                                    {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                                    {{ number_format($trx->total_amount, 0, ',', '.') }}
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @if($trx->status == 'paid')
                                         <span
@@ -140,7 +138,8 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $trx->processedBy->name ?? '-' }}</td>
+                                    {{ $trx->processedBy->name ?? '-' }}
+                                </td>
                             </tr>
                         @empty
                             <tr>
