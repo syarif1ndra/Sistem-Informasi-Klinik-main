@@ -130,6 +130,10 @@
             <span>Metode Bayar</span>
             <span>{{ $transaction->payment_method == 'bpjs' ? 'BPJS' : 'Umum' }}</span>
         </div>
+        <div class="info-row">
+            <span>Praktisi</span>
+            <span>{{ $transaction->handledBy ? $transaction->handledBy->name : '-' }}</span>
+        </div>
     </div>
 
     <div class="divider"></div>
