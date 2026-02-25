@@ -144,17 +144,19 @@
                                                 Lihat Struk
                                             </button>
 
-                                            <a href="{{ route('user.registration.transactions.print_struk', $registration->transaction_data->id) }}"
-                                                target="_blank"
-                                                class="inline-flex items-center px-4 py-2 bg-pink-50 text-pink-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-pink-500 hover:text-white transition-all active:scale-90 shadow-sm ml-2 group/print">
-                                                <svg class="w-4 h-4 mr-1.5 text-pink-500 group-hover/print:text-white" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M17 17v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2h2m3-4h6a2 2 0 012 2v6m-6 0H9m12 0a2 2 0 012 2v4a2 2 0 01-2 2H9a2 2 0 01-2-2">
-                                                    </path>
-                                                </svg>
-                                                Cetak Struk
-                                            </a>
+                                            @if($registration->transaction_data->status === 'paid')
+                                                <a href="{{ route('user.registration.transactions.print_struk', $registration->transaction_data->id) }}"
+                                                    target="_blank"
+                                                    class="inline-flex items-center px-4 py-2 bg-pink-50 text-pink-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-pink-500 hover:text-white transition-all active:scale-90 shadow-sm ml-2 group/print">
+                                                    <svg class="w-4 h-4 mr-1.5 text-pink-500 group-hover/print:text-white" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M17 17v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-9a2 2 0 012-2h2m3-4h6a2 2 0 012 2v6m-6 0H9m12 0a2 2 0 012 2v4a2 2 0 01-2 2H9a2 2 0 01-2-2">
+                                                        </path>
+                                                    </svg>
+                                                    Cetak Struk
+                                                </a>
+                                            @endif
 
                                             <!-- Hidden data for this transaction -->
                                             <div id="tx-data-{{ $registration->transaction_data->id }}" class="hidden">
