@@ -59,7 +59,8 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
                 'practitioners' => $practitioners,
                 'type' => $this->type,
                 'totalRevenue' => $totalRevenue,
-                'totalTransactions' => $totalTransactions
+                'totalTransactions' => $totalTransactions,
+                'isExcel' => true
             ]);
 
         } elseif ($this->type === 'yearly') {
@@ -82,7 +83,8 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
                 'practitioners' => $practitioners,
                 'type' => $this->type,
                 'totalRevenue' => $totalRevenue,
-                'totalTransactions' => $totalTransactions
+                'totalTransactions' => $totalTransactions,
+                'isExcel' => true
             ]);
 
         } else {
@@ -100,7 +102,8 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
                 'practitioners' => $practitioners,
                 'type' => $this->type,
                 'totalRevenue' => $totalRevenue,
-                'totalTransactions' => $totalTransactions
+                'totalTransactions' => $totalTransactions,
+                'isExcel' => true
             ]);
         }
     }

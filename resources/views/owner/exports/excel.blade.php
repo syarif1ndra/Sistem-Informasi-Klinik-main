@@ -6,7 +6,8 @@
         <tr>
             <th colspan="4" style="font-style: italic;">Periode:
                 {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} -
-                {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</th>
+                {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+            </th>
         </tr>
         <tr></tr>
     </thead>
@@ -53,7 +54,7 @@
                 <td>{{ $trx->created_at->format('Y-m-d H:i') }}</td>
                 <td>{{ $trx->patient->name ?? '-' }}</td>
                 <td>{{ strtoupper($trx->payment_method) }}</td>
-                <td>{{ $trx->total_amount }}</td>
+                <td>{{ number_format($trx->total_amount, 0, ',', '.') }}</td>
                 <td>{{ $trx->status == 'paid' ? 'LUNAS' : 'BELUM LUNAS' }}</td>
             </tr>
         @endforeach

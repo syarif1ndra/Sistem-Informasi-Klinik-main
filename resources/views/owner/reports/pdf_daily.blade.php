@@ -99,7 +99,13 @@
             </tr>
             <tr>
                 <td style="border: none; padding: 2px 10px 2px 0;"><strong>Total Pendapatan (Lunas):</strong></td>
-                <td style="border: none; padding: 2px 0;">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</td>
+                <td style="border: none; padding: 2px 0;">
+                    @if(isset($isExcel) && $isExcel)
+                        {{ $totalRevenue }}
+                    @else
+                        Rp {{ number_format($totalRevenue, 0, ',', '.') }}
+                    @endif
+                </td>
             </tr>
         </table>
     </div>
@@ -123,7 +129,13 @@
                     <td>{{ $trx->patient->name ?? '-' }}</td>
                     <td>{{ $trx->handledBy->name ?? '-' }}</td>
                     <td class="text-center">{{ ucfirst($trx->status) }}</td>
-                    <td class="text-right">{{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                    <td class="text-right">
+                        @if(isset($isExcel) && $isExcel)
+                            {{ $trx->total_amount }}
+                        @else
+                            {{ number_format($trx->total_amount, 0, ',', '.') }}
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>

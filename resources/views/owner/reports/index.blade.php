@@ -107,8 +107,6 @@
                             </th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Admin
-                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
@@ -137,13 +135,10 @@
                                             Lunas</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $trx->processedBy->name ?? '-' }}
-                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-6 py-10 text-center text-gray-500">Tidak ada data transaksi.</td>
+                                <td colspan="7" class="px-6 py-10 text-center text-gray-500">Tidak ada data transaksi.</td>
                             </tr>
                         @endforelse
                     </tbody>

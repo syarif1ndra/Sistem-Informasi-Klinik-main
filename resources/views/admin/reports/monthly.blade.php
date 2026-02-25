@@ -114,8 +114,6 @@
                             </th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Status
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Admin
-                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
@@ -139,12 +137,10 @@
                                         <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-yellow-100 text-yellow-800">Belum Lunas</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $trx->processedBy->name ?? '-' }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-10 text-center text-gray-500">Tidak ada data transaksi pada bulan ini.</td>
+                                <td colspan="6" class="px-6 py-10 text-center text-gray-500">Tidak ada data transaksi pada bulan ini.</td>
                             </tr>
                         @endforelse
                     </tbody>
