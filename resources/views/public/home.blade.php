@@ -8,7 +8,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h1 class="text-5xl font-bold mb-6">Selamat Datang di Bidan Siti Hajar</h1>
+                    <h1 class="text-5xl font-bold mb-6">Layanan Kebidanan Profesional Bidan Siti Hajar Natar</h1>
                     <p class="text-xl text-pink-100 mb-8 leading-relaxed">
                         Kami memberikan pelayanan kesehatan terbaik untuk ibu dan anak. Dengan tenaga bidan profesional dan
                         berpengalaman, kami siap mendampingi perjalanan kehamilan hingga persalinan Anda.
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    @if(session('success'))
+    @if (session('success'))
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
@@ -83,7 +83,7 @@
     </div>
 
     <!-- Layanan Kami -->
-    <div class="py-16 bg-white">
+    <div id="layanan" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Layanan Kesehatan Kami</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -162,12 +162,14 @@
 
 
     <!-- Obat Tersedia -->
-    <div class="py-16 bg-gray-50">
+    <div id="obat" class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Vaksin & Obat Tersedia</h2>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-[600px] w-full divide-y divide-gray-200">
+                        <caption class="sr-only">Daftar harga dan ketersediaan vaksin serta obat di Klinik Bidan Siti Hajar
+                        </caption>
                         <thead class="bg-gradient-to-r from-pink-500 to-rose-600">
                             <tr>
                                 <th
@@ -200,12 +202,14 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                         Rp {{ number_format($medicine->price, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">{{ $medicine->description }}
+                                    <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                                        {{ $medicine->description }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-6 py-8 text-center text-gray-500">Belum ada data obat.</td>
+                                    <td colspan="4" class="px-6 py-8 text-center text-gray-500">Belum ada data obat.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -216,38 +220,166 @@
     </div>
 
     <!-- FAQ Section -->
-    <div class="py-16 bg-white">
+    <div id="faq" class="py-16 bg-white" x-data="{ activeFaq: null }">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Pertanyaan yang Sering Diajukan</h2>
+
             <div class="space-y-6">
-                @forelse($faqs as $faq)
-                    <div
-                        class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 overflow-hidden hover:shadow-xl transition duration-300">
-                        <details class="group cursor-pointer">
-                            <summary
-                                class="flex items-center justify-between p-6 font-semibold text-gray-800 hover:bg-pink-50 transition duration-150">
-                                <span class="flex items-center">
-                                    <span class="text-pink-600 mr-3">Q:</span>
-                                    {{ $faq->question }}
-                                </span>
-                                <svg class="w-5 h-5 text-pink-600 group-open:rotate-180 transition duration-300" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                                </svg>
-                            </summary>
-                            <div class="px-6 pb-6 pt-2 text-gray-700 bg-pink-50">
-                                <span class="text-pink-600 font-semibold">A:</span> {{ $faq->answer }}
-                            </div>
-                        </details>
+                <div
+                    class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="cursor-pointer">
+                        <button @click="activeFaq === 1 ? activeFaq = null : activeFaq = 1"
+                            class="w-full flex items-center justify-between p-6 font-semibold text-gray-800 hover:bg-pink-50 transition duration-150 text-left">
+                            <span class="flex items-center">
+                                <span class="text-pink-600 font-bold mr-3">Q:</span>
+                                Apa saja persyaratan untuk periksa kehamilan pertama kali?
+                            </span>
+                            <svg class="w-5 h-5 text-pink-600 transition duration-300"
+                                :class="activeFaq === 1 ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                        </button>
+
+                        <div x-show="activeFaq === 1" x-collapse
+                            class="px-6 pb-6 pt-2 text-gray-700 bg-pink-50 leading-relaxed">
+                            <span class="text-pink-600 font-semibold">A:</span>
+                            Cukup membawa KTP dan Buku KIA (jika sudah punya). Untuk kunjungan pertama, kami akan melakukan
+                            pemeriksaan fisik lengkap dan pendataan riwayat kesehatan Ibu.
+                        </div>
                     </div>
-                @empty
-                    <div class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 p-6">
-                        <h3 class="text-lg font-bold text-pink-600 mb-2">Q: Apa saja tanda-tanda awal kehamilan?</h3>
-                        <p class="text-gray-700">A: Tanda awal kehamilan meliputi telat haid, mual di pagi hari (morning
-                            sickness), payudara sensitif, dan kelelahan.</p>
+                </div>
+
+                <div
+                    class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="cursor-pointer">
+                        <button @click="activeFaq === 2 ? activeFaq = null : activeFaq = 2"
+                            class="w-full flex items-center justify-between p-6 font-semibold text-gray-800 hover:bg-pink-50 transition duration-150 text-left">
+                            <span class="flex items-center">
+                                <span class="text-pink-600 font-bold mr-3">Q:</span>
+                                Apakah Klinik Siti Hajar melayani persalinan 24 jam?
+                            </span>
+                            <svg class="w-5 h-5 text-pink-600 transition duration-300"
+                                :class="activeFaq === 2 ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                        </button>
+
+                        <div x-show="activeFaq === 2" x-collapse
+                            class="px-6 pb-6 pt-2 text-gray-700 bg-pink-50 leading-relaxed">
+                            <span class="text-pink-600 font-semibold">A:</span>
+                            Ya, untuk layanan persalinan darurat dan persalinan berencana, tim bidan kami standby 24 jam
+                            penuh untuk mendampingi Anda.
+                        </div>
                     </div>
-                @endforelse
+                </div>
+
+                <div
+                    class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="cursor-pointer">
+                        <button @click="activeFaq === 3 ? activeFaq = null : activeFaq = 3"
+                            class="w-full flex items-center justify-between p-6 font-semibold text-gray-800 hover:bg-pink-50 transition duration-150 text-left">
+                            <span class="flex items-center">
+                                <span class="text-pink-600 font-bold mr-3">Q:</span>
+                                Bagaimana cara mendaftar antrian secara online?
+                            </span>
+                            <svg class="w-5 h-5 text-pink-600 transition duration-300"
+                                :class="activeFaq === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                        </button>
+
+                        <div x-show="activeFaq === 3" x-collapse
+                            class="px-6 pb-6 pt-2 text-gray-700 bg-pink-50 leading-relaxed">
+                            <span class="text-pink-600 font-semibold">A:</span>
+                            Anda dapat mengklik tombol "Masuk" di bagian atas, login ke akun Anda, lalu pilih menu "Ambil
+                            Antrian". Nomor antrian akan muncul secara otomatis dan dapat dipantau dari rumah.
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="cursor-pointer">
+                        <button @click="activeFaq === 4 ? activeFaq = null : activeFaq = 4"
+                            class="w-full flex items-center justify-between p-6 font-semibold text-gray-800 hover:bg-pink-50 transition duration-150 text-left">
+                            <span class="flex items-center">
+                                <span class="text-pink-600 font-bold mr-3">Q:</span>
+                                Metode pembayaran apa saja yang diterima di Klinik Siti Hajar?
+                            </span>
+                            <svg class="w-5 h-5 text-pink-600 transition duration-300"
+                                :class="activeFaq === 4 ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                        </button>
+                        <div x-show="activeFaq === 4" x-collapse
+                            class="px-6 pb-6 pt-2 text-gray-700 bg-pink-50 leading-relaxed">
+                            <span class="text-pink-600 font-semibold">A:</span>
+                            Kami menerima pembayaran tunai (Cash) dan non-tunai melalui transfer bank serta QRIS (OVO,
+                            GoPay, Dana). Untuk saat ini, layanan BPJS Kesehatan sedang dalam proses pengembangan kerja
+                            sama.
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="cursor-pointer">
+                        <button @click="activeFaq === 5 ? activeFaq = null : activeFaq = 5"
+                            class="w-full flex items-center justify-between p-6 font-semibold text-gray-800 hover:bg-pink-50 transition duration-150 text-left">
+                            <span class="flex items-center">
+                                <span class="text-pink-600 font-bold mr-3">Q:</span>
+                                Vaksin apa saja yang tersedia untuk bayi dan balita?
+                            </span>
+                            <svg class="w-5 h-5 text-pink-600 transition duration-300"
+                                :class="activeFaq === 5 ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                        </button>
+                        <div x-show="activeFaq === 5" x-collapse
+                            class="px-6 pb-6 pt-2 text-gray-700 bg-pink-50 leading-relaxed">
+                            <span class="text-pink-600 font-semibold">A:</span>
+                            Kami menyediakan imunisasi dasar lengkap (HBO, BCG, Polio, DPT-HB-Hib, Campak/MR) serta vaksin
+                            tambahan sesuai stok tersedia. Anda dapat mengecek detail stok dan harga pada tabel **Vaksin &
+                            Obat** di atas.
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white rounded-lg shadow-lg border-l-4 border-pink-500 overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="cursor-pointer">
+                        <button @click="activeFaq === 6 ? activeFaq = null : activeFaq = 6"
+                            class="w-full flex items-center justify-between p-6 font-semibold text-gray-800 hover:bg-pink-50 transition duration-150 text-left">
+                            <span class="flex items-center">
+                                <span class="text-pink-600 font-bold mr-3">Q:</span>
+                                Apakah bisa langsung datang tanpa mendaftar online jika keadaan darurat?
+                            </span>
+                            <svg class="w-5 h-5 text-pink-600 transition duration-300"
+                                :class="activeFaq === 6 ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                        </button>
+                        <div x-show="activeFaq === 6" x-collapse
+                            class="px-6 pb-6 pt-2 text-gray-700 bg-pink-50 leading-relaxed">
+                            <span class="text-pink-600 font-semibold">A:</span>
+                            Bisa. Untuk kasus darurat (seperti tanda persalinan aktif atau pendarahan), pasien akan langsung
+                            mendapatkan penanganan prioritas (IGD Kebidanan) tanpa harus mengikuti nomor antrian reguler.
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -258,7 +390,7 @@
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Lokasi Kami</h2>
             <div class="bg-white rounded-lg shadow-lg p-4 overflow-hidden">
                 <div class="aspect-w-16 aspect-h-9">
-                    <iframe
+                    <iframe title="Lokasi Google Maps Klinik Bidan Siti Hajar"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.6565890684574!2d105.19281737398143!3d-5.316152294662252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40cf12cf4f9355%3A0xa51d2b3796b1f411!2sBidan%20Siti%20Hajar!5e0!3m2!1sid!2sid!4v1769923926204!5m2!1sid!2sid"
                         width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade" class="w-full h-96 md:h-[450px] rounded-lg">
@@ -273,7 +405,7 @@
         let lastQueueNumber = null;
 
         function updateQueue() {
-            fetch('{{ url("/api/current-queue") }}')
+            fetch('{{ url('/api/current-queue') }}')
                 .then(response => {
                     if (response.ok) return response.json();
                     throw new Error('Network response was not ok');

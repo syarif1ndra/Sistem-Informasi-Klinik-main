@@ -14,240 +14,87 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // =====================
-        // ADMIN USER
+        // USERS (Admin, Bidan, Dokter, dll)
+        // Kita pakai 'email' sebagai kunci unik pengecekan
         // =====================
-        User::create([
-            'name' => 'Admin Bidan',
-            'email' => 'admin@klinik.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        $users = [
+            ['name' => 'Admin Bidan', 'email' => 'admin@klinik.com', 'role' => 'admin'],
+            ['name' => 'user', 'email' => 'user@gmail.com', 'role' => 'user'],
+            ['name' => 'Bidan Utama', 'email' => 'bidan@klinik.com', 'role' => 'bidan'],
+            ['name' => 'Dokter Klinik', 'email' => 'dokter@klinik.com', 'role' => 'dokter'],
+            ['name' => 'Owner Klinik', 'email' => 'owner@klinik.com', 'role' => 'owner'],
+            ['name' => 'Apoteker Klinik', 'email' => 'apoteker@klinik.com', 'role' => 'apoteker'],
+        ];
 
-        User::create([
-            'name' => 'user ',
-            'email' => 'user@gmail.com',
-            'password' => Hash::make('password'),
-            'role' => 'user',
-        ]);
-
-        // =====================
-        // BIDAN USER
-        // =====================
-        User::create([
-            'name' => 'Bidan Utama',
-            'email' => 'bidan@klinik.com',
-            'password' => Hash::make('password'),
-            'role' => 'bidan',
-        ]);
-
-        // =====================
-        // DOKTER USER
-        // =====================
-        User::create([
-            'name' => 'Dokter Klinik',
-            'email' => 'dokter@klinik.com',
-            'password' => Hash::make('password'),
-            'role' => 'dokter',
-        ]);
-        User::create([
-            'name' => 'Owner Klinik',
-            'email' => 'owner@klinik.com',
-            'password' => Hash::make('password'),
-            'role' => 'owner',
-        ]);
-        User::create([
-            'name' => 'Apoteker Klinik',
-            'email' => 'apoteker@klinik.com',
-            'password' => Hash::make('password'),
-            'role' => 'apoteker',
-        ]);
+        foreach ($users as $user) {
+            User::updateOrCreate(
+                ['email' => $user['email']], // Cek berdasarkan email
+                [
+                    'name' => $user['name'],
+                    'password' => Hash::make('password'),
+                    'role' => $user['role'],
+                ]
+            );
+        }
 
         // =====================
         // SERVICES (LAYANAN)
+        // Kita pakai 'name' sebagai kunci unik pengecekan
         // =====================
+        $services = [
+            ['name' => 'KB IUD', 'description' => 'Pemasangan alat kontrasepsi IUD.', 'price' => 750000],
+            ['name' => 'KB Implan', 'description' => 'Pemasangan KB implan.', 'price' => 300000],
+            ['name' => 'KB Suntik 1 Bulan', 'description' => 'KB suntik 1 bulan.', 'price' => 35000],
+            ['name' => 'KB Suntik 3 Bulan', 'description' => 'KB suntik 3 bulan.', 'price' => 35000],
+            ['name' => 'Berobat Anak', 'description' => 'Pemeriksaan dan pengobatan anak.', 'price' => 65000],
+            ['name' => 'Berobat Dewasa', 'description' => 'Pemeriksaan dan pengobatan dewasa.', 'price' => 85000],
+            ['name' => 'Hecting', 'description' => 'Tindakan penjahitan luka.', 'price' => 25000],
+            ['name' => 'ANC', 'description' => 'Antenatal Care / pemeriksaan kehamilan.', 'price' => 65000],
+            ['name' => 'USG', 'description' => 'Pemeriksaan USG kehamilan.', 'price' => 100000],
+            ['name' => 'Gestamin', 'description' => 'Pemeriksaan dan vitamin kehamilan.', 'price' => 70000],
+            ['name' => 'Pregnabon', 'description' => 'Vitamin kehamilan.', 'price' => 70000],
+            ['name' => 'Kontrol Nifas', 'description' => 'Pemeriksaan ibu setelah melahirkan.', 'price' => 100000],
+            ['name' => 'Persalinan', 'description' => 'Pelayanan persalinan normal.', 'price' => 2000000],
+            ['name' => 'Baby Spa', 'description' => 'Perawatan baby spa.', 'price' => 150000],
+            ['name' => 'Massage Bayi', 'description' => 'Pijat dan relaksasi bayi.', 'price' => 50000],
+            ['name' => 'Baby Gym', 'description' => 'Stimulasi gerak dan motorik bayi.', 'price' => 50000],
+            ['name' => 'Perawatan Bayi', 'description' => 'Perawatan kesehatan bayi.', 'price' => 50000],
+            ['name' => 'Pijat Batuk', 'description' => 'Terapi pijat untuk bayi batuk.', 'price' => 100000],
+        ];
 
-        // KB & Pemeriksaan Umum
-        Service::create([
-            'name' => 'KB IUD',
-            'description' => 'Pemasangan alat kontrasepsi IUD.',
-            'price' => 750000
-        ]);
-
-        Service::create([
-            'name' => 'KB Implan',
-            'description' => 'Pemasangan KB implan.',
-            'price' => 300000
-        ]);
-
-        Service::create([
-            'name' => 'KB Suntik 1 Bulan',
-            'description' => 'KB suntik 1 bulan.',
-            'price' => 35000
-        ]);
-
-        Service::create([
-            'name' => 'KB Suntik 3 Bulan',
-            'description' => 'KB suntik 3 bulan.',
-            'price' => 35000
-        ]);
-
-        Service::create([
-            'name' => 'Berobat Anak',
-            'description' => 'Pemeriksaan dan pengobatan anak.',
-            'price' => 65000
-        ]);
-
-        Service::create([
-            'name' => 'Berobat Dewasa',
-            'description' => 'Pemeriksaan dan pengobatan dewasa.',
-            'price' => 85000
-        ]);
-
-        Service::create([
-            'name' => 'Hecting',
-            'description' => 'Tindakan penjahitan luka.',
-            'price' => 25000
-        ]);
-
-        // Kehamilan
-        Service::create([
-            'name' => 'ANC',
-            'description' => 'Antenatal Care / pemeriksaan kehamilan.',
-            'price' => 65000
-        ]);
-
-        Service::create([
-            'name' => 'USG',
-            'description' => 'Pemeriksaan USG kehamilan.',
-            'price' => 100000
-        ]);
-
-        Service::create([
-            'name' => 'Gestamin',
-            'description' => 'Pemeriksaan dan vitamin kehamilan.',
-            'price' => 70000
-        ]);
-
-        Service::create([
-            'name' => 'Pregnabon',
-            'description' => 'Vitamin kehamilan.',
-            'price' => 70000
-        ]);
-
-        Service::create([
-            'name' => 'Kontrol Nifas',
-            'description' => 'Pemeriksaan ibu setelah melahirkan.',
-            'price' => 100000
-        ]);
-
-        // Persalinan & Bayi
-        Service::create([
-            'name' => 'Persalinan',
-            'description' => 'Pelayanan persalinan normal.',
-            'price' => 2000000
-        ]);
-
-        Service::create([
-            'name' => 'Baby Spa',
-            'description' => 'Perawatan baby spa.',
-            'price' => 150000
-        ]);
-
-        Service::create([
-            'name' => 'Massage Bayi',
-            'description' => 'Pijat dan relaksasi bayi.',
-            'price' => 50000
-        ]);
-
-        Service::create([
-            'name' => 'Baby Gym',
-            'description' => 'Stimulasi gerak dan motorik bayi.',
-            'price' => 50000
-        ]);
-
-        Service::create([
-            'name' => 'Perawatan Bayi',
-            'description' => 'Perawatan kesehatan bayi.',
-            'price' => 50000
-        ]);
-
-        Service::create([
-            'name' => 'Pijat Batuk',
-            'description' => 'Terapi pijat untuk bayi batuk.',
-            'price' => 100000
-        ]);
+        foreach ($services as $service) {
+            Service::updateOrCreate(['name' => $service['name']], $service);
+        }
 
         // =====================
         // MEDICINES (IMUNISASI)
         // =====================
-        Medicine::create([
-            'name' => 'Vaksin Rotavirus',
-            'category' => 'Imunisasi',
-            'stock' => 50,
-            'price' => 100000,
-            'description' => 'Vaksin rotavirus untuk bayi.'
-        ]);
+        $medicines = [
+            ['name' => 'Vaksin Rotavirus', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 100000, 'description' => 'Vaksin rotavirus untuk bayi.'],
+            ['name' => 'Vaksin DPT / Polio', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 75000, 'description' => 'Vaksin DPT dan Polio.'],
+            ['name' => 'Vaksin BCG', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 100000, 'description' => 'Vaksin BCG pencegahan TBC.'],
+            ['name' => 'Vaksin Hib', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 150000, 'description' => 'Vaksin Haemophilus Influenzae tipe B.'],
+            ['name' => 'Vaksin TT', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 50000, 'description' => 'Vaksin Tetanus Toxoid.'],
+            ['name' => 'Vaksin Campak', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 100000, 'description' => 'Vaksin campak.'],
+            ['name' => 'Vaksin PCV', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 100000, 'description' => 'Vaksin Pneumococcal Conjugate.'],
+        ];
 
-        Medicine::create([
-            'name' => 'Vaksin DPT / Polio',
-            'category' => 'Imunisasi',
-            'stock' => 50,
-            'price' => 75000,
-            'description' => 'Vaksin DPT dan Polio.'
-        ]);
-
-        Medicine::create([
-            'name' => 'Vaksin BCG',
-            'category' => 'Imunisasi',
-            'stock' => 50,
-            'price' => 100000,
-            'description' => 'Vaksin BCG pencegahan TBC.'
-        ]);
-
-        Medicine::create([
-            'name' => 'Vaksin Hib',
-            'category' => 'Imunisasi',
-            'stock' => 50,
-            'price' => 150000,
-            'description' => 'Vaksin Haemophilus Influenzae tipe B.'
-        ]);
-
-        Medicine::create([
-            'name' => 'Vaksin TT',
-            'category' => 'Imunisasi',
-            'stock' => 50,
-            'price' => 50000,
-            'description' => 'Vaksin Tetanus Toxoid.'
-        ]);
-
-        Medicine::create([
-            'name' => 'Vaksin Campak',
-            'category' => 'Imunisasi',
-            'stock' => 50,
-            'price' => 100000,
-            'description' => 'Vaksin campak.'
-        ]);
-
-        Medicine::create([
-            'name' => 'Vaksin PCV',
-            'category' => 'Imunisasi',
-            'stock' => 50,
-            'price' => 100000,
-            'description' => 'Vaksin Pneumococcal Conjugate.'
-        ]);
+        foreach ($medicines as $med) {
+            Medicine::updateOrCreate(['name' => $med['name']], $med);
+        }
 
         // =====================
         // FAQ
         // =====================
-        Faq::create([
-            'question' => 'Apa saja tanda awal kehamilan?',
-            'answer' => 'Tanda awal meliputi telat haid, mual, dan payudara sensitif.'
-        ]);
+        Faq::updateOrCreate(
+            ['question' => 'Apa saja tanda awal kehamilan?'],
+            ['answer' => 'Tanda awal meliputi telat haid, mual, dan payudara sensitif.']
+        );
 
-        Faq::create([
-            'question' => 'Kapan bayi harus imunisasi?',
-            'answer' => 'Imunisasi diberikan sesuai jadwal nasional dari lahir.'
-        ]);
+        Faq::updateOrCreate(
+            ['question' => 'Kapan bayi harus imunisasi?'],
+            ['answer' => 'Imunisasi diberikan sesuai jadwal nasional dari lahir.']
+        );
 
         // =====================
         // CALL EXTRA SEEDERS

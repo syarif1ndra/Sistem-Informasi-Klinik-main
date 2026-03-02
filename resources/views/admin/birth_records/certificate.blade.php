@@ -258,7 +258,7 @@
         </div>
 
         <div class="content">
-            <p class="intro-text">Yang bertanda tangan di bawah ini, petugas kesehatan pada Klinik Sehat Bersama, dengan
+            <p class="intro-text">Yang bertanda tangan di bawah ini, petugas kesehatan pada Klinik bidan siti hajar, dengan
                 ini menerangkan bahwa:</p>
 
             <div class="section-box">
