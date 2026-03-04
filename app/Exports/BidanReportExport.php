@@ -13,16 +13,18 @@ class BidanReportExport implements FromCollection, WithHeadings, WithMapping, Wi
 {
     protected $startDate;
     protected $endDate;
+    protected $paymentMethod;
 
-    public function __construct($startDate, $endDate)
+    public function __construct($startDate, $endDate, $paymentMethod = 'all')
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->paymentMethod = $paymentMethod;
     }
 
     public function collection()
     {
-        $transactions = Transaction::with([
+        $query = Transaction::with([
             'patient',
             'items' => function ($q) {
                 $q->where('item_type', 'App\Models\Service');
@@ -30,9 +32,13 @@ class BidanReportExport implements FromCollection, WithHeadings, WithMapping, Wi
         ])
             ->where('handled_by', auth()->id())
             ->whereDate('date', '>=', $this->startDate)
-            ->whereDate('date', '<=', $this->endDate)
-            ->oldest()
-            ->get();
+            ->whereDate('date', '<=', $this->endDate);
+
+        if ($this->paymentMethod !== 'all') {
+            $query->where('payment_method', $this->paymentMethod);
+        }
+
+        $transactions = $query->oldest()->get();
 
         $transactions->transform(function ($transaction) {
             if ($transaction->status === 'paid') {
@@ -54,6 +60,7 @@ class BidanReportExport implements FromCollection, WithHeadings, WithMapping, Wi
             'No. Transaksi',
             'Nama Pasien',
             'Layanan Diberikan',
+            'Metode Pembayaran',
             'Total Jasa Medis',
             'Pendapatan Anda (40%)',
             'Status'
@@ -71,6 +78,7 @@ class BidanReportExport implements FromCollection, WithHeadings, WithMapping, Wi
             $transaction->transaction_number,
             $transaction->patient->name ?? '-',
             $services ?: '-',
+            strtoupper($transaction->payment_method),
             'Rp ' . number_format($transaction->items->sum('subtotal'), 0, ',', '.'),
             'Rp ' . number_format($transaction->practitioner_income, 0, ',', '.'),
             ucfirst($transaction->status)

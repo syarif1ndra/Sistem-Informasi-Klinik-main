@@ -13,6 +13,7 @@ class ReportController extends Controller
     {
         $startDate = $request->input('start_date', date('Y-m-01'));
         $endDate = $request->input('end_date', date('Y-m-d'));
+        $paymentMethod = $request->input('payment_method', 'all');
 
         // Only transactions handled by this bidan
         $query = Transaction::with('patient')
@@ -20,11 +21,19 @@ class ReportController extends Controller
             ->whereDate('date', '>=', $startDate)
             ->whereDate('date', '<=', $endDate);
 
-        $totalRevenue = TransactionItem::whereHas('transaction', function ($q) use ($startDate, $endDate) {
+        if ($paymentMethod !== 'all') {
+            $query->where('payment_method', $paymentMethod);
+        }
+
+        $totalRevenue = TransactionItem::whereHas('transaction', function ($q) use ($startDate, $endDate, $paymentMethod) {
             $q->where('handled_by', auth()->id())
                 ->where('status', 'paid')
                 ->whereDate('date', '>=', $startDate)
                 ->whereDate('date', '<=', $endDate);
+
+            if ($paymentMethod !== 'all') {
+                $q->where('payment_method', $paymentMethod);
+            }
         })
             ->where('item_type', 'App\Models\Service')
             ->sum('subtotal') * 0.4;
@@ -47,14 +56,15 @@ class ReportController extends Controller
             return $transaction;
         });
 
-        $transactions->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+        $transactions->appends(['start_date' => $startDate, 'end_date' => $endDate, 'payment_method' => $paymentMethod]);
 
         return view('bidan.reports.index', compact(
             'transactions',
             'totalRevenue',
             'totalTransactions',
             'startDate',
-            'endDate'
+            'endDate',
+            'paymentMethod'
         ));
     }
 
@@ -62,13 +72,16 @@ class ReportController extends Controller
     {
         $startDate = $request->input('start_date', date('Y-m-01'));
         $endDate = $request->input('end_date', date('Y-m-d'));
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\BidanReportExport($startDate, $endDate), 'laporan-keuangan-bidan-' . $startDate . '-to-' . $endDate . '.xlsx');
+        $paymentMethod = $request->input('payment_method', 'all');
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\BidanReportExport($startDate, $endDate, $paymentMethod), 'laporan-keuangan-bidan-' . $startDate . '-to-' . $endDate . '.xlsx');
     }
 
     public function exportPdf(Request $request)
     {
         $startDate = $request->input('start_date', date('Y-m-01'));
         $endDate = $request->input('end_date', date('Y-m-d'));
+        $paymentMethod = $request->input('payment_method', 'all');
 
         // Only transactions handled by this bidan
         $query = Transaction::with([
@@ -81,11 +94,19 @@ class ReportController extends Controller
             ->whereDate('date', '>=', $startDate)
             ->whereDate('date', '<=', $endDate);
 
-        $totalRevenue = TransactionItem::whereHas('transaction', function ($q) use ($startDate, $endDate) {
+        if ($paymentMethod !== 'all') {
+            $query->where('payment_method', $paymentMethod);
+        }
+
+        $totalRevenue = TransactionItem::whereHas('transaction', function ($q) use ($startDate, $endDate, $paymentMethod) {
             $q->where('handled_by', auth()->id())
                 ->where('status', 'paid')
                 ->whereDate('date', '>=', $startDate)
                 ->whereDate('date', '<=', $endDate);
+
+            if ($paymentMethod !== 'all') {
+                $q->where('payment_method', $paymentMethod);
+            }
         })
             ->where('item_type', 'App\Models\Service')
             ->sum('subtotal') * 0.4;

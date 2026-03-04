@@ -131,7 +131,8 @@
             <td><strong>Periode</strong></td>
             <td>:</td>
             <td>{{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} -
-                {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</td>
+                {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
+            </td>
             <td><strong>Total Pasien</strong></td>
             <td>:</td>
             <td>{{ $totalTransactions }} Pasien</td>
@@ -144,8 +145,9 @@
                 <th width="5%" class="text-center">No</th>
                 <th width="12%">Tanggal</th>
                 <th width="15%">No. Transaksi</th>
-                <th width="20%">Nama Pasien</th>
+                <th width="15%">Nama Pasien</th>
                 <th width="20%">Layanan Diberikan</th>
+                <th width="10%">Metode</th>
                 <th width="15%" class="text-right">Total Jasa Medis</th>
                 <th width="13%" class="text-center">Status</th>
             </tr>
@@ -160,10 +162,12 @@
                     <td>
                         @php
                             $services = $trx->items->where('item_type', 'App\Models\Service')->map(function ($i) {
-                                return $i->item_name; })->implode(', ');
+                                return $i->item_name;
+                            })->implode(', ');
                         @endphp
                         {{ $services ?: '-' }}
                     </td>
+                    <td>{{ strtoupper($trx->payment_method) }}</td>
                     <td class="text-right">
                         @php
                             $serviceTotal = $trx->items->where('item_type', 'App\Models\Service')->sum('subtotal');
@@ -200,7 +204,8 @@
             <tr>
                 <td style="font-weight: bold; padding-top: 5px;">Pendapatan Anda (40%)</td>
                 <td class="text-right" style="font-weight: bold; color: #db2777; padding-top: 5px;">Rp
-                    {{ number_format($totalRevenue, 0, ',', '.') }}</td>
+                    {{ number_format($totalRevenue, 0, ',', '.') }}
+                </td>
             </tr>
         </table>
     </div>

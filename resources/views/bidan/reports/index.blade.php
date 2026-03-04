@@ -18,7 +18,7 @@
                 class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                 style="display: none;">
                 <div class="py-1">
-                    <a href="{{ route('bidan.reports.exportExcel', ['start_date' => $startDate, 'end_date' => $endDate]) }}"
+                    <a href="{{ route('bidan.reports.exportExcel', ['start_date' => $startDate, 'end_date' => $endDate, 'payment_method' => $paymentMethod ?? 'all']) }}"
                         target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20"
@@ -29,7 +29,7 @@
                         </svg>
                         Excel
                     </a>
-                    <a href="{{ route('bidan.reports.exportPdf', ['start_date' => $startDate, 'end_date' => $endDate]) }}"
+                    <a href="{{ route('bidan.reports.exportPdf', ['start_date' => $startDate, 'end_date' => $endDate, 'payment_method' => $paymentMethod ?? 'all']) }}"
                         target="_blank"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" viewBox="0 0 20 20"
@@ -57,6 +57,15 @@
             <label class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
             <input type="date" name="end_date" value="{{ $endDate }}"
                 class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Metode Pembayaran</label>
+            <select name="payment_method"
+                class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+                <option value="all" {{ ($paymentMethod ?? 'all') == 'all' ? 'selected' : '' }}>Semua</option>
+                <option value="cash" {{ ($paymentMethod ?? '') == 'cash' ? 'selected' : '' }}>Umum</option>
+                <option value="bpjs" {{ ($paymentMethod ?? '') == 'bpjs' ? 'selected' : '' }}>BPJS</option>
+            </select>
         </div>
         <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">
             Filter
@@ -107,7 +116,7 @@
                         <td class="px-6 py-4">
                             <span
                                 class="px-2 py-1 text-xs font-semibold rounded-full
-                                                        {{ $transaction->status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                                                {{ $transaction->status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                 {{ ucfirst($transaction->status) }}
                             </span>
                         </td>
