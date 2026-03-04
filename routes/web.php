@@ -208,6 +208,7 @@ Route::middleware(['auth', 'verified', 'role.owner'])->prefix('owner')->name('ow
     Route::get('/reports/export/pdf', [\App\Http\Controllers\Owner\ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [\App\Http\Controllers\Owner\ReportController::class, 'index'])->name('reports');
     Route::get('/staff-performance', [\App\Http\Controllers\Owner\StaffPerformanceController::class, 'index'])->name('staff.performance');
+    Route::put('/staff/{user}/fee', [\App\Http\Controllers\Owner\StaffPerformanceController::class, 'updateFee'])->name('staff.updateFee');
     Route::get('/finance', [\App\Http\Controllers\Owner\FinanceController::class, 'index'])->name('finance');
     Route::post('/finance/expense', [\App\Http\Controllers\Owner\FinanceController::class, 'storeExpense'])->name('finance.expense.store');
     Route::delete('/finance/expense/{expense}', [\App\Http\Controllers\Owner\FinanceController::class, 'destroyExpense'])->name('finance.expense.destroy');

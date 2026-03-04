@@ -75,7 +75,7 @@ class TransactionController extends Controller
             ]);
 
             // Automatically add Consultation Fee for Dokter
-            $konsultasiPrice = 80000;
+            $konsultasiPrice = auth()->user()->consultation_fee ?? 0;
             $totalAmount += $konsultasiPrice;
             TransactionItem::create([
                 'transaction_id' => $transaction->id,
@@ -216,7 +216,7 @@ class TransactionController extends Controller
             $medicineItems = [];
 
             // Automatically add Consultation Fee for Dokter on update
-            $konsultasiPrice = 80000;
+            $konsultasiPrice = auth()->user()->consultation_fee ?? 0;
             $totalAmount += $konsultasiPrice;
             TransactionItem::create([
                 'transaction_id' => $transaction->id,

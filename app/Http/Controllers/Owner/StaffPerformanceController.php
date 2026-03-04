@@ -37,4 +37,17 @@ class StaffPerformanceController extends Controller
 
         return view('owner.staff.index', compact('medis', 'startDate', 'endDate'));
     }
+
+    public function updateFee(Request $request, User $user)
+    {
+        $request->validate([
+            'consultation_fee' => 'required|integer|min:0',
+        ]);
+
+        $user->update([
+            'consultation_fee' => $request->consultation_fee,
+        ]);
+
+        return back()->with('success', 'Biaya konsultasi ' . $user->name . ' berhasil diperbarui.');
+    }
 }

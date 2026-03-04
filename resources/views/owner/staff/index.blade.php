@@ -49,6 +49,8 @@
                             </th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Pasien Ditangani</th>
+                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                Biaya Konsultasi</th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Kontribusi Pendapatan</th>
                         </tr>
@@ -61,13 +63,35 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-pink-600">
                                     {{ $staff->total_pasien }} pasien
                                 </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-center">
+                                    <form action="{{ route('owner.staff.updateFee', $staff->id) }}" method="POST"
+                                        class="inline-flex items-center gap-2">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="relative">
+                                            <span
+                                                class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400 text-xs font-semibold pointer-events-none">Rp</span>
+                                            <input type="number" name="consultation_fee"
+                                                value="{{ $staff->consultation_fee ?? 0 }}" min="0" step="1000"
+                                                class="w-32 pl-8 pr-2 py-1.5 text-xs font-semibold text-right border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all shadow-sm">
+                                        </div>
+                                        <button type="submit"
+                                            class="px-2.5 py-1.5 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-xs font-semibold transition-colors shadow-sm"
+                                            title="Simpan">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-emerald-600">Rp
                                     {{ number_format($staff->revenue, 0, ',', '.') }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-10 text-center text-gray-500">Belum ada data tenaga medis.</td>
+                                <td colspan="5" class="px-6 py-10 text-center text-gray-500">Belum ada data tenaga medis.</td>
                             </tr>
                         @endforelse
                     </tbody>

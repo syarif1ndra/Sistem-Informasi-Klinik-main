@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'shift', // Added shift
+        'consultation_fee',
         'google_id',
         'email_verified_at',
     ];
