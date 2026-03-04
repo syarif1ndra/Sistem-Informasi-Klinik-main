@@ -55,8 +55,9 @@
 
                             <label class="block text-sm font-semibold text-gray-700 mt-4 mb-2">Metode Pembayaran</label>
                             <select name="payment_method" x-model="paymentType"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50 pointer-events-none" readonly>
-                                <option value="cash" selected>Umum</option>
+                                class="w-full rounded-lg border-gray-300 shadow-sm transition p-3 focus:border-blue-500 focus:ring-blue-500">
+                                <option value="cash">Umum</option>
+                                <option value="bpjs">BPJS</option>
                             </select>
 
                             <label class="block text-sm font-semibold text-gray-700 mt-4 mb-2">Status Pembayaran</label>
