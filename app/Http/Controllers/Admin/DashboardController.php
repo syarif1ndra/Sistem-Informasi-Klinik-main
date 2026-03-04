@@ -44,7 +44,7 @@ class DashboardController extends Controller
 
         for ($i = 11; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            $monthName = $date->format('M'); // Jan - Des
+            $monthName = $date->translatedFormat('M'); // Jan - Des
             $year = $date->year;
             $month = $date->month;
 
@@ -70,7 +70,7 @@ class DashboardController extends Controller
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $dateString = $date->format('Y-m-d');
-            $dayLabel = $date->format('d M'); // e.g., 18 Feb
+            $dayLabel = $date->translatedFormat('d M'); // e.g., 18 Feb
 
             $days[] = $dayLabel;
 

@@ -68,7 +68,7 @@ class DashboardController extends Controller
         // Assuming service in queue refers to the type of visit
         for ($i = 11; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            $monthName = $date->format('M');
+            $monthName = $date->translatedFormat('M');
             $year = $date->year;
             $month = $date->month;
 

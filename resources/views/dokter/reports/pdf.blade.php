@@ -130,8 +130,8 @@
         <tr>
             <td><strong>Periode</strong></td>
             <td>:</td>
-            <td>{{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} -
-                {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
+            <td>{{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }} -
+                {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }}
             </td>
             <td><strong>Total Pasien</strong></td>
             <td>:</td>
@@ -210,7 +210,7 @@
     <div style="clear: both;"></div>
 
     <div class="signature">
-        <p>Cianjur, {{ date('d F Y') }}</p>
+        <p>Cianjur, {{ now()->translatedFormat('d F Y') }}</p>
         <p style="margin-bottom: 60px;">Dokter Pemeriksa,</p>
         <p><strong>{{ auth()->user()->name }}</strong></p>
     </div>

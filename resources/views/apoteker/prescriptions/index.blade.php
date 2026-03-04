@@ -40,7 +40,7 @@
                             <tr class="hover:bg-gray-50/50 transition duration-150">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ $prescription->created_at->format('d M Y') }}
+                                        {{ $prescription->created_at->translatedFormat('d M Y') }}
                                     </div>
                                     <div class="text-sm text-gray-500">{{ $prescription->created_at->format('H:i') }} WIB</div>
                                 </td>

@@ -116,7 +116,7 @@
                         <p class="font-bold border-t border-gray-400 px-4 pt-1">{{ $immunization->parent_name }}</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-sm text-gray-500 mb-16">{{ date('d F Y') }}</p>
+                        <p class="text-sm text-gray-500 mb-16">{{ now()->translatedFormat('d F Y') }}</p>
                         <p class="font-bold border-t border-gray-400 px-4 pt-1">Petugas Klinik</p>
                     </div>
                 </div>

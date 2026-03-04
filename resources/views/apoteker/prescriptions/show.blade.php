@@ -29,7 +29,8 @@
                             class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Selesai</span>
                     @endif
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Ref Tgl: {{ $prescription->created_at->format('d M Y H:i') }}</p>
+                <p class="text-sm text-gray-500 mt-1">Ref Tgl:
+                    {{ $prescription->created_at->translatedFormat('d M Y H:i') }}</p>
             </div>
         </div>
 
