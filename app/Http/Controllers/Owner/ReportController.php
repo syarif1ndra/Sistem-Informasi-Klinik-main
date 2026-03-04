@@ -18,10 +18,15 @@ class ReportController extends Controller
     {
         $type = $request->input('type', 'daily'); // daily, monthly, yearly
         $practitionerId = $request->input('practitioner_id', 'all');
+        $paymentMethod = $request->input('payment_method', 'all');
 
         $practitioners = User::whereIn('role', ['dokter', 'bidan'])->get();
 
         $query = Transaction::with(['patient', 'processedBy', 'handledBy']);
+
+        if ($paymentMethod !== 'all') {
+            $query->where('payment_method', $paymentMethod);
+        }
 
         if ($practitionerId !== 'all') {
             $query->where('handled_by', $practitionerId);
@@ -41,12 +46,12 @@ class ReportController extends Controller
             $totalTransactions = $transactions->count();
 
             if ($request->has('export') && $request->export === 'pdf') {
-                $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+                $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
                 $pdf->setPaper('A4', 'portrait');
                 return $pdf->download('laporan-bulanan-owner-' . $month . '.pdf');
             }
 
-            return view('owner.reports.monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            return view('owner.reports.monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
 
         } elseif ($type === 'yearly') {
             $year = $request->input('year', Carbon::today()->format('Y'));
@@ -67,12 +72,12 @@ class ReportController extends Controller
             $totalTransactions = $transactions->sum('total_count');
 
             if ($request->has('export') && $request->export === 'pdf') {
-                $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+                $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
                 $pdf->setPaper('A4', 'portrait');
                 return $pdf->download('laporan-tahunan-owner-' . $year . '.pdf');
             }
 
-            return view('owner.reports.yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            return view('owner.reports.yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
 
         } else {
             // Default Daily Type Detail Data
@@ -87,7 +92,7 @@ class ReportController extends Controller
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();
 
-            return view('owner.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            return view('owner.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
         }
     }
 
@@ -99,8 +104,9 @@ class ReportController extends Controller
         $endDate = $request->input('end_date', Carbon::today()->toDateString());
         $month = $request->input('month', Carbon::today()->format('Y-m'));
         $year = $request->input('year', Carbon::today()->format('Y'));
+        $paymentMethod = $request->input('payment_method', 'all');
 
-        return Excel::download(new OwnerClinicalReportExport($type, $practitionerId, $startDate, $endDate, $month, $year), 'laporan-klinik-' . date('Y-m-d') . '.xlsx');
+        return Excel::download(new OwnerClinicalReportExport($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod), 'laporan-klinik-' . date('Y-m-d') . '.xlsx');
     }
 
     public function exportPdf(Request $request)
@@ -119,6 +125,11 @@ class ReportController extends Controller
             $query->where('handled_by', $practitionerId);
         }
 
+        $paymentMethod = $request->input('payment_method', 'all');
+        if ($paymentMethod !== 'all') {
+            $query->where('payment_method', $paymentMethod);
+        }
+
         if ($type === 'monthly') {
             $month = $request->input('month', Carbon::today()->format('Y-m'));
             $date = Carbon::createFromFormat('Y-m', $month);
@@ -127,7 +138,7 @@ class ReportController extends Controller
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();
 
-            $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-bulanan-' . $month . '.pdf');
 
@@ -145,7 +156,7 @@ class ReportController extends Controller
             $totalRevenue = $transactions->sum('total_revenue');
             $totalTransactions = $transactions->sum('total_count');
 
-            $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-tahunan-' . $year . '.pdf');
 
@@ -158,7 +169,7 @@ class ReportController extends Controller
             $totalTransactions = $transactions->count();
 
             // Note: Reuse pdf_daily
-            $pdf = Pdf::loadView('owner.reports.pdf_daily', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions'));
+            $pdf = Pdf::loadView('owner.reports.pdf_daily', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-harian-' . $startDate . '-to-' . $endDate . '.pdf');
         }

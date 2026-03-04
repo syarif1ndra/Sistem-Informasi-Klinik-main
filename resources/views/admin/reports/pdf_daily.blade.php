@@ -111,6 +111,7 @@
                 <th>Tanggal</th>
                 <th>Pasien</th>
                 <th>Praktisi</th>
+                <th class="text-center">Metode</th>
                 <th class="text-center">Status</th>
                 <th class="text-right">Total (Rp)</th>
             </tr>
@@ -122,6 +123,7 @@
                     <td>{{ $trx->created_at->translatedFormat('d M Y H:i') }}</td>
                     <td>{{ $trx->patient->name ?? '-' }}</td>
                     <td>{{ $trx->handledBy->name ?? '-' }}</td>
+                    <td class="text-center">{{ strtoupper($trx->payment_method) }}</td>
                     <td class="text-center">{{ ucfirst($trx->status) }}</td>
                     <td class="text-right">Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
                 </tr>

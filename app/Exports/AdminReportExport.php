@@ -20,8 +20,9 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
     protected $endDate;
     protected $month;
     protected $year;
+    protected $paymentMethod;
 
-    public function __construct($type, $practitionerId, $startDate, $endDate, $month, $year)
+    public function __construct($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod = 'all')
     {
         $this->type = $type;
         $this->practitionerId = $practitionerId;
@@ -29,6 +30,7 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
         $this->endDate = $endDate;
         $this->month = $month;
         $this->year = $year;
+        $this->paymentMethod = $paymentMethod;
     }
 
     public function view(): View
@@ -43,6 +45,10 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
 
         if ($this->practitionerId !== 'all') {
             $query->where('handled_by', $this->practitionerId);
+        }
+
+        if ($this->paymentMethod !== 'all') {
+            $query->where('payment_method', $this->paymentMethod);
         }
 
         if ($this->type === 'monthly') {
@@ -60,6 +66,7 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
                 'type' => $this->type,
                 'totalRevenue' => $totalRevenue,
                 'totalTransactions' => $totalTransactions,
+                'paymentMethod' => $this->paymentMethod,
                 'isExcel' => true
             ]);
 
@@ -84,6 +91,7 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
                 'type' => $this->type,
                 'totalRevenue' => $totalRevenue,
                 'totalTransactions' => $totalTransactions,
+                'paymentMethod' => $this->paymentMethod,
                 'isExcel' => true
             ]);
 
@@ -103,6 +111,7 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
                 'type' => $this->type,
                 'totalRevenue' => $totalRevenue,
                 'totalTransactions' => $totalTransactions,
+                'paymentMethod' => $this->paymentMethod,
                 'isExcel' => true
             ]);
         }

@@ -39,6 +39,15 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Metode Bayar</label>
+                    <select name="payment_method"
+                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
+                        <option value="all" {{ ($paymentMethod ?? 'all') == 'all' ? 'selected' : '' }}>Semua</option>
+                        <option value="cash" {{ ($paymentMethod ?? '') == 'cash' ? 'selected' : '' }}>Umum</option>
+                        <option value="bpjs" {{ ($paymentMethod ?? '') == 'bpjs' ? 'selected' : '' }}>BPJS</option>
+                    </select>
+                </div>
                 <div class="flex items-center space-x-2">
                     <button type="submit"
                         class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition shadow-sm h-[38px]">

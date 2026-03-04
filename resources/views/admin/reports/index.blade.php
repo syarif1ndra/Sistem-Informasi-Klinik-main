@@ -40,6 +40,15 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Metode Bayar</label>
+                    <select name="payment_method"
+                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
+                        <option value="all" {{ ($paymentMethod ?? 'all') == 'all' ? 'selected' : '' }}>Semua</option>
+                        <option value="cash" {{ ($paymentMethod ?? '') == 'cash' ? 'selected' : '' }}>Umum</option>
+                        <option value="bpjs" {{ ($paymentMethod ?? '') == 'bpjs' ? 'selected' : '' }}>BPJS</option>
+                    </select>
+                </div>
                 <button type="submit"
                     class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition shadow-sm h-[38px]">
                     Filter
@@ -128,6 +137,9 @@
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Praktisi
                             </th>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                Metode
+                            </th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total
                             </th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
@@ -146,6 +158,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                     {{ $trx->handledBy->name ?? '-' }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                    {{ strtoupper($trx->payment_method) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-gray-900">Rp
                                     {{ number_format($trx->total_amount, 0, ',', '.') }}
