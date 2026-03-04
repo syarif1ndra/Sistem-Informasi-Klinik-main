@@ -22,7 +22,7 @@ class PatientProfileController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'nik' => 'required|digits:16|unique:user_patients,nik',
+            'nik' => 'required|digits:16',
             'dob' => 'required|date',
             'gender' => 'required|in:L,P',
             'phone' => 'required|string|max:20',
@@ -53,7 +53,7 @@ class PatientProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'nik' => 'required|digits:16|unique:user_patients,nik,' . $patient->id,
+            'nik' => 'required|digits:16',
             'dob' => 'required|date',
             'gender' => 'required|in:L,P',
             'phone' => 'required|string|max:20',
