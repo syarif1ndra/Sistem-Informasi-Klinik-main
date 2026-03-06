@@ -165,7 +165,7 @@
                                                 </div>
                                                 <div class="tx-status">{{ ucfirst($registration->transaction_data->status) }}</div>
                                                 <div class="tx-payment">
-                                                    {{ strtoupper($registration->transaction_data->payment_method) }}</div>
+                                                    {{ $registration->transaction_data->payment_method === 'bpjs' ? 'BPJS' : 'UMUM' }}</div>
                                                 <div class="tx-items">
                                                     @php
                                                         $konsultasi = $registration->transaction_data->items->where('name', 'Biaya Konsultasi')->first();
