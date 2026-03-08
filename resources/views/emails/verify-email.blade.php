@@ -129,7 +129,7 @@
         </table>
         <div class="footer">
             <p>&copy; {{ date('Y') }} Klinik Bidan Siti Hajar. Semua hak dilindungi.</p>
-            <p>Jl. Contoh No. 123, Kota Anda, Indonesia</p>
+            <p>Jl. Raya, Merak Batin, Natar, Lampung</p>
         </div>
     </div>
 </body>
