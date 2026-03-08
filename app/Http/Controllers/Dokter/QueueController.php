@@ -42,85 +42,73 @@ class QueueController extends Controller
 
         $status = $validated['status'];
 
+        try {
+            DB::transaction(function () use ($queue, $status) {
+                $dataToUpdate = ['status' => $status];
+                if (in_array($status, ['calling', 'called', 'finished'])) {
+                    $dataToUpdate['handled_by'] = auth()->id();
+                }
+                $queue->update($dataToUpdate);
+                $queue->touch();
 
-        // NUCLEAR DEBUGGING - Write directly to a file in public path
-        $logFile = public_path('debug_queue_sync.txt');
-        $logData = "\n[" . date('Y-m-d H:i:s') . "] Status Update Request: " . $status . "\n";
-        $logData .= "Queue ID: " . $queue->id . "\n";
-        $logData .= "User Patient ID: " . ($queue->user_patient_id ?? 'NULL') . "\n";
-        $logData .= "Patient ID (Before): " . ($queue->patient_id ?? 'NULL') . "\n";
-
-        file_put_contents($logFile, $logData, FILE_APPEND);
-
-        DB::transaction(function () use ($queue, $status, $logFile) {
-            $dataToUpdate = ['status' => $status];
-            if (in_array($status, ['calling', 'called', 'finished'])) {
-                $dataToUpdate['handled_by'] = auth()->id();
-            }
-            $queue->update($dataToUpdate);
-            $queue->touch(); // Force update updated_at timestamp so frontend realizes it was called again
-
-            // Logic 1: When status becomes 'calling' (Button Panggil clicked)
-            // Create or Sync Patient Data
-            if ($status === 'calling' && $queue->user_patient_id) {
-                file_put_contents($logFile, "Condition MET: Calling + UserPatientID\n", FILE_APPEND);
-
-                $userPatient = $queue->userPatient;
-                if ($userPatient) {
-                    file_put_contents($logFile, "UserPatient Found: " . $userPatient->name . "\n", FILE_APPEND);
-
-                    // Check if patient already exists by NIK
-                    $patient = Patient::where('nik', $userPatient->nik)->first();
-
-                    if (!$patient) {
-                        file_put_contents($logFile, "Creating NEW Patient...\n", FILE_APPEND);
-                        // Create new official patient
-                        $patient = Patient::create([
+                // Logic 1: When status becomes 'calling' (Button Panggil clicked)
+                if ($status === 'calling' && $queue->user_patient_id) {
+                    $userPatient = $queue->userPatient;
+                    if ($userPatient) {
+                        $patientData = [
                             'user_id' => $userPatient->user_id,
                             'name' => $userPatient->name,
-                            'nik' => $userPatient->nik,
-                            'dob' => $userPatient->dob,
-                            'gender' => $userPatient->gender,
+                            'nik' => (!empty($userPatient->nik) && strlen($userPatient->nik) === 16 && is_numeric($userPatient->nik)) ? $userPatient->nik : null,
+                            'dob' => $userPatient->dob ?? '1900-01-01',
+                            'gender' => $userPatient->gender ?? 'L',
                             'phone' => $userPatient->phone,
-                            'address' => $userPatient->address,
+                            'address' => $userPatient->address ?? '-',
                             'service' => $queue->service_name,
-                        ]);
-                        file_put_contents($logFile, "Created Patient ID: " . $patient->id . "\n", FILE_APPEND);
-                    } else {
-                        file_put_contents($logFile, "Updating EXISTING Patient ID: " . $patient->id . "\n", FILE_APPEND);
-                        // Update existing patient data
-                        $patient->update([
-                            'phone' => $userPatient->phone,
-                            'service' => $queue->service_name,
-                        ]);
+                        ];
+
+                        // Strict NIK Match (Only if valid 16-digit numeric)
+                        $patient = null;
+                        if (!empty($userPatient->nik) && strlen($userPatient->nik) === 16 && is_numeric($userPatient->nik)) {
+                            $patient = Patient::where('nik', $userPatient->nik)->first();
+                        }
+
+                        // Fallback 1: Name + DOB
+                        if (!$patient) {
+                            $patient = Patient::where('name', $userPatient->name)
+                                ->where('dob', $userPatient->dob ?? '1900-01-01')
+                                ->first();
+                        }
+
+                        // Fallback 2: user_id + name
+                        if (!$patient && !empty($userPatient->user_id)) {
+                            $patient = Patient::where('user_id', $userPatient->user_id)
+                                ->where('name', $userPatient->name)
+                                ->first();
+                        }
+
+                        if (!$patient) {
+                            $patient = Patient::create($patientData);
+                        } else {
+                            $patient->update($patientData);
+                        }
+                        $queue->update(['patient_id' => $patient->id]);
+                        $patient->touch();
                     }
-                    // Link queue to patient
-                    $queue->update(['patient_id' => $patient->id]);
-                    $patient->touch(); // Force update timestamp so it appears in daily list
-                    file_put_contents($logFile, "Linked Queue to Patient ID: " . $patient->id . "\n", FILE_APPEND);
-                } else {
-                    file_put_contents($logFile, "ERROR: UserPatient relation returned NULL\n", FILE_APPEND);
-                }
-            } else {
-                file_put_contents($logFile, "Condition NOT MET. Status: $status, UserPatientID: " . ($queue->user_patient_id ?? 'NULL') . "\n", FILE_APPEND);
-            }
-
-            // Logic 2: When status becomes 'cancelled' (Button Batal clicked)
-            // Logic 2: When status becomes 'cancelled' (Button Batal clicked)
-            // Delete Patient Data (Cleanup master data, but keep queue history)
-            if ($status === 'cancelled' && $queue->patient_id) {
-                file_put_contents($logFile, "Cancelling... Deleting Patient ID: " . $queue->patient_id . "\n", FILE_APPEND);
-
-                $patient = Patient::find($queue->patient_id);
-                if ($patient) {
-                    $patient->delete();
-                    file_put_contents($logFile, "Deleted Patient ID: " . $patient->id . "\n", FILE_APPEND);
                 }
 
-                // Unlink current queue
-                $queue->update(['patient_id' => null]);
-            }
-        });
+                if ($status === 'cancelled' && $queue->patient_id) {
+                    $patient = Patient::find($queue->patient_id);
+                    if ($patient) {
+                        $patient->delete();
+                    }
+                    $queue->update(['patient_id' => null]);
+                }
+            });
+        } catch (\Exception $e) {
+            return $request->wantsJson()
+                ? response()->json(['success' => false, 'message' => $e->getMessage()], 422)
+                : redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
 
         return $request->wantsJson()
             ? response()->json(['success' => true, 'message' => 'Status antrian berhasil diperbarui.', 'status' => $status])

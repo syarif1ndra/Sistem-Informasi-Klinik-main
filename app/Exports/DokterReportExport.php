@@ -73,7 +73,7 @@ class DokterReportExport implements FromCollection, WithHeadings, WithMapping, W
             ''
         ]);
         $results->push(['', '', '', '', '']);
-        $results->push(['', '', '', 'Cianjur, ' . now()->translatedFormat('d F Y'), '']);
+        $results->push(['', '', '', 'Natar, ' . now()->translatedFormat('d F Y'), '']);
         $results->push(['', '', '', 'Dokter Pemeriksa,', '']);
         $results->push(['', '', '', '', '']);
         $results->push(['', '', '', auth()->user()->name, '']);

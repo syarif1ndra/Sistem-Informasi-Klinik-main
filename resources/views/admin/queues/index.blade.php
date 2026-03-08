@@ -157,14 +157,16 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
-                                <input type="date" name="dob"
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Lahir <span
+                                        class="text-red-500">*</span></label>
+                                <input type="date" name="dob" required
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-shadow">
                             </div>
 
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Jenis Kelamin</label>
-                                <select name="gender"
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Jenis Kelamin <span
+                                        class="text-red-500">*</span></label>
+                                <select name="gender" required
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-shadow">
                                     <option value="">Pilih Jenis Kelamin</option>
                                     <option value="L">Laki-laki</option>
@@ -173,8 +175,9 @@
                             </div>
 
                             <div class="col-span-1 md:col-span-2">
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Alamat Lengkap</label>
-                                <textarea name="address" rows="2" placeholder="Masukkan alamat domisili pasien"
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Alamat Lengkap <span
+                                        class="text-red-500">*</span></label>
+                                <textarea name="address" rows="2" required placeholder="Masukkan alamat domisili pasien"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-shadow"></textarea>
                             </div>
 
@@ -272,7 +275,12 @@
                 },
                 body: JSON.stringify({ status: 'calling' })
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         // Update UI Status Badge
@@ -288,7 +296,10 @@
                         }
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Warning alert removed as requested.
+                });
         }
     </script>
 @endsection

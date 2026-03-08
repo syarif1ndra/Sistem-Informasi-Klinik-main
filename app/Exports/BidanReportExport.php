@@ -73,7 +73,7 @@ class BidanReportExport implements FromCollection, WithHeadings, WithMapping, Wi
             ''
         ]);
         $results->push(['', '', '', '', '']);
-        $results->push(['', '', '', 'Cianjur, ' . now()->translatedFormat('d F Y'), '']);
+        $results->push(['', '', '', 'Natar, ' . now()->translatedFormat('d F Y'), '']);
         $results->push(['', '', '', 'Bidan Pemeriksa,', '']);
         $results->push(['', '', '', '', '']);
         $results->push(['', '', '', auth()->user()->name, '']);

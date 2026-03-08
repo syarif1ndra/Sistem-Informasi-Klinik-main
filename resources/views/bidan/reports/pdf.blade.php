@@ -110,7 +110,7 @@
 <body>
     <div class="header">
         <h1 class="clinic-name">KLINIK BIDAN SITI HAJAR</h1>
-        <p class="clinic-address">Kp. Cibuntu RT.04 / RW.04, Desa Bojong, Kec. Karangtengah, Kab. Cianjur</p>
+        <p class="clinic-address">Kp. Cibuntu RT.04 / RW.04, Desa Bojong, Kec. Karangtengah, Kab. Natar</p>
         <p class="clinic-address">No. Izin Klinik: 449/194/Klinik/2023 | Telp: 0812-XXXX-XXXX</p>
     </div>
 
@@ -185,7 +185,7 @@
             <tr>
                 <td style="border: none; width: 70%;"></td>
                 <td style="border: none; text-align: center;">
-                    Cianjur, {{ now()->translatedFormat('d F Y') }}<br>
+                    Natar, {{ now()->translatedFormat('d F Y') }}<br>
                     Bidan Pemeriksa,<br><br><br><br>
                     <strong>({{ auth()->user()->name }})</strong>
                 </td>

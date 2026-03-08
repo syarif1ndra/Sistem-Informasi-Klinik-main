@@ -96,7 +96,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Total Transaksi Filtered</p>
+                    <p class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Total Transaksi </p>
                     <h3 class="text-3xl font-black text-gray-800">{{ $totalTransactions }}</h3>
                 </div>
                 <div class="p-4 bg-gray-50 rounded-full text-gray-400">
@@ -110,8 +110,8 @@
             <div
                 class="bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-lg p-6 text-white flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-bold text-pink-100 uppercase tracking-widest mb-1">Total Pendapatan Filtered
-                        (Lunas)</p>
+                    <p class="text-sm font-bold text-pink-100 uppercase tracking-widest mb-1">Total Pendapatan 
+                        </p>
                     <h3 class="text-3xl font-black">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
                 </div>
                 <div class="p-4 bg-white/20 rounded-full text-white">

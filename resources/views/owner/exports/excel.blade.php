@@ -104,7 +104,7 @@
             <td></td>
             <td></td>
             <td colspan="2" style="text-align: center;">
-                Cianjur, {{ now()->translatedFormat('d F Y') }}<br>
+                Natar, {{ now()->translatedFormat('d F Y') }}<br>
                 Owner,<br><br><br><br>
                 <strong>({{ auth()->user()->name }})</strong>
             </td>

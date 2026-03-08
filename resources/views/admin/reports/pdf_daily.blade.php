@@ -132,7 +132,7 @@
             <tr>
                 <td style="border: none; width: 70%;"></td>
                 <td style="border: none; text-align: center;">
-                    Cianjur, {{ now()->translatedFormat('d F Y') }}<br>
+                    Natar, {{ now()->translatedFormat('d F Y') }}<br>
                     Petugas,<br><br><br><br>
                     <strong>({{ auth()->user()->name }})</strong>
                 </td>

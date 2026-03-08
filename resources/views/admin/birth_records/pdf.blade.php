@@ -46,7 +46,9 @@
     <div class="header">
         <h1>Bidan Siti Hajar</h1>
         <p>Jl. Raya, Merak Batin, Natar, Lampung</p>
-        <p>Laporan Data Kelahiran - {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</p>
+        <p>Laporan Data Kelahiran - {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
+            {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
+        </p>
     </div>
 
     <table>
@@ -68,7 +70,8 @@
                     <td>{{ $record->baby_name }}</td>
                     <td style="text-align: center;">{{ $record->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                     <td style="text-align: center;">
-                        {{ \Carbon\Carbon::parse($record->birth_date)->translatedFormat('d F Y') }}</td>
+                        {{ \Carbon\Carbon::parse($record->birth_date)->translatedFormat('d F Y') }}
+                    </td>
                     <td style="text-align: center;">{{ \Carbon\Carbon::parse($record->birth_time)->format('H:i') }}</td>
                     <td>{{ $record->mother_name }}</td>
                     <td>{{ $record->father_name }}</td>

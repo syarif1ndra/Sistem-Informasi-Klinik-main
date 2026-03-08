@@ -168,4 +168,6 @@ class PatientController extends Controller
 
         return $pdf->download('data-pasien-' . $startDate . '-to-' . $endDate . '.pdf');
     }
+
+    
 }
