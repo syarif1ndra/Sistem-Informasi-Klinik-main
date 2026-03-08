@@ -110,8 +110,8 @@
 <body>
     <div class="header">
         <h1 class="clinic-name">KLINIK BIDAN SITI HAJAR</h1>
-        <p class="clinic-address">Kp. Cibuntu RT.04 / RW.04, Desa Bojong, Kec. Karangtengah, Kab. Natar</p>
-        <p class="clinic-address">No. Izin Klinik: 449/194/Klinik/2023 | Telp: 0812-XXXX-XXXX</p>
+        <p class="clinic-address">Jl. Raya, Merak Batin, Natar, Lampung</p>
+        <p class="clinic-address">Telp 0822-8968-5085</p>
     </div>
 
     <div class="report-title">
@@ -170,11 +170,11 @@
                 $grossMedicine = $totalRevenue / 0.4;
             @endphp
             <tr>
-                <th colspan="4" class="text-right">Total Jasa Medis (Lunas)</th>
+                <th colspan="4" class="text-right">Total Jasa Medis </th>
                 <th class="text-right">Rp {{ number_format($grossMedicine, 0, ',', '.') }}</th>
             </tr>
             <tr>
-                <th colspan="4" class="text-right">Pendapatan Anda (40%)</th>
+                <th colspan="4" class="text-right">Pendapatan Anda</th>
                 <th class="text-right" style="color: #db2777;">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</th>
             </tr>
         </tfoot>

@@ -110,8 +110,8 @@
 <body>
     <div class="header">
         <h1 class="clinic-name">KLINIK BIDAN SITI HAJAR</h1>
-        <p class="clinic-address">Kp. Cibuntu RT.04 / RW.04, Desa Bojong, Kec. Karangtengah, Kab. Natar</p>
-        <p class="clinic-address">No. Izin Klinik: 449/194/Klinik/2023 | Telp: 0812-XXXX-XXXX</p>
+        <p class="clinic-address">Jl. Raya, Merak Batin, Natar, Lampung</p>
+        <p class="clinic-address">Telp Telp+62 822-8968-5085</p>
     </div>
 
     <div class="report-title">
@@ -167,7 +167,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="4" class="text-right">Total Jasa Medis (Lunas)</th>
+                <th colspan="4" class="text-right">Total Jasa Medis </th>
                 <th class="text-right">Rp {{ number_format($totalRevenue * 2, 0, ',', '.') }}</th>
             </tr>
             <tr>

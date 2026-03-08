@@ -61,7 +61,7 @@ class DokterReportExport implements FromCollection, WithHeadings, WithMapping, W
         $results->push([
             '',
             '',
-            'TOTAL JASA MEDIS (LUNAS)',
+            'TOTAL JASA MEDIS ',
             'Rp ' . number_format($totalJasaMedis, 0, ',', '.'),
             ''
         ]);

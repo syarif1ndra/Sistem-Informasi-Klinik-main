@@ -30,7 +30,7 @@
         <!-- Cards Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
-                <p class="text-sm font-bold text-gray-500 uppercase mb-1">Kas Masuk (Lunas)</p>
+                <p class="text-sm font-bold text-gray-500 uppercase mb-1">Kas Masuk </p>
                 <h3 class="text-2xl font-black text-emerald-600">Rp {{ number_format($kasMasuk, 0, ',', '.') }}</h3>
             </div>
             <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
@@ -107,7 +107,7 @@
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="px-6 py-5 border-b border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900">Riwayat Pengeluaran (Kas Keluar) Terfilter</h3>
+                        <h3 class="text-lg font-bold text-gray-900">Riwayat Pengeluaran</h3>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">

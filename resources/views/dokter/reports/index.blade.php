@@ -80,7 +80,7 @@
             <p class="text-3xl font-bold text-gray-800 mt-1">{{ $totalTransactions }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-            <p class="text-gray-500 text-sm uppercase font-semibold">Total Pendapatan (Lunas)</p>
+            <p class="text-gray-500 text-sm uppercase font-semibold">Total Pendapatan</p>
             <p class="text-3xl font-bold text-gray-800 mt-1">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
         </div>
     </div>

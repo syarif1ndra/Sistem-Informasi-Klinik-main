@@ -61,14 +61,14 @@ class BidanReportExport implements FromCollection, WithHeadings, WithMapping, Wi
         $results->push([
             '',
             '',
-            'TOTAL JASA MEDIS (LUNAS)',
+            'TOTAL JASA MEDIS ',
             'Rp ' . number_format($totalJasaMedis, 0, ',', '.'),
             ''
         ]);
         $results->push([
             '',
             '',
-            'PENDAPATAN ANDA (40%)',
+            'PENDAPATAN ANDA ',
             'Rp ' . number_format($totalIncome, 0, ',', '.'),
             ''
         ]);
@@ -88,7 +88,7 @@ class BidanReportExport implements FromCollection, WithHeadings, WithMapping, Wi
             'Nama Pasien',
             'Metode Pembayaran',
             'Jumlah Pendapatan',
-            'Pendapatan Anda (40%)'
+            'Pendapatan Anda '
         ];
     }
 

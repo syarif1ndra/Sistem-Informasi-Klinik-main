@@ -121,7 +121,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="5" class="text-right">Total Pendapatan (Lunas)</th>
+                <th colspan="5" class="text-right">Total Pendapatan </th>
                 <th class="text-right">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</th>
             </tr>
         </tfoot>
