@@ -35,7 +35,6 @@ class ReportController extends Controller
         if ($type === 'monthly') {
             $month = $request->input('month', Carbon::today()->format('Y-m'));
 
-            // Extract Year and Month carefully since SQLite vs MySQL DATE logic differ
             $date = Carbon::createFromFormat('Y-m', $month);
             $query->whereYear('date', $date->year)->whereMonth('date', $date->month);
 
@@ -57,7 +56,6 @@ class ReportController extends Controller
 
             $query->whereYear('date', $year);
 
-            // Grouping by Month in standard SQL
             $transactions = $query->select(
                 DB::raw('MONTH(date) as label_month'),
                 DB::raw('COUNT(*) as total_count'),
@@ -79,7 +77,6 @@ class ReportController extends Controller
             return view('admin.reports.yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
 
         } else {
-            // Default Daily Type Detail Data
             $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
             $endDate = $request->input('end_date', Carbon::today()->toDateString());
 
@@ -167,7 +164,6 @@ class ReportController extends Controller
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();
 
-            // Note: Use pdf_daily
             $pdf = Pdf::loadView('admin.reports.pdf_daily', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-harian-admin-' . $startDate . '-to-' . $endDate . '.pdf');

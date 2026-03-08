@@ -62,7 +62,6 @@ class QueueController extends Controller
             'address.required' => 'Alamat harus diisi.'
         ]);
 
-        // Upsert patient by valid 16-digit NIK or Name+DOB fallback
         $patient = null;
         if (!empty($validated['nik']) && strlen($validated['nik']) === 16 && is_numeric($validated['nik'])) {
             $patient = Patient::where('nik', $validated['nik'])->first();
@@ -84,7 +83,6 @@ class QueueController extends Controller
                 'address' => $validated['address'],
             ]);
         } else {
-            // Update contact info and ensure data consistency
             $patient->update([
                 'name' => $validated['name'],
                 'dob' => $validated['dob'],
@@ -94,7 +92,6 @@ class QueueController extends Controller
             ]);
         }
 
-        // Auto-generate next queue number for selected date
         $lastNumber = Queue::whereDate('date', $validated['date'])->max('queue_number') ?? 0;
         $nextNumber = $lastNumber + 1;
 
@@ -131,13 +128,9 @@ class QueueController extends Controller
                 $queue->update($dataToUpdate);
                 $queue->touch();
 
-                // Logic 1: When status becomes 'calling' (Button Panggil clicked)
-                // Create or Sync Patient Data from UserPatient registration
                 if ($status === 'calling' && $queue->user_patient_id) {
                     $userPatient = $queue->userPatient;
                     if ($userPatient) {
-                        // Logic: Instead of blocking with a warning, provide safe defaults to prevent SQL errors
-                        // as requested to "hilangkan pesan peringatannya".
                         $patientData = [
                             'user_id' => $userPatient->user_id,
                             'name' => $userPatient->name,
@@ -149,20 +142,17 @@ class QueueController extends Controller
                             'service' => $queue->service_name,
                         ];
 
-                        // Strict NIK Match (Only if valid 16-digit numeric)
                         $patient = null;
                         if (!empty($userPatient->nik) && strlen($userPatient->nik) === 16 && is_numeric($userPatient->nik)) {
                             $patient = Patient::where('nik', $userPatient->nik)->first();
                         }
 
-                        // Fallback 1: Name + DOB
                         if (!$patient) {
                             $patient = Patient::where('name', $userPatient->name)
                                 ->where('dob', $userPatient->dob ?? '1900-01-01')
                                 ->first();
                         }
 
-                        // Fallback 2: user_id + name
                         if (!$patient && !empty($userPatient->user_id)) {
                             $patient = Patient::where('user_id', $userPatient->user_id)
                                 ->where('name', $userPatient->name)
@@ -172,22 +162,16 @@ class QueueController extends Controller
                         if (!$patient) {
                             $patient = Patient::create($patientData);
                         } else {
-                            // Update existing patient data (prefer actual values from registration)
                             $patient->update($patientData);
                         }
-                        // Link queue to patient
                         $queue->update(['patient_id' => $patient->id]);
                         $patient->touch();
                     }
                 }
 
-                // Logic 2: When status becomes 'cancelled'
                 if ($status === 'cancelled' && $queue->patient_id) {
                     $patient = Patient::find($queue->patient_id);
                     if ($patient) {
-                        // Check if this patient has multiple queues. If only one, we can delete (it was temporary).
-                        // However, to be safe and preserve history, usually we just unlink if it's from public reg.
-                        // Here we keep existing behavior of deleting the temporary patient record.
                         $patient->delete();
                     }
                     $queue->update(['patient_id' => null]);

@@ -39,7 +39,6 @@
             </button>
         </div>
 
-        <!-- Search & Filter Card -->
         <div class="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-100">
             <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-col md:flex-row gap-4 items-end">
                 <div class="flex-grow">
@@ -164,7 +163,6 @@
             </div>
         </div>
 
-        <!-- Create User Modal -->
         <div x-show="showCreateModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="flex items-center justify-center min-h-screen px-4">
                 <div @click="showCreateModal = false" class="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity"></div>
@@ -217,7 +215,6 @@
             </div>
         </div>
 
-        <!-- Edit User Modal -->
         <div x-show="showEditModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="flex items-center justify-center min-h-screen px-4">
                 <div @click="showEditModal = false" class="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity"></div>

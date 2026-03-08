@@ -94,7 +94,6 @@
             </table>
         </div>
 
-        <!-- Add Queue Modal -->
         <div x-show="showAddModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
                 <div x-show="showAddModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
@@ -133,7 +132,6 @@
 
                     <form action="{{ route('admin.queues.store') }}" method="POST" class="p-6">
                         @csrf
-                        <!-- Gunakan tanggal filter sebagai default -->
                         <input type="hidden" name="date" value="{{ $date }}">
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
@@ -235,12 +233,9 @@
 
 @section('scripts')
     <script>
-        // Define the table data route specifically for AJAX
         const tableDataUrl = '{{ route("admin.queues.tableData") }}';
 
-        // Polling functionality for realtime updates
         function fetchQueueTableData() {
-            // Include that date filter correctly
             const dateParam = new URLSearchParams(window.location.search).get('date') || '{{ $date }}';
             fetch(`${tableDataUrl}?date=${dateParam}`, {
                 headers: {
@@ -254,18 +249,15 @@
                 .catch(error => console.error('Error fetching realtime queue data:', error));
         }
 
-        // Poll every 5 seconds
         setInterval(fetchQueueTableData, 5000);
 
         function callPatient(queueId, queueNumber, patientName) {
             console.log(`Calling patient: ${queueNumber} - ${patientName}`);
-            // Text to Speech
             const text = `Nomor antrian ${queueNumber}, ${patientName}`;
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'id-ID'; // Indonesian
             window.speechSynthesis.speak(utterance);
 
-            // Update Status via AJAX
             fetch(`/admin/queues/${queueId}/status`, {
                 method: 'PATCH',
                 headers: {
@@ -283,13 +275,11 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        // Update UI Status Badge
                         const statusSpan = document.getElementById(`status-${queueId}`);
                         if (statusSpan) {
                             statusSpan.className = 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800';
                             statusSpan.innerText = 'Calling';
                         }
-                        // Optional: Update row background
                         const row = document.getElementById(`row-${queueId}`);
                         if (row) {
                             row.classList.add('bg-yellow-50');
