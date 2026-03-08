@@ -89,26 +89,13 @@
         @endif
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <table style="width: auto; margin-bottom: 0;">
-            <tr>
-                <td style="border: none; padding: 2px 10px 2px 0;"><strong>Total Transaksi:</strong></td>
-                <td style="border: none; padding: 2px 0;">{{ $totalTransactions }}</td>
-            </tr>
-            <tr>
-                <td style="border: none; padding: 2px 10px 2px 0;"><strong>Total Pendapatan (Lunas):</strong></td>
-                <td style="border: none; padding: 2px 0;">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</td>
-            </tr>
-        </table>
-    </div>
-
     <table>
         <thead>
             <tr>
                 <th class="text-center">No</th>
                 <th>Bulan</th>
                 <th class="text-center">Jumlah Transaksi</th>
-                <th class="text-right">Total Pendapatan (Lunas)</th>
+                <th class="text-right">Jumlah Pendapatan</th>
             </tr>
         </thead>
         <tbody>
@@ -125,7 +112,26 @@
                 </tr>
             @endforelse
         </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" class="text-right">Total Pendapatan (Lunas)</th>
+                <th class="text-right">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</th>
+            </tr>
+        </tfoot>
     </table>
+
+    <div style="margin-top: 50px;">
+        <table style="width: 100%; border: none;">
+            <tr>
+                <td style="border: none; width: 70%;"></td>
+                <td style="border: none; text-align: center;">
+                    Cianjur, {{ now()->translatedFormat('d F Y') }}<br>
+                    Owner,<br><br><br><br>
+                    <strong>({{ auth()->user()->name }})</strong>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <div class="footer">
         Dicetak pada: {{ now()->translatedFormat('d F Y H:i:s') }}

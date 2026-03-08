@@ -133,9 +133,9 @@
             <td>{{ \Carbon\Carbon::parse($startDate)->translatedFormat('d M Y') }} -
                 {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }}
             </td>
-            <td><strong>Total Pasien</strong></td>
-            <td>:</td>
-            <td>{{ $totalTransactions }} Pasien</td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
     </table>
 
@@ -143,13 +143,10 @@
         <thead>
             <tr>
                 <th width="5%" class="text-center">No</th>
-                <th width="12%">Tanggal</th>
-                <th width="15%">No. Transaksi</th>
-                <th width="15%">Nama Pasien</th>
-                <th width="20%">Layanan Diberikan</th>
-                <th width="10%">Metode</th>
-                <th width="15%" class="text-right">Total Jasa Medis</th>
-                <th width="13%" class="text-center">Status</th>
+                <th width="20%">Tanggal</th>
+                <th width="35%">Nama Pasien</th>
+                <th width="20%">Metode</th>
+                <th width="20%" class="text-right">Jumlah Pendapatan</th>
             </tr>
         </thead>
         <tbody>
@@ -157,65 +154,43 @@
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ \Carbon\Carbon::parse($trx->date)->format('d/m/Y') }}</td>
-                    <td>{{ $trx->transaction_number }}</td>
                     <td>{{ $trx->patient->name ?? '-' }}</td>
-                    <td>
-                        @php
-                            $services = $trx->items->where('item_type', 'App\Models\Service')->map(function ($i) {
-                                return $i->item_name;
-                            })->implode(', ');
-                        @endphp
-                        {{ $services ?: '-' }}
-                    </td>
-                    <td>{{ strtoupper($trx->payment_method) }}</td>
+                    <td>{{ $trx->payment_method == 'cash' ? 'UMUM' : strtoupper($trx->payment_method) }}</td>
                     <td class="text-right">
                         @php
                             $serviceTotal = $trx->items->where('item_type', 'App\Models\Service')->sum('subtotal');
                         @endphp
                         Rp {{ number_format($serviceTotal, 0, ',', '.') }}
                     </td>
-                    <td class="text-center">
-                        @if($trx->status === 'paid')
-                            <span class="badge-paid">Lunas</span>
-                        @else
-                            <span class="badge-unpaid">Belum Lunas</span>
-                        @endif
-                    </td>
                 </tr>
             @endforeach
         </tbody>
-    </table>
-
-    <div class="summary-box">
-        <div style="font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-            Ringkasan Pendapatan</div>
-        <table width="100%">
+        <tfoot>
             @php
                 $grossMedicine = $totalRevenue / 0.4;
             @endphp
             <tr>
-                <td>Total Jasa Medis (Lunas)</td>
-                <td class="text-right">Rp {{ number_format($grossMedicine, 0, ',', '.') }}</td>
+                <th colspan="4" class="text-right">Total Jasa Medis (Lunas)</th>
+                <th class="text-right">Rp {{ number_format($grossMedicine, 0, ',', '.') }}</th>
             </tr>
             <tr>
-                <td>Milik Klinik (60%)</td>
-                <td class="text-right">Rp {{ number_format($grossMedicine * 0.6, 0, ',', '.') }}</td>
+                <th colspan="4" class="text-right">Pendapatan Anda (40%)</th>
+                <th class="text-right" style="color: #db2777;">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</th>
             </tr>
+        </tfoot>
+    </table>
+
+    <div style="margin-top: 50px;">
+        <table style="width: 100%; border: none;">
             <tr>
-                <td style="font-weight: bold; padding-top: 5px;">Pendapatan Anda (40%)</td>
-                <td class="text-right" style="font-weight: bold; color: #db2777; padding-top: 5px;">Rp
-                    {{ number_format($totalRevenue, 0, ',', '.') }}
+                <td style="border: none; width: 70%;"></td>
+                <td style="border: none; text-align: center;">
+                    Cianjur, {{ now()->translatedFormat('d F Y') }}<br>
+                    Bidan Pemeriksa,<br><br><br><br>
+                    <strong>({{ auth()->user()->name }})</strong>
                 </td>
             </tr>
         </table>
-    </div>
-
-    <div style="clear: both;"></div>
-
-    <div class="signature">
-        <p>Cianjur, {{ now()->translatedFormat('d F Y') }}</p>
-        <p style="margin-bottom: 60px;">Bidan Pemeriksa,</p>
-        <p><strong>{{ auth()->user()->name }}</strong></p>
     </div>
 </body>
 

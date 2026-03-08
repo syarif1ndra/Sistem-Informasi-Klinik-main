@@ -39,49 +39,75 @@ class DokterReportExport implements FromCollection, WithHeadings, WithMapping, W
         }
 
         $transactions = $query->oldest()->get();
+        $totalJasaMedis = 0;
+        $totalIncome = 0;
 
-        $transactions->transform(function ($transaction) {
+        $transactions->transform(function ($transaction) use (&$totalJasaMedis, &$totalIncome) {
+            $serviceSum = $transaction->items->sum('subtotal');
             if ($transaction->status === 'paid') {
-                $serviceSum = $transaction->items->sum('subtotal');
                 $transaction->practitioner_income = $serviceSum * 0.5;
+                $totalJasaMedis += $serviceSum;
+                $totalIncome += $transaction->practitioner_income;
             } else {
                 $transaction->practitioner_income = 0;
             }
             return $transaction;
         });
 
-        return $transactions;
+        $data = $transactions->toArray();
+
+        // Add footer rows
+        $results = collect($transactions);
+        $results->push([
+            '',
+            '',
+            'TOTAL JASA MEDIS (LUNAS)',
+            'Rp ' . number_format($totalJasaMedis, 0, ',', '.'),
+            ''
+        ]);
+        $results->push([
+            '',
+            '',
+            'PENDAPATAN ANDA (50%)',
+            'Rp ' . number_format($totalIncome, 0, ',', '.'),
+            ''
+        ]);
+        $results->push(['', '', '', '', '']);
+        $results->push(['', '', '', 'Cianjur, ' . now()->translatedFormat('d F Y'), '']);
+        $results->push(['', '', '', 'Dokter Pemeriksa,', '']);
+        $results->push(['', '', '', '', '']);
+        $results->push(['', '', '', auth()->user()->name, '']);
+
+        return $results;
     }
 
     public function headings(): array
     {
         return [
             'Tanggal',
-            'No. Transaksi',
             'Nama Pasien',
-            'Layanan Diberikan',
             'Metode Pembayaran',
-            'Total Jasa Medis',
-            'Pendapatan Anda (50%)',
-            'Status'
+            'Jumlah Pendapatan',
+            'Pendapatan Anda (50%)'
         ];
     }
 
     public function map($transaction): array
     {
+        if (is_array($transaction)) {
+            return $transaction;
+        }
+
         $services = $transaction->items->map(function ($item) {
             return $item->item_name;
         })->implode(', ');
 
         return [
             \Carbon\Carbon::parse($transaction->date)->format('d/m/Y'),
-            $transaction->transaction_number,
             $transaction->patient->name ?? '-',
-            $services ?: '-',
-            strtoupper($transaction->payment_method),
+            $transaction->payment_method == 'cash' ? 'UMUM' : strtoupper($transaction->payment_method),
             'Rp ' . number_format($transaction->items->sum('subtotal'), 0, ',', '.'),
-            'Rp ' . number_format($transaction->practitioner_income, 0, ',', '.'),
-            ucfirst($transaction->status)
+            'Rp ' . number_format($transaction->practitioner_income, 0, ',', '.')
         ];
     }
 

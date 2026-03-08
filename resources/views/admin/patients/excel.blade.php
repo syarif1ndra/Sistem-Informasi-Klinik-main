@@ -1,10 +1,10 @@
 <table>
     <thead>
         <tr>
-            <th colspan="6" style="text-align: center; font-weight: bold; font-size: 14pt;">LAPORAN DATA PASIEN</th>
+            <th colspan="7" style="text-align: center; font-weight: bold; font-size: 14pt;">LAPORAN DATA PASIEN</th>
         </tr>
         <tr>
-            <th colspan="6" style="text-align: center; font-weight: bold;">Tanggal:
+            <th colspan="7" style="text-align: center; font-weight: bold;">Tanggal:
                 {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
                 {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
             </th>
@@ -13,6 +13,7 @@
         <tr>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">No</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Nama Pasien</th>
+            <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Alamat</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Keluhan</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">No. HP</th>
             <th style="font-weight: bold; border: 1px solid #000000; text-align: center;">Jenis Kelamin</th>
@@ -24,6 +25,7 @@
             <tr>
                 <td style="border: 1px solid #000000; text-align: center;">{{ $index + 1 }}</td>
                 <td style="border: 1px solid #000000;">{{ $visit->patient->name ?? '-' }}</td>
+                <td style="border: 1px solid #000000;">{{ $visit->patient->address ?? '-' }}</td>
                 <td style="border: 1px solid #000000;">{{ $visit->complaint ?? '-' }}</td>
                 <td style="border: 1px solid #000000;">{{ $visit->patient->phone ?? '-' }}</td>
                 <td style="border: 1px solid #000000; text-align: center;">

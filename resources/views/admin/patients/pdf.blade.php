@@ -47,7 +47,8 @@
         <h1>Bidan Siti Hajar</h1>
         <p>Jl. Raya, Merak Batin, Natar, Lampung</p>
         <p>Laporan Data Pasien - {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
-            {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}</p>
+            {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
+        </p>
     </div>
 
     <table>
@@ -55,6 +56,7 @@
             <tr>
                 <th width="5%">No</th>
                 <th>Nama Pasien</th>
+                <th>Alamat</th>
                 <th>Keluhan</th>
                 <th>No. HP</th>
                 <th>Jenis Kelamin</th>
@@ -66,6 +68,7 @@
                 <tr>
                     <td style="text-align: center;">{{ $index + 1 }}</td>
                     <td>{{ $visit->patient->name ?? '-' }}</td>
+                    <td>{{ $visit->patient->address ?? '-' }}</td>
                     <td>{{ $visit->complaint ?? '-' }}</td>
                     <td>{{ $visit->patient->phone ?? '-' }}</td>
                     <td style="text-align: center;">{{ ($visit->patient->gender ?? '') == 'L' ? 'Laki-laki' : 'Perempuan' }}

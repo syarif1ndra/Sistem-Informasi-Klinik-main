@@ -107,7 +107,7 @@
                         <td class="px-6 py-4 text-sm font-medium text-gray-900">
                             {{ $transaction->patient->name ?? '-' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">{{ strtoupper($transaction->payment_method) }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ $transaction->payment_method == 'cash' ? 'UMUM' : strtoupper($transaction->payment_method) }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">
                             Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}
                         </td>

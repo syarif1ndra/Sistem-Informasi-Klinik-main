@@ -45,19 +45,24 @@
             <th style="font-weight: bold;">Tanggal</th>
             <th style="font-weight: bold;">Nama Pasien</th>
             <th style="font-weight: bold;">Metode Pembayaran</th>
-            <th style="font-weight: bold;">Total Pembayaran</th>
+            <th style="font-weight: bold;">Jumlah Pendapatan</th>
             <th style="font-weight: bold;">Status</th>
         </tr>
+        @php $sumLatest = 0; @endphp
         @foreach($latestTransactions as $trx)
             <tr>
                 <td>{{ $trx->id }}</td>
                 <td>{{ $trx->created_at->format('Y-m-d H:i') }}</td>
                 <td>{{ $trx->patient->name ?? '-' }}</td>
-                <td>{{ strtoupper($trx->payment_method) }}</td>
+                <td>{{ $trx->payment_method == 'cash' ? 'UMUM' : strtoupper($trx->payment_method) }}</td>
                 <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
-                <td>{{ $trx->status == 'paid' ? 'LUNAS' : 'BELUM LUNAS' }}</td>
             </tr>
         @endforeach
+        <tr>
+            <th colspan="4" style="text-align: right;">Total Pendapatan (10 Transaksi Terakhir)</th>
+            <th style="font-weight: bold;">Rp {{ number_format($latestTransactions->sum('total_amount'), 0, ',', '.') }}
+            </th>
+        </tr>
         <tr></tr>
 
         <!-- Warning Section -->
@@ -91,5 +96,18 @@
                 <td>{{ \Carbon\Carbon::parse($med->expired_date)->format('Y-m-d') }}</td>
             </tr>
         @endforeach
+        <tr></tr>
+        <tr></tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="2" style="text-align: center;">
+                Cianjur, {{ now()->translatedFormat('d F Y') }}<br>
+                Owner,<br><br><br><br>
+                <strong>({{ auth()->user()->name }})</strong>
+            </td>
+        </tr>
     </tbody>
 </table>

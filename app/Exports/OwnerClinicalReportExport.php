@@ -72,14 +72,27 @@ class OwnerClinicalReportExport implements FromView, ShouldAutoSize, WithStyles
 
         } elseif ($this->type === 'yearly') {
             $query->whereYear('date', $this->year);
-            $transactions = $query->select(
+            $rawTransactions = $query->select(
                 DB::raw('MONTH(date) as label_month'),
                 DB::raw('COUNT(*) as total_count'),
                 DB::raw('SUM(CASE WHEN status = "paid" THEN total_amount ELSE 0 END) as total_revenue')
             )
                 ->groupBy('label_month')
                 ->orderBy('label_month', 'asc')
-                ->get();
+                ->get()
+                ->keyBy('label_month');
+
+            $transactions = collect(range(1, 12))->map(function ($month) use ($rawTransactions) {
+                if (isset($rawTransactions[$month])) {
+                    return $rawTransactions[$month];
+                }
+                return (object) [
+                    'label_month' => $month,
+                    'total_count' => 0,
+                    'total_revenue' => 0
+                ];
+            });
+
             $totalRevenue = $transactions->sum('total_revenue');
             $totalTransactions = $transactions->sum('total_count');
 
