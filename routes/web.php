@@ -21,7 +21,6 @@ use App\Http\Controllers\User\PatientProfileController as UserPatientProfileCont
 use App\Http\Controllers\User\ClinicRegistrationController as UserClinicRegistrationController;
 use Illuminate\Support\Facades\Route;
 
-// Public Routes
 Route::get('/', [PublicController::class, 'index'])->name('public.home');
 Route::get('/antrian-display', [QueueDisplayController::class, 'index'])->name('public.queue_display');
 Route::get('/antrian-display/data', [QueueDisplayController::class, 'data'])->name('public.queue_display.data');
@@ -31,56 +30,43 @@ Route::get('/faq', [PublicController::class, 'faqs'])->name('public.faqs');
 Route::get('/daftar', [PatientRegistrationController::class, 'create'])->name('public.register');
 Route::post('/daftar', [PatientRegistrationController::class, 'store'])->name('public.register.store');
 
-// User Auth Routes
 Route::middleware('guest')->group(function () {
-    // User login/register now handled by standard Breeze routes
     Route::get('user/register', [UserRegisteredUserController::class, 'create'])->name('user.register');
     Route::post('user/register', [UserRegisteredUserController::class, 'store']);
 });
 
-// Logout is handled by standard auth routes
 
 
-// Google Auth Routes
 Route::get('auth/google', [App\Http\Controllers\Auth\SocialController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [App\Http\Controllers\Auth\SocialController::class, 'handleGoogleCallback']);
 
-// Bidan Routes (Protected by Breeze)
 Route::middleware(['auth', 'verified', 'role.bidan'])->prefix('bidan')->name('bidan.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Bidan\DashboardController::class, 'index'])->name('dashboard');
 
-    // Realtime Queue specific for Bidan Board
     Route::get('/queues/table-data', [\App\Http\Controllers\Bidan\DashboardController::class, 'queueTableData'])->name('queues.tableData');
 
-    // Bidan Queue Management (filtered by assigned_practitioner_id)
     Route::get('/queues', [\App\Http\Controllers\Bidan\QueueController::class, 'index'])->name('queues.index');
     Route::get('/queues/table-data-list', [\App\Http\Controllers\Bidan\QueueController::class, 'tableData'])->name('queues.tableDataList');
 
-    // Transactions
     Route::resource('transactions', \App\Http\Controllers\Bidan\TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [\App\Http\Controllers\Bidan\TransactionController::class, 'printStruk'])->name('transactions.print_struk');
 
-    // Patient List (filtered by handled_by)
     Route::get('/patients', [\App\Http\Controllers\Bidan\PatientController::class, 'index'])->name('patients.index');
     Route::get('/patients/{patient}', [\App\Http\Controllers\Bidan\PatientController::class, 'show'])->name('patients.show');
 
-    // Screenings (Skrining & Diagnosis)
     Route::get('/patients/{patient}/screenings/create', [\App\Http\Controllers\Bidan\ScreeningController::class, 'create'])->name('patients.screenings.create');
     Route::post('/patients/{patient}/screenings', [\App\Http\Controllers\Bidan\ScreeningController::class, 'store'])->name('patients.screenings.store');
     Route::get('/patients/{patient}/screenings/{screening}/edit', [\App\Http\Controllers\Bidan\ScreeningController::class, 'edit'])->name('patients.screenings.edit');
     Route::put('/patients/{patient}/screenings/{screening}', [\App\Http\Controllers\Bidan\ScreeningController::class, 'update'])->name('patients.screenings.update');
 
-    // Financial Report (filtered by handled_by)
     Route::get('/reports/export/excel', [\App\Http\Controllers\Bidan\ReportController::class, 'exportExcel'])->name('reports.exportExcel');
     Route::get('/reports/export/pdf', [\App\Http\Controllers\Bidan\ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [\App\Http\Controllers\Bidan\ReportController::class, 'index'])->name('reports.index');
 });
 
-// Dokter Routes
 Route::middleware(['auth', 'verified', 'role.dokter'])->prefix('dokter')->name('dokter.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Dokter\DashboardController::class, 'index'])->name('dashboard');
 
-    // Realtime Queue specific for Dokter Board
     Route::get('/queues/table-data', [\App\Http\Controllers\Dokter\DashboardController::class, 'queueTableData'])->name('queues.tableData');
 
     Route::get('/queues', [\App\Http\Controllers\Dokter\QueueController::class, 'index'])->name('queues.index');
@@ -90,11 +76,9 @@ Route::middleware(['auth', 'verified', 'role.dokter'])->prefix('dokter')->name('
     Route::resource('transactions', \App\Http\Controllers\Dokter\TransactionController::class);
     Route::get('/transactions/{transaction}/print-struk', [\App\Http\Controllers\Dokter\TransactionController::class, 'printStruk'])->name('transactions.print_struk');
 
-    // Patient List (filtered by handled_by)
     Route::get('/patients', [\App\Http\Controllers\Dokter\PatientController::class, 'index'])->name('patients.index');
     Route::get('/patients/{patient}', [\App\Http\Controllers\Dokter\PatientController::class, 'show'])->name('patients.show');
 
-    // Screenings (Skrining & Diagnosis)
     Route::get('/patients/{patient}/screenings/create', [\App\Http\Controllers\Dokter\ScreeningController::class, 'create'])->name('patients.screenings.create');
     Route::post('/patients/{patient}/screenings', [\App\Http\Controllers\Dokter\ScreeningController::class, 'store'])->name('patients.screenings.store');
     Route::get('/patients/{patient}/screenings/{screening}/edit', [\App\Http\Controllers\Dokter\ScreeningController::class, 'edit'])->name('patients.screenings.edit');

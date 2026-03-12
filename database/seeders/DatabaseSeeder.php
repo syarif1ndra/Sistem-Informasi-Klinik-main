@@ -13,22 +13,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // =====================
-        // USERS (Admin, Bidan, Dokter, dll)
-        // Kita pakai 'email' sebagai kunci unik pengecekan
-        // =====================
+
         $users = [
             ['name' => 'Admin Bidan', 'email' => 'admin@klinik.com', 'role' => 'admin'],
             ['name' => 'user', 'email' => 'user@gmail.com', 'role' => 'user'],
             ['name' => 'Bidan Utama', 'email' => 'bidan@klinik.com', 'role' => 'bidan'],
             ['name' => 'Dokter Klinik', 'email' => 'dokter@klinik.com', 'role' => 'dokter'],
             ['name' => 'Owner Klinik', 'email' => 'owner@klinik.com', 'role' => 'owner'],
-            ['name' => 'Apoteker Klinik', 'email' => 'apoteker@klinik.com', 'role' => 'apoteker'],
         ];
 
         foreach ($users as $user) {
             User::updateOrCreate(
-                ['email' => $user['email']], // Cek berdasarkan email
+                ['email' => $user['email']], 
                 [
                     'name' => $user['name'],
                     'password' => Hash::make('password'),
@@ -37,10 +33,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        // =====================
-        // SERVICES (LAYANAN)
-        // Kita pakai 'name' sebagai kunci unik pengecekan
-        // =====================
+  
         $services = [
             ['name' => 'KB IUD', 'description' => 'Pemasangan alat kontrasepsi IUD.', 'price' => 750000],
             ['name' => 'KB Implan', 'description' => 'Pemasangan KB implan.', 'price' => 300000],
@@ -66,9 +59,7 @@ class DatabaseSeeder extends Seeder
             Service::updateOrCreate(['name' => $service['name']], $service);
         }
 
-        // =====================
-        // MEDICINES (IMUNISASI)
-        // =====================
+   
         $medicines = [
             ['name' => 'Vaksin Rotavirus', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 100000, 'description' => 'Vaksin rotavirus untuk bayi.'],
             ['name' => 'Vaksin DPT / Polio', 'category' => 'Imunisasi', 'stock' => 50, 'price' => 75000, 'description' => 'Vaksin DPT dan Polio.'],
@@ -83,22 +74,8 @@ class DatabaseSeeder extends Seeder
             Medicine::updateOrCreate(['name' => $med['name']], $med);
         }
 
-        // =====================
-        // FAQ
-        // =====================
-        Faq::updateOrCreate(
-            ['question' => 'Apa saja tanda awal kehamilan?'],
-            ['answer' => 'Tanda awal meliputi telat haid, mual, dan payudara sensitif.']
-        );
 
-        Faq::updateOrCreate(
-            ['question' => 'Kapan bayi harus imunisasi?'],
-            ['answer' => 'Imunisasi diberikan sesuai jadwal nasional dari lahir.']
-        );
-
-        // =====================
-        // CALL EXTRA SEEDERS
-        // =====================
+    
         $this->call([
             Icd10CodeSeeder::class,
         ]);

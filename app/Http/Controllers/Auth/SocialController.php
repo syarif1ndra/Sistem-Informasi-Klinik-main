@@ -30,11 +30,16 @@ class SocialController extends Controller
                     return redirect()->route('login')->withErrors(['email' => 'Access denied. Admins cannot login via Google.']);
                 }
 
-                // Update google_id if not set
+                $updateData = [];
                 if (empty($user->google_id)) {
-                    $user->update([
-                        'google_id' => $googleUser->getId(),
-                    ]);
+                    $updateData['google_id'] = $googleUser->getId();
+                }
+                if (empty($user->email_verified_at)) {
+                    $updateData['email_verified_at'] = now();
+                }
+                
+                if (!empty($updateData)) {
+                    $user->update($updateData);
                 }
 
                 Auth::login($user);
