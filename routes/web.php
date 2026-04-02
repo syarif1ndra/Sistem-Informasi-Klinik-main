@@ -191,6 +191,7 @@ Route::middleware(['auth', 'verified', 'role.owner'])->prefix('owner')->name('ow
     Route::get('/reports/export/excel', [\App\Http\Controllers\Owner\ReportController::class, 'exportExcel'])->name('reports.exportExcel');
     Route::get('/reports/export/pdf', [\App\Http\Controllers\Owner\ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/reports', [\App\Http\Controllers\Owner\ReportController::class, 'index'])->name('reports');
+    Route::patch('/reports/toggle-payment/{transaction}', [\App\Http\Controllers\Owner\ReportController::class, 'toggleStaffPaymentStatus'])->name('reports.togglePayment');
     Route::get('/staff-performance', [\App\Http\Controllers\Owner\StaffPerformanceController::class, 'index'])->name('staff.performance');
     Route::put('/staff/{user}/fee', [\App\Http\Controllers\Owner\StaffPerformanceController::class, 'updateFee'])->name('staff.updateFee');
     Route::get('/finance', [\App\Http\Controllers\Owner\FinanceController::class, 'index'])->name('finance');

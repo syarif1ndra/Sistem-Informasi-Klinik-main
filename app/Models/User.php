@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'shift', // Added shift
         'consultation_fee',
+        'revenue_percentage',
         'google_id',
         'email_verified_at',
     ];

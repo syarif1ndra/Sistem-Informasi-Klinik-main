@@ -12,6 +12,9 @@ class Transaction extends Model
     protected $fillable = [
         'patient_id',
         'total_amount',
+        'medical_staff_revenue',
+        'clinic_revenue',
+        'staff_payment_status',
         'status',
         'payment_method',
         'date',

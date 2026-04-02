@@ -76,7 +76,9 @@ class TransactionController extends Controller
 
             // Automatically add Consultation Fee for Bidan
             $konsultasiPrice = auth()->user()->consultation_fee ?? 0;
+            $revenuePercentage = auth()->user()->revenue_percentage ?? 0;
             $totalAmount += $konsultasiPrice;
+            $serviceAmount = $konsultasiPrice;
             TransactionItem::create([
                 'transaction_id' => $transaction->id,
                 'item_type' => 'App\Models\Service', // Treat as service
@@ -103,6 +105,10 @@ class TransactionController extends Controller
                     $name = $item->name;
                     $subtotal = $price * $itemData['quantity'];
                     $totalAmount += $subtotal;
+                    
+                    if (get_class($item) === 'App\Models\Service') {
+                        $serviceAmount += $subtotal;
+                    }
 
                     TransactionItem::create([
                         'transaction_id' => $transaction->id,
@@ -149,8 +155,17 @@ class TransactionController extends Controller
                 }
             }
 
+            // Calculate revenue splits
+            $medicalStaffRevenue = (int)(($revenuePercentage / 100) * $serviceAmount);
+            $clinicRevenue = $totalAmount - $medicalStaffRevenue;
+
             // Removed BPJS 0 logic so price remains valid
-            $transaction->update(['total_amount' => $totalAmount]);
+            $transaction->update([
+                'total_amount' => $totalAmount,
+                'medical_staff_revenue' => $medicalStaffRevenue,
+                'clinic_revenue' => $clinicRevenue,
+                'staff_payment_status' => 'unpaid'
+            ]);
 
             DB::commit();
             return redirect()->route('bidan.transactions.index')->with('success', 'Transaction created successfully.');
@@ -217,7 +232,9 @@ class TransactionController extends Controller
 
             // Automatically add Consultation Fee for Bidan on update
             $konsultasiPrice = auth()->user()->consultation_fee ?? 0;
+            $revenuePercentage = auth()->user()->revenue_percentage ?? 0;
             $totalAmount += $konsultasiPrice;
+            $serviceAmount = $konsultasiPrice;
             TransactionItem::create([
                 'transaction_id' => $transaction->id,
                 'item_type' => 'App\Models\Service',
@@ -243,6 +260,10 @@ class TransactionController extends Controller
                     $name = $item->name;
                     $subtotal = $price * $itemData['quantity'];
                     $totalAmount += $subtotal;
+                    
+                    if (get_class($item) === 'App\Models\Service') {
+                        $serviceAmount += $subtotal;
+                    }
 
                     TransactionItem::create([
                         'transaction_id' => $transaction->id,
@@ -312,10 +333,15 @@ class TransactionController extends Controller
             }
 
             // 5. Update core transaction record
+            $medicalStaffRevenue = (int)(($revenuePercentage / 100) * $serviceAmount);
+            $clinicRevenue = $totalAmount - $medicalStaffRevenue;
+            
             $transaction->update([
                 'patient_id' => $request->patient_id,
                 'payment_method' => $request->payment_method,
                 'total_amount' => $totalAmount,
+                'medical_staff_revenue' => $medicalStaffRevenue,
+                'clinic_revenue' => $clinicRevenue,
                 'notes' => $request->notes,
             ]);
 

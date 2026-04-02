@@ -14,11 +14,41 @@ use App\Exports\OwnerClinicalReportExport;
 
 class ReportController extends Controller
 {
+    private function calculateRevenueSplits($transactions)
+    {
+        $totalClinicRevenue = 0;
+        $totalMedicalRevenue = 0;
+        
+        foreach ($transactions->where('status', 'paid') as $t) {
+            if ($t->medical_staff_revenue > 0 || $t->clinic_revenue > 0) {
+                $totalClinicRevenue += $t->clinic_revenue;
+                $totalMedicalRevenue += $t->medical_staff_revenue;
+            } else {
+                $totalClinicRevenue += $t->total_amount;
+            }
+        }
+        
+        return [
+            'clinic' => $totalClinicRevenue,
+            'medical' => $totalMedicalRevenue
+        ];
+    }
+
+    public function toggleStaffPaymentStatus(Request $request, Transaction $transaction)
+    {
+        $transaction->update([
+            'staff_payment_status' => $transaction->staff_payment_status === 'paid' ? 'unpaid' : 'paid'
+        ]);
+        
+        return back()->with('success', 'Status pembayaran staff untuk transaksi #' . $transaction->id . ' diperbarui.');
+    }
+
     public function index(Request $request)
     {
         $type = $request->input('type', 'daily'); // daily, monthly, yearly
         $practitionerId = $request->input('practitioner_id', 'all');
         $paymentMethod = $request->input('payment_method', 'all');
+        $staffPaymentStatus = $request->input('staff_payment_status', 'all');
 
         $practitioners = User::whereIn('role', ['dokter', 'bidan'])->get();
 
@@ -32,6 +62,10 @@ class ReportController extends Controller
             $query->where('handled_by', $practitionerId);
         }
 
+        if ($staffPaymentStatus !== 'all') {
+            $query->where('staff_payment_status', $staffPaymentStatus);
+        }
+
         if ($type === 'monthly') {
             $month = $request->input('month', Carbon::today()->format('Y-m'));
 
@@ -43,15 +77,18 @@ class ReportController extends Controller
             $transactions = $query->orderBy('date', 'asc')->get();
 
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
+            $splits = $this->calculateRevenueSplits($transactions);
+            $totalClinicRevenue = $splits['clinic'];
+            $totalMedicalRevenue = $splits['medical'];
             $totalTransactions = $transactions->count();
 
             if ($request->has('export') && $request->export === 'pdf') {
-                $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+                $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
                 $pdf->setPaper('A4', 'portrait');
                 return $pdf->download('laporan-bulanan-owner-' . $month . '.pdf');
             }
 
-            return view('owner.reports.monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+            return view('owner.reports.monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
 
         } elseif ($type === 'yearly') {
             $year = $request->input('year', Carbon::today()->format('Y'));
@@ -62,22 +99,26 @@ class ReportController extends Controller
             $transactions = $query->select(
                 DB::raw('MONTH(date) as label_month'),
                 DB::raw('COUNT(*) as total_count'),
-                DB::raw('SUM(CASE WHEN status = "paid" THEN total_amount ELSE 0 END) as total_revenue')
+                DB::raw('SUM(CASE WHEN status = "paid" THEN total_amount ELSE 0 END) as total_revenue'),
+                DB::raw('SUM(CASE WHEN status = "paid" THEN (CASE WHEN clinic_revenue > 0 OR medical_staff_revenue > 0 THEN clinic_revenue ELSE total_amount END) ELSE 0 END) as total_clinic_revenue'),
+                DB::raw('SUM(CASE WHEN status = "paid" THEN medical_staff_revenue ELSE 0 END) as total_medical_revenue')
             )
                 ->groupBy('label_month')
                 ->orderBy('label_month', 'asc')
                 ->get();
 
             $totalRevenue = $transactions->sum('total_revenue');
+            $totalClinicRevenue = $transactions->sum('total_clinic_revenue');
+            $totalMedicalRevenue = $transactions->sum('total_medical_revenue');
             $totalTransactions = $transactions->sum('total_count');
 
             if ($request->has('export') && $request->export === 'pdf') {
-                $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+                $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
                 $pdf->setPaper('A4', 'portrait');
                 return $pdf->download('laporan-tahunan-owner-' . $year . '.pdf');
             }
 
-            return view('owner.reports.yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+            return view('owner.reports.yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
 
         } else {
             // Default Daily Type Detail Data
@@ -90,9 +131,12 @@ class ReportController extends Controller
             $transactions = $query->orderBy('created_at', 'asc')->get();
 
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
+            $splits = $this->calculateRevenueSplits($transactions);
+            $totalClinicRevenue = $splits['clinic'];
+            $totalMedicalRevenue = $splits['medical'];
             $totalTransactions = $transactions->count();
 
-            return view('owner.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+            return view('owner.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
         }
     }
 
@@ -105,8 +149,9 @@ class ReportController extends Controller
         $month = $request->input('month', Carbon::today()->format('Y-m'));
         $year = $request->input('year', Carbon::today()->format('Y'));
         $paymentMethod = $request->input('payment_method', 'all');
+        $staffPaymentStatus = $request->input('staff_payment_status', 'all');
 
-        return Excel::download(new OwnerClinicalReportExport($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod), 'laporan-klinik-' . date('Y-m-d') . '.xlsx');
+        return Excel::download(new OwnerClinicalReportExport($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod, $staffPaymentStatus), 'laporan-klinik-' . date('Y-m-d') . '.xlsx');
     }
 
     public function exportPdf(Request $request)
@@ -130,15 +175,23 @@ class ReportController extends Controller
             $query->where('payment_method', $paymentMethod);
         }
 
+        $staffPaymentStatus = $request->input('staff_payment_status', 'all');
+        if ($staffPaymentStatus !== 'all') {
+            $query->where('staff_payment_status', $staffPaymentStatus);
+        }
+
         if ($type === 'monthly') {
             $month = $request->input('month', Carbon::today()->format('Y-m'));
             $date = Carbon::createFromFormat('Y-m', $month);
             $query->whereYear('date', $date->year)->whereMonth('date', $date->month);
             $transactions = $query->orderBy('date', 'asc')->get();
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
+            $splits = $this->calculateRevenueSplits($transactions);
+            $totalClinicRevenue = $splits['clinic'];
+            $totalMedicalRevenue = $splits['medical'];
             $totalTransactions = $transactions->count();
 
-            $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+            $pdf = Pdf::loadView('owner.reports.pdf_monthly', compact('transactions', 'month', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-bulanan-' . $month . '.pdf');
 
@@ -154,9 +207,11 @@ class ReportController extends Controller
                 ->orderBy('label_month', 'asc')
                 ->get();
             $totalRevenue = $transactions->sum('total_revenue');
+            $totalClinicRevenue = $transactions->sum('total_clinic_revenue');
+            $totalMedicalRevenue = $transactions->sum('total_medical_revenue');
             $totalTransactions = $transactions->sum('total_count');
 
-            $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+            $pdf = Pdf::loadView('owner.reports.pdf_yearly', compact('transactions', 'year', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-tahunan-' . $year . '.pdf');
 
@@ -166,10 +221,13 @@ class ReportController extends Controller
             $query->whereDate('date', '>=', $startDate)->whereDate('date', '<=', $endDate);
             $transactions = $query->orderBy('created_at', 'asc')->get();
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
+            $splits = $this->calculateRevenueSplits($transactions);
+            $totalClinicRevenue = $splits['clinic'];
+            $totalMedicalRevenue = $splits['medical'];
             $totalTransactions = $transactions->count();
 
             // Note: Reuse pdf_daily
-            $pdf = Pdf::loadView('owner.reports.pdf_daily', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+            $pdf = Pdf::loadView('owner.reports.pdf_daily', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
             $pdf->setPaper('A4', 'portrait');
             return $pdf->download('laporan-harian-' . $startDate . '-to-' . $endDate . '.pdf');
         }

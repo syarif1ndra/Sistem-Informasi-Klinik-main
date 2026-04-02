@@ -78,6 +78,7 @@ class DatabaseSeeder extends Seeder
     
         $this->call([
             Icd10CodeSeeder::class,
+            DummyDataSeeder::class,
         ]);
     }
 }
