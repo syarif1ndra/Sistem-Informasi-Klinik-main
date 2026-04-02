@@ -107,17 +107,7 @@
                 </div>
             </div>
             
-            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Total P. Medis</p>
-                    <h3 class="text-3xl font-black text-emerald-600">Rp {{ number_format($totalMedicalRevenue, 0, ',', '.') }}</h3>
-                </div>
-                <div class="p-4 bg-emerald-50 rounded-full text-emerald-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </div>
-            </div>
+      
 
             <div
                 class="bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-lg p-6 text-white flex items-center justify-between">
@@ -155,8 +145,6 @@
                             </th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">P. Medis
                             </th>
-                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                Lunas?</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
@@ -180,16 +168,6 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-emerald-600">Rp
                                     {{ number_format($trx->medical_staff_revenue, 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    @if($trx->status == 'paid')
-                                        <span
-                                            class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-green-100 text-green-800">Lunas</span>
-                                    @else
-                                        <span
-                                            class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-yellow-100 text-yellow-800">Belum
-                                            Lunas</span>
-                                    @endif
                                 </td>
                             </tr>
                         @empty

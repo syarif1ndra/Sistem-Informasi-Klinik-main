@@ -138,7 +138,7 @@
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Jumlah Transaksi</th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total
-                                Pendapatan (Lunas)</th>
+                                Pendapatan</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
