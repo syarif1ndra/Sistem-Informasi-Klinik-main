@@ -166,7 +166,7 @@
                                     {{ $trx->handledBy->name ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                    {{ strtoupper($trx->payment_method) }}
+                                    {{ $trx->payment_method == 'cash' ? 'UMUM' : strtoupper($trx->payment_method) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-gray-900">Rp
                                     {{ number_format($trx->total_amount, 0, ',', '.') }}</td>

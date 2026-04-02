@@ -322,7 +322,7 @@
                 <table class="min-w-full divide-y divide-gray-100">
                     <thead class="bg-gray-50/50">
                         <tr>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Trx ID</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">No</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tanggal</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Pasien</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Metode</th>
@@ -333,7 +333,7 @@
                     <tbody class="bg-white divide-y divide-gray-50">
                         @forelse($latestTransactions as $trx)
                             <tr class="hover:bg-blue-50/30 transition duration-150 group">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">#{{ str_pad($trx->id, 5, '0', STR_PAD_LEFT) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $trx->created_at->translatedFormat('d M Y H:i') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $trx->patient->name ?? '-' }}</div>
