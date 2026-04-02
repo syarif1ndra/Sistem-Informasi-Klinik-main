@@ -139,6 +139,8 @@
                                 Jumlah Transaksi</th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total
                                 Pendapatan (Lunas)</th>
+                            <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total
+                                P. Medis</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
@@ -153,6 +155,9 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-green-600">
                                     Rp {{ number_format($trx->total_revenue, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-emerald-600">
+                                    Rp {{ number_format($trx->total_medical_revenue, 0, ',', '.') }}
                                 </td>
                             </tr>
                         @empty

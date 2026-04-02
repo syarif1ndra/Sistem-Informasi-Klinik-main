@@ -42,20 +42,10 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Metode Bayar</label>
-                    <select name="payment_method"
-                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
+                    <select name="payment_method" class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
                         <option value="all" {{ ($paymentMethod ?? 'all') == 'all' ? 'selected' : '' }}>Semua</option>
                         <option value="cash" {{ ($paymentMethod ?? '') == 'cash' ? 'selected' : '' }}>Umum</option>
                         <option value="bpjs" {{ ($paymentMethod ?? '') == 'bpjs' ? 'selected' : '' }}>BPJS</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Status Pembayaran Pegawai</label>
-                    <select name="staff_payment_status"
-                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
-                        <option value="all" {{ ($staffPaymentStatus ?? 'all') == 'all' ? 'selected' : '' }}>Semua</option>
-                        <option value="paid" {{ ($staffPaymentStatus ?? '') == 'paid' ? 'selected' : '' }}>Sudah Dibayar</option>
-                        <option value="unpaid" {{ ($staffPaymentStatus ?? '') == 'unpaid' ? 'selected' : '' }}>Belum Dibayar</option>
                     </select>
                 </div>
                 <button type="submit"
@@ -116,34 +106,15 @@
                     </svg>
                 </div>
             </div>
-            </div>
             
-            <div
-                class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white flex items-center justify-between">
+            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-bold text-indigo-100 uppercase tracking-widest mb-1">Klinik Bersih</p>
-                    <h3 class="text-2xl font-black">Rp {{ number_format($totalClinicRevenue, 0, ',', '.') }}</h3>
+                    <p class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Total P. Medis</p>
+                    <h3 class="text-3xl font-black text-emerald-600">Rp {{ number_format($totalMedicalRevenue, 0, ',', '.') }}</h3>
                 </div>
-                <div class="p-3 bg-white/20 rounded-full text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                </div>
-            </div>
-
-            <div
-                class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-bold text-emerald-100 uppercase tracking-widest mb-1">Medis Bersih</p>
-                    <h3 class="text-2xl font-black">Rp {{ number_format($totalMedicalRevenue, 0, ',', '.') }}</h3>
-                </div>
-                <div class="p-3 bg-white/20 rounded-full text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <div class="p-4 bg-emerald-50 rounded-full text-emerald-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                 </div>
             </div>
@@ -151,8 +122,7 @@
             <div
                 class="bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-lg p-6 text-white flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-bold text-pink-100 uppercase tracking-widest mb-1">Total Pendapatan 
-                        </p>
+                    <p class="text-sm font-bold text-pink-100 uppercase tracking-widest mb-1">Total Pendapatan </p>
                     <h3 class="text-3xl font-black">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
                 </div>
                 <div class="p-4 bg-white/20 rounded-full text-white">
@@ -170,7 +140,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">No</th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tgl
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Pasien
@@ -183,12 +153,8 @@
                             </th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total Transaksi
                             </th>
-                            <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">P. Klinik
-                            </th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">P. Medis
                             </th>
-                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                Pembayaran Pegawai</th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Lunas?</th>
                         </tr>
@@ -196,7 +162,7 @@
                     <tbody class="bg-white divide-y divide-gray-100">
                         @forelse($transactions as $trx)
                             <tr class="hover:bg-gray-50 transition duration-150">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $trx->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $trx->created_at->translatedFormat('d M Y H:i') }}
                                 </td>
@@ -212,32 +178,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-gray-900">Rp
                                     {{ number_format($trx->total_amount, 0, ',', '.') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-indigo-600">Rp
-                                    {{ number_format($trx->medical_staff_revenue > 0 || $trx->clinic_revenue > 0 ? $trx->clinic_revenue : $trx->total_amount, 0, ',', '.') }}
-                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-emerald-600">Rp
                                     {{ number_format($trx->medical_staff_revenue, 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    @if(in_array($trx->handledBy->role ?? '', ['dokter', 'bidan']) && $trx->medical_staff_revenue > 0)
-                                        <form action="{{ route('owner.reports.togglePayment', $trx->id) }}" method="POST" class="inline-block">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="p-1 rounded transition-colors {{ $trx->staff_payment_status === 'paid' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}" title="{{ $trx->staff_payment_status === 'paid' ? 'Sudah Dibayar' : 'Belum Dibayar' }}">
-                                                @if($trx->staff_payment_status === 'paid')
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                                    </svg>
-                                                @else
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                @endif
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span class="text-gray-400 text-xs">-</span>
-                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @if($trx->status == 'paid')

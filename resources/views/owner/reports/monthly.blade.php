@@ -137,7 +137,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">ID
+                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">No
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tgl
                             </th>
@@ -149,6 +149,8 @@
                             </th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total
                             </th>
+                            <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">P. Medis
+                            </th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Status
                             </th>
                         </tr>
@@ -156,7 +158,7 @@
                     <tbody class="bg-white divide-y divide-gray-100">
                         @forelse($transactions as $trx)
                             <tr class="hover:bg-gray-50 transition duration-150">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $trx->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $trx->created_at->translatedFormat('d M Y H:i') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -170,6 +172,8 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-gray-900">Rp
                                     {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right text-emerald-600">Rp
+                                    {{ number_format($trx->medical_staff_revenue, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @if($trx->status == 'paid')
                                         <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-green-100 text-green-800">Lunas</span>
