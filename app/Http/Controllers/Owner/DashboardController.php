@@ -96,7 +96,7 @@ class DashboardController extends Controller
             $staff->revenue = \App\Models\Transaction::where('handled_by', $staff->id)
                 ->where('status', 'paid')
                 ->whereBetween('date', [$startDateTime, $endDateTime])
-                ->sum('total_amount');
+                ->sum('medical_staff_revenue'); // Shows the actual fee earned by the medical staff
 
             $staff->staff_name = $staff->name;
         }

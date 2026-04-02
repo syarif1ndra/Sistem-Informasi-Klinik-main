@@ -25,13 +25,10 @@ class DashboardController extends Controller
             $q->where('assigned_practitioner_id', auth()->id());
         })->count();
 
-        // 2. Total Pendapatan Pribadi (50% dari Jasa/Layanan pada transaksi yang ditangani dan lunas)
-        $personalRevenue = TransactionItem::whereHas('transaction', function ($q) {
-            $q->where('handled_by', auth()->id())
-                ->where('status', 'paid');
-        })
-            ->where('item_type', 'App\Models\Service')
-            ->sum('subtotal') * 0.5;
+        // 2. Pendapatan Pribadi dihitung berdasarkan splits dari transaksi yang sudah paid
+        $personalRevenue = Transaction::where('handled_by', auth()->id())
+            ->where('status', 'paid')
+            ->sum('medical_staff_revenue');
 
         // 3. Data Antrian Hari Ini (Untuk Tabel Real-time) - assigned to this doctor
         $recentQueues = Queue::with(['patient', 'userPatient'])

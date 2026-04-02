@@ -25,18 +25,16 @@ class ReportController extends Controller
             $query->where('payment_method', $paymentMethod);
         }
 
-        $totalRevenue = TransactionItem::whereHas('transaction', function ($q) use ($startDate, $endDate, $paymentMethod) {
-            $q->where('handled_by', auth()->id())
-                ->where('status', 'paid')
-                ->whereDate('date', '>=', $startDate)
-                ->whereDate('date', '<=', $endDate);
+        $totalRevenueQuery = Transaction::where('handled_by', auth()->id())
+            ->where('status', 'paid')
+            ->whereDate('date', '>=', $startDate)
+            ->whereDate('date', '<=', $endDate);
 
-            if ($paymentMethod !== 'all') {
-                $q->where('payment_method', $paymentMethod);
-            }
-        })
-            ->where('item_type', 'App\Models\Service')
-            ->sum('subtotal') * 0.5;
+        if ($paymentMethod !== 'all') {
+            $totalRevenueQuery->where('payment_method', $paymentMethod);
+        }
+        
+        $totalRevenue = $totalRevenueQuery->sum('medical_staff_revenue');
 
         $totalTransactions = (clone $query)->count();
 
@@ -48,8 +46,7 @@ class ReportController extends Controller
 
         $transactions->getCollection()->transform(function ($transaction) {
             if ($transaction->status === 'paid') {
-                $serviceSum = $transaction->items->sum('subtotal');
-                $transaction->practitioner_income = $serviceSum * 0.5;
+                $transaction->practitioner_income = $transaction->medical_staff_revenue;
             } else {
                 $transaction->practitioner_income = 0;
             }
@@ -98,18 +95,16 @@ class ReportController extends Controller
             $query->where('payment_method', $paymentMethod);
         }
 
-        $totalRevenue = TransactionItem::whereHas('transaction', function ($q) use ($startDate, $endDate, $paymentMethod) {
-            $q->where('handled_by', auth()->id())
-                ->where('status', 'paid')
-                ->whereDate('date', '>=', $startDate)
-                ->whereDate('date', '<=', $endDate);
+        $totalRevenueQueryPdf = Transaction::where('handled_by', auth()->id())
+            ->where('status', 'paid')
+            ->whereDate('date', '>=', $startDate)
+            ->whereDate('date', '<=', $endDate);
 
-            if ($paymentMethod !== 'all') {
-                $q->where('payment_method', $paymentMethod);
-            }
-        })
-            ->where('item_type', 'App\Models\Service')
-            ->sum('subtotal') * 0.5;
+        if ($paymentMethod !== 'all') {
+            $totalRevenueQueryPdf->where('payment_method', $paymentMethod);
+        }
+        
+        $totalRevenue = $totalRevenueQueryPdf->sum('medical_staff_revenue');
 
         $totalTransactions = (clone $query)->count();
         $transactions = (clone $query)->oldest()->get();
