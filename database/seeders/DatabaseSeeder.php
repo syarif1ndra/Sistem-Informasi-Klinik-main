@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     {
 
         $users = [
-            ['name' => 'Admin Bidan', 'email' => 'admin@klinik.com', 'role' => 'admin'],
+            ['name' => 'Admin ', 'email' => 'admin@klinik.com', 'role' => 'admin'],
             ['name' => 'user', 'email' => 'user@gmail.com', 'role' => 'user'],
-            ['name' => 'Bidan Utama', 'email' => 'bidan@klinik.com', 'role' => 'bidan'],
-            ['name' => 'Dokter Klinik', 'email' => 'dokter@klinik.com', 'role' => 'dokter'],
+            ['name' => 'Bidan Siti Hajar', 'email' => 'bidan@klinik.com', 'role' => 'bidan'],
+            ['name' => 'Dokter Jaya', 'email' => 'dokter@klinik.com', 'role' => 'dokter'],
             ['name' => 'Owner Klinik', 'email' => 'owner@klinik.com', 'role' => 'owner'],
         ];
 
@@ -76,9 +76,6 @@ class DatabaseSeeder extends Seeder
 
 
     
-        $this->call([
-            Icd10CodeSeeder::class,
-            DummyDataSeeder::class,
-        ]);
+        
     }
 }
