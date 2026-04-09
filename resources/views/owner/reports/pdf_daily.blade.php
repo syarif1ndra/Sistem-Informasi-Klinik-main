@@ -124,11 +124,7 @@
                 <th colspan="5" class="text-right">Total Pendapatan Transaksi</th>
                 <th class="text-right">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</th>
             </tr>
-            <tr>
-                <th colspan="5" class="text-right">Total Pendapatan Medis Bersih</th>
-                <th class="text-right">Rp {{ number_format($totalMedicalRevenue, 0, ',', '.') }}</th>
-            </tr>
-
+           
         </tfoot>
     </table>
 

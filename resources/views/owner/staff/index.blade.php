@@ -55,6 +55,10 @@
                                 Pendapatan Transaksi</th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Pendapatan Bersih</th>
+                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                Status Gaji</th>
+                            <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
@@ -102,10 +106,35 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-emerald-600">Rp
                                     {{ number_format($staff->net_revenue ?? 0, 0, ',', '.') }}
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    @if ($staff->salary_status === 'dibayar')
+                                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Sudah Dibayar</span>
+                                    @else
+                                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 border border-red-200">Belum Dibayar</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <form action="{{ route('owner.staff.togglePayment', $staff->id) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        <input type="hidden" name="start_date" value="{{ $startDate }}">
+                                        <input type="hidden" name="end_date" value="{{ $endDate }}">
+                                        @if ($staff->salary_status === 'belum')
+                                            <input type="hidden" name="action" value="pay">
+                                            <button type="submit" class="px-3 py-1.5 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-xs font-semibold transition-colors shadow-sm whitespace-nowrap">
+                                                Tandai Sudah Dibayar
+                                            </button>
+                                        @else
+                                            <input type="hidden" name="action" value="cancel">
+                                            <button type="submit" class="px-3 py-1.5 bg-gray-500 hover:bg-gray-600 text-white rounded-lg text-xs font-semibold transition-colors shadow-sm whitespace-nowrap" onclick="return confirm('Batalkan status pembayaran?')">
+                                                Batalkan
+                                            </button>
+                                        @endif
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-10 text-center text-gray-500">Belum ada data tenaga medis.</td>
+                                <td colspan="8" class="px-6 py-10 text-center text-gray-500">Belum ada data tenaga medis.</td>
                             </tr>
                         @endforelse
                     </tbody>

@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
             Medicine::updateOrCreate(['name' => $med['name']], $med);
         }
 
-
+        $this->call(Icd10CodeSeeder::class);
     
         
     }
