@@ -124,9 +124,16 @@ class ReportController extends Controller
             // Default Daily Type Detail Data
             $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
             $endDate = $request->input('end_date', Carbon::today()->toDateString());
+            $search = $request->input('search', '');
 
             $query->whereDate('date', '>=', $startDate)
                 ->whereDate('date', '<=', $endDate);
+
+            if ($search) {
+                $query->whereHas('patient', function ($patientQuery) use ($search) {
+                    $patientQuery->where('name', 'like', '%' . $search . '%');
+                });
+            }
 
             $transactions = $query->orderBy('created_at', 'asc')->get();
 
@@ -136,7 +143,7 @@ class ReportController extends Controller
             $totalMedicalRevenue = $splits['medical'];
             $totalTransactions = $transactions->count();
 
-            return view('owner.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus'));
+            return view('owner.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalClinicRevenue', 'totalMedicalRevenue', 'totalTransactions', 'paymentMethod', 'staffPaymentStatus', 'search'));
         }
     }
 

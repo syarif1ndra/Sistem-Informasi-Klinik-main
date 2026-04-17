@@ -9,6 +9,12 @@
     <form method="GET" action="{{ route('bidan.patients.index') }}"
         class="bg-white rounded-lg shadow p-4 mb-6 flex flex-wrap items-end gap-4">
         <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Cari Nama Pasien</label>
+            <input type="text" name="search" value="{{ $search }}"
+                placeholder="Masukkan nama pasien..."
+                class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">
+        </div>
+        <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
             <input type="date" name="start_date" value="{{ $startDate }}"
                 class="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400">

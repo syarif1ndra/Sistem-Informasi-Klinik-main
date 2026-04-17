@@ -14,8 +14,9 @@ class PatientController extends Controller
     {
         $startDate = $request->input('start_date', date('Y-m-01'));
         $endDate = $request->input('end_date', date('Y-m-d'));
+        $search = $request->input('search', '');
 
-        $patients = Patient::whereHas('queues', function ($q) use ($startDate, $endDate) {
+        $query = Patient::whereHas('queues', function ($q) use ($startDate, $endDate) {
             $q->where('assigned_practitioner_id', auth()->id())
                 ->whereDate('date', '>=', $startDate)
                 ->whereDate('date', '<=', $endDate);
@@ -26,11 +27,17 @@ class PatientController extends Controller
                             ->whereDate('date', '<=', $endDate)
                             ->orderByDesc('date');
                     }
-                ])->paginate(15);
+                ]);
 
-        $patients->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
 
-        return view('bidan.patients.index', compact('patients', 'startDate', 'endDate'));
+        $patients = $query->paginate(15);
+
+        $patients->appends(['start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]);
+
+        return view('bidan.patients.index', compact('patients', 'startDate', 'endDate', 'search'));
     }
 
     public function show(Request $request, Patient $patient)
