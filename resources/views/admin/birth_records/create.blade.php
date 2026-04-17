@@ -81,6 +81,12 @@
                                         class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
                                         required>
                                 </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Anak Ke</label>
+                                    <input type="number" name="child_order" min="1"
+                                        class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
+                                        placeholder="1">
+                                </div>
                             </div>
                         </div>
 
@@ -168,6 +174,18 @@
                                         <textarea name="mother_address" rows="2"
                                             class="w-full mt-1 rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"></textarea>
                                     </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase">Umur</label>
+                                        <input type="number" name="mother_age" min="0"
+                                            class="w-full mt-1 rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
+                                            placeholder="31">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase">Pekerjaan</label>
+                                        <input type="text" name="mother_job"
+                                            class="w-full mt-1 rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
+                                            placeholder="Ibu Rumah Tangga">
+                                    </div>
                                 </div>
                             </div>
 
@@ -192,6 +210,18 @@
                                         <textarea name="father_address" rows="2"
                                             class="w-full mt-1 rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"></textarea>
                                     </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase">Umur</label>
+                                        <input type="number" name="father_age" min="0"
+                                            class="w-full mt-1 rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
+                                            placeholder="32">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-500 uppercase">Pekerjaan</label>
+                                        <input type="text" name="father_job"
+                                            class="w-full mt-1 rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
+                                            placeholder="Wiraswasta">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -205,6 +235,12 @@
                                         WhatsApp</label>
                                     <input type="text" name="phone_number"
                                         class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Penolong</label>
+                                    <input type="text" name="attendant_name"
+                                        class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-2.5"
+                                        placeholder="Bidan Siti Hajar">
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Catatan Tambahan</label>

@@ -33,30 +33,33 @@ class BirthRecordController extends Controller
         return view('admin.birth_records.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'baby_name' => 'required|string|max:255',
             'birth_date' => 'required|date',
-            'birth_time' => 'required',
+            'birth_time' => 'required|date_format:H:i',
             'birth_place' => 'required|string|max:255',
             'gender' => 'required|in:L,P',
             'mother_name' => 'required|string|max:255',
             'mother_nik' => 'required|string|max:16',
+            'mother_age' => 'nullable|numeric|min:0|max:120',
+            'mother_job' => 'nullable|string|max:255',
             'father_name' => 'required|string|max:255',
             'father_nik' => 'required|string|max:16',
+            'father_age' => 'nullable|numeric|min:0|max:120',
+            'father_job' => 'nullable|string|max:255',
             'mother_address' => 'nullable|string',
             'father_address' => 'nullable|string',
             'phone_number' => 'nullable|string',
+            'child_order' => 'nullable|numeric|min:1',
+            'attendant_name' => 'nullable|string|max:255',
 
             // Medical Data
             'gpa' => 'nullable|string',
-            'kala_1' => 'nullable|string',
-            'kala_2' => 'nullable|string',
-            'kala_3' => 'nullable|string',
+            'kala_1' => 'nullable|date_format:H:i',
+            'kala_2' => 'nullable|date_format:H:i',
+            'kala_3' => 'nullable|date_format:H:i',
 
             // Anthropometry
             'baby_weight' => 'nullable|numeric',
@@ -90,30 +93,33 @@ class BirthRecordController extends Controller
         return view('admin.birth_records.edit', compact('birthRecord'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, BirthRecord $birthRecord)
     {
         $validated = $request->validate([
             'baby_name' => 'required|string|max:255',
             'birth_date' => 'required|date',
-            'birth_time' => 'required',
+            'birth_time' => 'required|date_format:H:i',
             'birth_place' => 'required|string|max:255',
             'gender' => 'required|in:L,P',
             'mother_name' => 'required|string|max:255',
             'mother_nik' => 'required|string|max:16',
+            'mother_age' => 'nullable|numeric|min:0|max:120',
+            'mother_job' => 'nullable|string|max:255',
             'father_name' => 'required|string|max:255',
             'father_nik' => 'required|string|max:16',
+            'father_age' => 'nullable|numeric|min:0|max:120',
+            'father_job' => 'nullable|string|max:255',
             'mother_address' => 'nullable|string',
             'father_address' => 'nullable|string',
             'phone_number' => 'nullable|string',
+            'child_order' => 'nullable|numeric|min:1',
+            'attendant_name' => 'nullable|string|max:255',
 
             // Medical Data
             'gpa' => 'nullable|string',
-            'kala_1' => 'nullable|string',
-            'kala_2' => 'nullable|string',
-            'kala_3' => 'nullable|string',
+            'kala_1' => 'nullable|date_format:H:i',
+            'kala_2' => 'nullable|date_format:H:i',
+            'kala_3' => 'nullable|date_format:H:i',
 
             // Anthropometry
             'baby_weight' => 'nullable|numeric',
