@@ -21,8 +21,9 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
     protected $month;
     protected $year;
     protected $paymentMethod;
+    protected $search;
 
-    public function __construct($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod = 'all')
+    public function __construct($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod = 'all', $search = '')
     {
         $this->type = $type;
         $this->practitionerId = $practitionerId;
@@ -31,6 +32,7 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
         $this->month = $month;
         $this->year = $year;
         $this->paymentMethod = $paymentMethod;
+        $this->search = $search;
     }
 
     public function view(): View
@@ -111,6 +113,13 @@ class AdminReportExport implements FromView, ShouldAutoSize, WithStyles
         } else {
             // Daily Data
             $query->whereDate('date', '>=', $this->startDate)->whereDate('date', '<=', $this->endDate);
+
+            if ($this->search) {
+                $query->whereHas('patient', function ($patientQuery) {
+                    $patientQuery->where('name', 'like', '%' . $this->search . '%');
+                });
+            }
+
             $transactions = $query->orderBy('created_at', 'asc')->get();
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();

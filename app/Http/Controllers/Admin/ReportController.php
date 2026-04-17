@@ -79,16 +79,23 @@ class ReportController extends Controller
         } else {
             $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
             $endDate = $request->input('end_date', Carbon::today()->toDateString());
+            $search = $request->input('search', '');
 
             $query->whereDate('date', '>=', $startDate)
                 ->whereDate('date', '<=', $endDate);
+
+            if ($search) {
+                $query->whereHas('patient', function ($patientQuery) use ($search) {
+                    $patientQuery->where('name', 'like', '%' . $search . '%');
+                });
+            }
 
             $transactions = $query->orderBy('created_at', 'asc')->get();
 
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();
 
-            return view('admin.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod'));
+            return view('admin.reports.index', compact('transactions', 'startDate', 'endDate', 'practitionerId', 'practitioners', 'type', 'totalRevenue', 'totalTransactions', 'paymentMethod', 'search'));
         }
     }
 
@@ -101,8 +108,9 @@ class ReportController extends Controller
         $month = $request->input('month', Carbon::today()->format('Y-m'));
         $year = $request->input('year', Carbon::today()->format('Y'));
         $paymentMethod = $request->input('payment_method', 'all');
+        $search = $request->input('search', '');
 
-        return Excel::download(new AdminReportExport($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod), 'laporan-admin-' . date('Y-m-d') . '.xlsx');
+        return Excel::download(new AdminReportExport($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod, $search), 'laporan-admin-' . date('Y-m-d') . '.xlsx');
     }
 
     public function exportPdf(Request $request)
@@ -159,7 +167,15 @@ class ReportController extends Controller
         } else {
             $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
             $endDate = $request->input('end_date', Carbon::today()->toDateString());
+            $search = $request->input('search', '');
             $query->whereDate('date', '>=', $startDate)->whereDate('date', '<=', $endDate);
+
+            if ($search) {
+                $query->whereHas('patient', function ($patientQuery) use ($search) {
+                    $patientQuery->where('name', 'like', '%' . $search . '%');
+                });
+            }
+
             $transactions = $query->orderBy('created_at', 'asc')->get();
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $totalTransactions = $transactions->count();

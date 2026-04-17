@@ -15,15 +15,24 @@ class ImmunizationController extends Controller
     {
         $startDate = $request->input('start_date', date('Y-m-d'));
         $endDate = $request->input('end_date', date('Y-m-d'));
+        $search = $request->input('search', '');
 
-        $immunizations = Immunization::whereBetween('immunization_date', [$startDate, $endDate])
+        $query = Immunization::whereBetween('immunization_date', [$startDate, $endDate])
             ->orderBy('immunization_date', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->orderBy('created_at', 'desc');
 
-        $immunizations->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('child_name', 'like', '%' . $search . '%')
+                  ->orWhere('parent_name', 'like', '%' . $search . '%');
+            });
+        }
 
-        return view('admin.immunizations.index', compact('immunizations', 'startDate', 'endDate'));
+        $immunizations = $query->paginate(10);
+
+        $immunizations->appends(['start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]);
+
+        return view('admin.immunizations.index', compact('immunizations', 'startDate', 'endDate', 'search'));
     }
 
     /**

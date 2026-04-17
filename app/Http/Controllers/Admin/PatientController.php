@@ -19,19 +19,27 @@ class PatientController extends Controller
     {
         $startDate = $request->input('start_date', date('Y-m-d'));
         $endDate = $request->input('end_date', date('Y-m-d'));
+        $search = $request->input('search', '');
 
         // Fetch Queues (Visits) instead of Patients
         // We load patient relationship to display patient details
-        $visits = Queue::with('patient')
+        $query = Queue::with('patient')
             ->whereBetween('date', [$startDate, $endDate])
             ->orderBy('date', 'desc')
-            ->orderBy('queue_number', 'asc')
-            ->paginate(10);
+            ->orderBy('queue_number', 'asc');
+
+        if ($search) {
+            $query->whereHas('patient', function ($patientQuery) use ($search) {
+                $patientQuery->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        $visits = $query->paginate(10);
 
         // Append query strings so pagination links work with filters
-        $visits->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+        $visits->appends(['start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]);
 
-        return view('admin.patients.index', compact('visits', 'startDate', 'endDate'));
+        return view('admin.patients.index', compact('visits', 'startDate', 'endDate', 'search'));
     }
 
     public function create()

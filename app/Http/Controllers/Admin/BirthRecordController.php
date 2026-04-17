@@ -14,15 +14,25 @@ class BirthRecordController extends Controller
     {
         $startDate = $request->input('start_date', date('Y-m-d'));
         $endDate = $request->input('end_date', date('Y-m-d'));
+        $search = $request->input('search', '');
 
-        $birthRecords = BirthRecord::whereBetween('birth_date', [$startDate, $endDate])
+        $query = BirthRecord::whereBetween('birth_date', [$startDate, $endDate])
             ->orderBy('birth_date', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->orderBy('created_at', 'desc');
 
-        $birthRecords->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('baby_name', 'like', '%' . $search . '%')
+                  ->orWhere('mother_name', 'like', '%' . $search . '%')
+                  ->orWhere('father_name', 'like', '%' . $search . '%');
+            });
+        }
 
-        return view('admin.birth_records.index', compact('birthRecords', 'startDate', 'endDate'));
+        $birthRecords = $query->paginate(15);
+
+        $birthRecords->appends(['start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]);
+
+        return view('admin.birth_records.index', compact('birthRecords', 'startDate', 'endDate', 'search'));
     }
 
     /**

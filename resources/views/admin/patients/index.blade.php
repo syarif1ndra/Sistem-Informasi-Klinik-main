@@ -8,6 +8,8 @@
             <form action="{{ route('admin.patients.index') }}" method="GET"
                 class="flex flex-col sm:flex-row items-center gap-2" id="filter-form">
                 <div class="flex items-center gap-2">
+                    <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama pasien..."
+                        class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
                     <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
                         class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
                     <span class="text-gray-500 font-medium">s/d</span>
