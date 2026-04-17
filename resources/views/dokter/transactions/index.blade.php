@@ -5,6 +5,8 @@
         <h1 class="text-3xl font-bold text-gray-800">Manajemen Transaksi</h1>
 
         <form action="{{ route('dokter.transactions.index') }}" method="GET" class="flex items-center">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama pasien atau nomor transaksi..."
+                class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2">
             <input type="date" name="date" value="{{ $date }}"
                 class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2">
             <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">

@@ -18,13 +18,25 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $date = $request->input('date', date('Y-m-d'));
-        $transactions = Transaction::with('patient')
-            ->where('handled_by', auth()->id())
-            ->whereDate('created_at', $date)
-            ->oldest()
-            ->paginate(10);
+        $search = $request->input('search', '');
 
-        return view('dokter.transactions.index', compact('transactions', 'date'));
+        $query = Transaction::with('patient')
+            ->where('handled_by', auth()->id())
+            ->whereDate('created_at', $date);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('patient', function ($patientQuery) use ($search) {
+                    $patientQuery->where('name', 'like', '%' . $search . '%');
+                })->orWhere('transaction_number', 'like', '%' . $search . '%');
+            });
+        }
+
+        $transactions = $query->oldest()->paginate(10);
+
+        $transactions->appends(['date' => $date, 'search' => $search]);
+
+        return view('dokter.transactions.index', compact('transactions', 'date', 'search'));
     }
 
     public function create()

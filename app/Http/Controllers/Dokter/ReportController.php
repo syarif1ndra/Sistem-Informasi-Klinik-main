@@ -14,6 +14,7 @@ class ReportController extends Controller
         $startDate = $request->input('start_date', date('Y-m-01')); // First day of month
         $endDate = $request->input('end_date', date('Y-m-d'));
         $paymentMethod = $request->input('payment_method', 'all');
+        $search = $request->input('search', '');
 
         // Only transactions handled by this doctor
         $query = Transaction::with('patient')
@@ -25,6 +26,12 @@ class ReportController extends Controller
             $query->where('payment_method', $paymentMethod);
         }
 
+        if ($search) {
+            $query->whereHas('patient', function ($patientQuery) use ($search) {
+                $patientQuery->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
         $totalRevenueQuery = Transaction::where('handled_by', auth()->id())
             ->where('status', 'paid')
             ->whereDate('date', '>=', $startDate)
@@ -32,6 +39,12 @@ class ReportController extends Controller
 
         if ($paymentMethod !== 'all') {
             $totalRevenueQuery->where('payment_method', $paymentMethod);
+        }
+
+        if ($search) {
+            $totalRevenueQuery->whereHas('patient', function ($patientQuery) use ($search) {
+                $patientQuery->where('name', 'like', '%' . $search . '%');
+            });
         }
         
         $totalRevenue = $totalRevenueQuery->sum('medical_staff_revenue');
@@ -53,7 +66,7 @@ class ReportController extends Controller
             return $transaction;
         });
 
-        $transactions->appends(['start_date' => $startDate, 'end_date' => $endDate, 'payment_method' => $paymentMethod]);
+        $transactions->appends(['start_date' => $startDate, 'end_date' => $endDate, 'payment_method' => $paymentMethod, 'search' => $search]);
 
         return view('dokter.reports.index', compact(
             'transactions',
@@ -61,7 +74,8 @@ class ReportController extends Controller
             'totalTransactions',
             'startDate',
             'endDate',
-            'paymentMethod'
+            'paymentMethod',
+            'search'
         ));
     }
 
@@ -70,8 +84,9 @@ class ReportController extends Controller
         $startDate = $request->input('start_date', date('Y-m-01'));
         $endDate = $request->input('end_date', date('Y-m-d'));
         $paymentMethod = $request->input('payment_method', 'all');
+        $search = $request->input('search', '');
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\DokterReportExport($startDate, $endDate, $paymentMethod), 'laporan-keuangan-dokter-' . $startDate . '-to-' . $endDate . '.xlsx');
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\DokterReportExport($startDate, $endDate, $paymentMethod, $search), 'laporan-keuangan-dokter-' . $startDate . '-to-' . $endDate . '.xlsx');
     }
 
     public function exportPdf(Request $request)
@@ -79,6 +94,7 @@ class ReportController extends Controller
         $startDate = $request->input('start_date', date('Y-m-01'));
         $endDate = $request->input('end_date', date('Y-m-d'));
         $paymentMethod = $request->input('payment_method', 'all');
+        $search = $request->input('search', '');
 
         // Only transactions handled by this doctor
         $query = Transaction::with([
@@ -95,6 +111,12 @@ class ReportController extends Controller
             $query->where('payment_method', $paymentMethod);
         }
 
+        if ($search) {
+            $query->whereHas('patient', function ($patientQuery) use ($search) {
+                $patientQuery->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
         $totalRevenueQueryPdf = Transaction::where('handled_by', auth()->id())
             ->where('status', 'paid')
             ->whereDate('date', '>=', $startDate)
@@ -102,6 +124,12 @@ class ReportController extends Controller
 
         if ($paymentMethod !== 'all') {
             $totalRevenueQueryPdf->where('payment_method', $paymentMethod);
+        }
+
+        if ($search) {
+            $totalRevenueQueryPdf->whereHas('patient', function ($patientQuery) use ($search) {
+                $patientQuery->where('name', 'like', '%' . $search . '%');
+            });
         }
         
         $totalRevenue = $totalRevenueQueryPdf->sum('medical_staff_revenue');

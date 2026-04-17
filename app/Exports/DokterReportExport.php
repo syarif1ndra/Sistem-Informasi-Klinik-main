@@ -14,12 +14,14 @@ class DokterReportExport implements FromCollection, WithHeadings, WithMapping, W
     protected $startDate;
     protected $endDate;
     protected $paymentMethod;
+    protected $search;
 
-    public function __construct($startDate, $endDate, $paymentMethod = 'all')
+    public function __construct($startDate, $endDate, $paymentMethod = 'all', $search = '')
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->paymentMethod = $paymentMethod;
+        $this->search = $search;
     }
 
     public function collection()
@@ -36,6 +38,12 @@ class DokterReportExport implements FromCollection, WithHeadings, WithMapping, W
 
         if ($this->paymentMethod !== 'all') {
             $query->where('payment_method', $this->paymentMethod);
+        }
+
+        if ($this->search) {
+            $query->whereHas('patient', function ($patientQuery) {
+                $patientQuery->where('name', 'like', '%' . $this->search . '%');
+            });
         }
 
         $transactions = $query->oldest()->get();
