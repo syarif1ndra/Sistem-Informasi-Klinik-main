@@ -22,8 +22,9 @@ class OwnerClinicalReportExport implements FromView, ShouldAutoSize, WithStyles
     protected $year;
     protected $paymentMethod;
     protected $staffPaymentStatus;
+    protected $search;
 
-    public function __construct($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod = 'all', $staffPaymentStatus = 'all')
+    public function __construct($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod = 'all', $staffPaymentStatus = 'all', $search = '')
     {
         $this->type = $type;
         $this->practitionerId = $practitionerId;
@@ -33,6 +34,7 @@ class OwnerClinicalReportExport implements FromView, ShouldAutoSize, WithStyles
         $this->year = $year;
         $this->paymentMethod = $paymentMethod;
         $this->staffPaymentStatus = $staffPaymentStatus;
+        $this->search = $search;
     }
 
     public function view(): View
@@ -141,6 +143,13 @@ class OwnerClinicalReportExport implements FromView, ShouldAutoSize, WithStyles
         } else {
             // Daily Data
             $query->whereDate('date', '>=', $this->startDate)->whereDate('date', '<=', $this->endDate);
+
+            if ($this->search) {
+                $query->whereHas('patient', function ($patientQuery) {
+                    $patientQuery->where('name', 'like', '%' . $this->search . '%');
+                });
+            }
+
             $transactions = $query->orderBy('created_at', 'asc')->get();
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             

@@ -157,8 +157,9 @@ class ReportController extends Controller
         $year = $request->input('year', Carbon::today()->format('Y'));
         $paymentMethod = $request->input('payment_method', 'all');
         $staffPaymentStatus = $request->input('staff_payment_status', 'all');
+        $search = $request->input('search', '');
 
-        return Excel::download(new OwnerClinicalReportExport($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod, $staffPaymentStatus), 'laporan-klinik-' . date('Y-m-d') . '.xlsx');
+        return Excel::download(new OwnerClinicalReportExport($type, $practitionerId, $startDate, $endDate, $month, $year, $paymentMethod, $staffPaymentStatus, $search), 'laporan-klinik-' . date('Y-m-d') . '.xlsx');
     }
 
     public function exportPdf(Request $request)
@@ -225,7 +226,15 @@ class ReportController extends Controller
         } else {
             $startDate = $request->input('start_date', Carbon::today()->startOfMonth()->toDateString());
             $endDate = $request->input('end_date', Carbon::today()->toDateString());
+            $search = $request->input('search', '');
             $query->whereDate('date', '>=', $startDate)->whereDate('date', '<=', $endDate);
+
+            if ($search) {
+                $query->whereHas('patient', function ($patientQuery) use ($search) {
+                    $patientQuery->where('name', 'like', '%' . $search . '%');
+                });
+            }
+
             $transactions = $query->orderBy('created_at', 'asc')->get();
             $totalRevenue = $transactions->where('status', 'paid')->sum('total_amount');
             $splits = $this->calculateRevenueSplits($transactions);

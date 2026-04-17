@@ -20,6 +20,11 @@
             <form method="GET" action="{{ route('owner.reports') }}"
                 class="flex flex-wrap items-end gap-3 w-full md:w-auto">
                 <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Cari Nama Pasien</label>
+                    <input type="text" name="search" value="{{ $search }}" placeholder="Masukkan nama pasien..."
+                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
+                </div>
+                <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Dari</label>
                     <input type="date" name="start_date" value="{{ $startDate }}"
                         class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
