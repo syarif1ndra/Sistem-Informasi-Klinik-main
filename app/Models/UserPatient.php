@@ -19,6 +19,17 @@ class UserPatient extends Model
         'address',
     ];
 
+    /**
+     * Interact with the patients's gender.
+     */
+    protected function gender(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn (string $value) => $value === 'L' ? 'male' : 'female',
+            set: fn (string $value) => strtolower($value) === 'male' || strtolower($value) === 'l' ? 'L' : 'P',
+        );
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

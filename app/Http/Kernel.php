@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'role.owner' => \App\Http\Middleware\EnsureOwnerRole::class,
         'role.apoteker' => \App\Http\Middleware\EnsureApotekerRole::class,
         'patient.data' => \App\Http\Middleware\EnsurePatientData::class,
+        'api.role'     => \App\Http\Middleware\ApiRoleMiddleware::class,
     ];
 }

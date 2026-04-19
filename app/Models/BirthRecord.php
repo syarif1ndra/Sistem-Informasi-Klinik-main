@@ -43,4 +43,15 @@ class BirthRecord extends Model
     protected $casts = [
         'birth_date' => 'date',
     ];
+
+    /**
+     * Interact with the baby's gender.
+     */
+    protected function gender(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: fn (string $value) => $value === 'L' ? 'male' : 'female',
+            set: fn (string $value) => strtolower($value) === 'male' || strtolower($value) === 'l' ? 'L' : 'P',
+        );
+    }
 }
