@@ -6,18 +6,18 @@
             class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Kinerja Pegawai</h1>
-                <p class="text-gray-500 mt-1">Monitoring performa Tenaga Medis (Dokter, Bidan)</p>
+                <p class="text-gray-500 mt-1">
+                    Monitoring performa Tenaga Medis (Dokter, Bidan)
+                    @if($month)
+                        - Bulan {{ \Carbon\Carbon::createFromFormat('Y-m', $month)->locale('id')->isoFormat('MMMM YYYY') }}
+                    @endif
+                </p>
             </div>
             <form method="GET" action="{{ route('owner.staff.performance') }}"
                 class="flex flex-wrap items-end gap-3 w-full md:w-auto">
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Dari Tanggal</label>
-                    <input type="date" name="start_date" value="{{ $startDate }}"
-                        class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Sampai Tanggal</label>
-                    <input type="date" name="end_date" value="{{ $endDate }}"
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Pilih Bulan</label>
+                    <input type="month" name="month" value="{{ $month }}"
                         class="rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 text-sm">
                 </div>
                 <button type="submit"
@@ -37,7 +37,12 @@
                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900">Kinerja Tenaga Medis (Dokter, Bidan)</h3>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Kinerja Tenaga Medis (Dokter, Bidan)</h3>
+                    <p class="text-sm text-gray-600 mt-1">
+                        Data untuk bulan {{ \Carbon\Carbon::createFromFormat('Y-m', $month)->locale('id')->isoFormat('MMMM YYYY') }}
+                    </p>
+                </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -48,15 +53,15 @@
                             <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Role
                             </th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                Pasien Ditangani</th>
+                                Pasien Ditangani (Bulan Ini)</th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Biaya Konsultasi & Persentase</th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                Pendapatan Transaksi</th>
+                                Pendapatan Transaksi (Bulan Ini)</th>
                             <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                Pendapatan Bersih</th>
+                                Pendapatan Bersih (Bulan Ini)</th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                Status Gaji</th>
+                                Status Gaji (Bulan Ini)</th>
                             <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
                                 Aksi</th>
                         </tr>
