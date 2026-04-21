@@ -2,31 +2,38 @@
 
 @section('content')
     <div x-data="{ showAddModal: false }">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-            <h1 class="text-3xl font-bold text-gray-800">Manajemen Antrian</h1>
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
 
-            <div class="flex items-center gap-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 border-l-4 border-pink-500 pl-4">
+                Manajemen Antrian
+            </h1>
 
-                <form action="{{ route('admin.queues.index') }}" method="GET" class="flex items-center">
-                    <input type="date" name="date" value="{{ $date }}"
-                        class="shadow border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent mr-3 transition-colors">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+
+                <form action="{{ route('admin.queues.index') }}" method="GET"
+                    class="flex flex-row items-center gap-2 flex-1 sm:flex-none">
+                    <div class="relative flex-1">
+                        <input type="date" name="date" value="{{ $date }}"
+                            class="w-full shadow-sm border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
+                    </div>
                     <button type="submit"
-                        class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors mr-3 whitespace-nowrap">
+                        class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors whitespace-nowrap shadow-sm">
                         Filter
                     </button>
                 </form>
 
                 <button @click="showAddModal = true"
-                    class="bg-pink-500 hover:bg-pink-600 text-white font-semibold flex items-center gap-2 py-2 px-4 rounded-lg text-sm transition-colors whitespace-nowrap shadow-sm">
+                    class="bg-pink-500 hover:bg-pink-600 text-white font-semibold flex justify-center items-center gap-2 py-2.5 px-4 rounded-lg text-sm transition-all whitespace-nowrap shadow-md active:scale-95">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Tambah Antrian
+                    <span>Tambah Antrian</span>
                 </button>
+
             </div>
         </div>
 
-        @if(session('success'))
+        @if (session('success'))
             <div class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm flex items-start">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -41,7 +48,7 @@
             </div>
         @endif
 
-        @if($errors->any())
+        @if ($errors->any())
             <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm flex items-start">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
@@ -52,7 +59,7 @@
                 </div>
                 <div class="ml-3">
                     <ul class="text-sm text-red-700 font-medium list-disc list-inside">
-                        @foreach($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -76,23 +83,60 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Praktisi</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="queue-table-body" class="bg-white divide-y divide-gray-200">
-                    @include('admin.queues.partials.table')
-                </tbody>
-            </table>
+            <div class="overflow-x-auto w-full custom-scrollbar" style="-webkit-overflow-scrolling: touch;">
+                <table class="min-w-[1000px] w-full divide-y divide-gray-200">
+                    <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
+                        <tr>
+                            <th
+                                class="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                No. Antrian</th>
+                            <th
+                                class="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                Nama Pasien</th>
+                            <th
+                                class="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                Layanan</th>
+                            <th
+                                class="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                Keluhan</th>
+                            <th
+                                class="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                Praktisi</th>
+                            <th
+                                class="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                Status</th>
+                            <th
+                                class="px-6 py-4 text-right text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queue-table-body" class="bg-white divide-y divide-gray-200">
+                        @include('admin.queues.partials.table')
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        <style>
+            .custom-scrollbar::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #ec4899;
+                /* warna pink-500 */
+                border-radius: 10px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: #be185d;
+                /* warna rose-700 */
+            }
+        </style>
 
         <div x-show="showAddModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
@@ -187,7 +231,7 @@
                                     <select name="service_name" required
                                         class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-shadow">
                                         <option value="" disabled selected hidden>Pilih Layanan</option>
-                                        @foreach($services as $service)
+                                        @foreach ($services as $service)
                                             <option value="{{ $service }}">{{ $service }}</option>
                                         @endforeach
                                     </select>
@@ -197,10 +241,12 @@
                                             class="text-red-500">*</span></label>
                                     <select name="assigned_practitioner_id" required
                                         class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-shadow">
-                                        <option value="" disabled selected hidden>Pilih Praktisi (Dokter/Bidan)</option>
-                                        @foreach($practitioners as $practitioner)
+                                        <option value="" disabled selected hidden>Pilih Praktisi (Dokter/Bidan)
+                                        </option>
+                                        @foreach ($practitioners as $practitioner)
                                             <option value="{{ $practitioner->id }}">{{ $practitioner->name }}
-                                                ({{ ucfirst($practitioner->role) }})</option>
+                                                ({{ ucfirst($practitioner->role) }})
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -208,8 +254,7 @@
 
                             <div class="col-span-1 md:col-span-2">
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">Keluhan Awal</label>
-                                <textarea name="complaint" rows="2"
-                                    placeholder="Gejala atau keluhan yang dirasakan saat ini"
+                                <textarea name="complaint" rows="2" placeholder="Gejala atau keluhan yang dirasakan saat ini"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-shadow"></textarea>
                             </div>
                         </div>
@@ -233,15 +278,15 @@
 
 @section('scripts')
     <script>
-        const tableDataUrl = '{{ route("admin.queues.tableData") }}';
+        const tableDataUrl = '{{ route('admin.queues.tableData') }}';
 
         function fetchQueueTableData() {
             const dateParam = new URLSearchParams(window.location.search).get('date') || '{{ $date }}';
             fetch(`${tableDataUrl}?date=${dateParam}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('queue-table-body').innerHTML = html;
@@ -259,17 +304,21 @@
             window.speechSynthesis.speak(utterance);
 
             fetch(`/admin/queues/${queueId}/status`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({ status: 'calling' })
-            })
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        status: 'calling'
+                    })
+                })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(err => { throw err; });
+                        return response.json().then(err => {
+                            throw err;
+                        });
                     }
                     return response.json();
                 })
@@ -277,7 +326,8 @@
                     if (data.success) {
                         const statusSpan = document.getElementById(`status-${queueId}`);
                         if (statusSpan) {
-                            statusSpan.className = 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800';
+                            statusSpan.className =
+                                'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800';
                             statusSpan.innerText = 'Calling';
                         }
                         const row = document.getElementById(`row-${queueId}`);

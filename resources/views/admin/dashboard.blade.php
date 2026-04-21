@@ -94,51 +94,59 @@
 
     <!-- Recent Queues Table -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
-        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-xl font-bold text-gray-800">Antrian Terbaru Hari Ini</h3>
-            <a href="{{ route('admin.queues.index') }}" class="text-sm text-blue-600 hover:text-blue-800">Lihat Semua</a>
+        <div class="px-4 py-4 border-b border-gray-200 flex justify-between items-center bg-white">
+            <h3 class="text-lg font-bold text-gray-800 leading-tight">Antrian Terbaru Hari Ini</h3>
+            <a href="{{ route('admin.queues.index') }}"
+                class="text-xs text-blue-600 hover:text-blue-800 whitespace-nowrap ml-2">Lihat Semua</a>
         </div>
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($recentQueues as $queue)
+
+        <div class="w-full overflow-x-auto custom-scrollbar" style="-webkit-overflow-scrolling: touch;">
+            <table class="min-w-[600px] w-full divide-y divide-gray-200">
+                <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-lg font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">
-                                {{ $queue->patient->name ?? ($queue->userPatient->name ?? '-') }}
-                            </div>
-                            <div class="text-xs text-gray-500">
-                                {{ $queue->patient->nik ?? ($queue->userPatient->nik ?? '-') }}
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $queue->service_name }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $queue->status == 'waiting' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                    {{ $queue->status == 'calling' ? 'bg-blue-100 text-blue-800' : '' }}
-                                    {{ $queue->status == 'finished' ? 'bg-green-100 text-green-800' : '' }}
-                                    {{ $queue->status == 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
-                                {{ ucfirst($queue->status) }}
-                            </span>
-                        </td>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">No. Antrian</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Nama Pasien</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Layanan</th>
+                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Status</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada antrian hari ini.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($recentQueues as $queue)
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span
+                                    class="text-base font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ $queue->patient->name ?? ($queue->userPatient->name ?? '-') }}
+                                </div>
+                                <div class="text-[10px] text-gray-500">
+                                    {{ $queue->patient->nik ?? ($queue->userPatient->nik ?? '-') }}
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $queue->service_name }}
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span
+                                    class="px-2 py-0.5 inline-flex text-[10px] leading-4 font-semibold rounded-full
+                                {{ $queue->status == 'waiting' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                {{ $queue->status == 'calling' ? 'bg-blue-100 text-blue-800' : '' }}
+                                {{ $queue->status == 'finished' ? 'bg-green-100 text-green-800' : '' }}
+                                {{ $queue->status == 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
+                                    {{ ucfirst($queue->status) }}
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-4 py-4 text-center text-gray-500 text-sm">Belum ada antrian.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Chart.js -->
@@ -150,15 +158,13 @@
             type: 'bar',
             data: {
                 labels: {!! json_encode($monthlyIncome['labels']) !!},
-                datasets: [
-                    {
-                        label: 'Total Pendapatan',
-                        data: {!! json_encode($monthlyIncome['data']) !!},
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }
-                ]
+                datasets: [{
+                    label: 'Total Pendapatan',
+                    data: {!! json_encode($monthlyIncome['data']) !!},
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
@@ -166,7 +172,7 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function (value) {
+                            callback: function(value) {
                                 return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
                             }
                         }
@@ -175,13 +181,16 @@
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function (context) {
+                            label: function(context) {
                                 let label = context.dataset.label || '';
                                 if (label) {
                                     label += ': ';
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
+                                    label += new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }).format(context.parsed.y);
                                 }
                                 return label;
                             }

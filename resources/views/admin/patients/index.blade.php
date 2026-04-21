@@ -1,43 +1,67 @@
 @extends($activeLayout ?? 'layouts.admin')
 
 @section('content')
-    <div class="flex flex-col mb-6 gap-4">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 class="text-3xl font-bold text-gray-800">Manajemen Pasien</h1>
+    <div class="flex flex-col mb-8 gap-6">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 border-l-4 border-pink-500 pl-4">
+                Manajemen Pasien
+            </h1>
 
-            <form action="{{ route('admin.patients.index') }}" method="GET"
-                class="flex flex-col sm:flex-row items-center gap-2" id="filter-form">
-                <div class="flex items-center gap-2">
-                    <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama pasien..."
-                        class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
-                    <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
-                        class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
-                    <span class="text-gray-500 font-medium">s/d</span>
-                    <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
-                        class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
+            <form action="{{ route('admin.patients.index') }}" method="GET" class="flex flex-col w-full lg:w-auto gap-3"
+                id="filter-form">
+
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <div class="relative flex-1 sm:w-64">
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama pasien..."
+                            class="w-full shadow-sm border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-1">
+                        <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
+                            class="flex-1 shadow-sm border border-gray-300 rounded-lg py-2 px-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
+
+                        <span class="text-gray-400 text-xs font-bold uppercase tracking-tighter">s/d</span>
+
+                        <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
+                            class="flex-1 shadow-sm border border-gray-300 rounded-lg py-2 px-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
+                    </div>
+
+                    <button type="submit"
+                        class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors text-sm">
+                        Filter
+                    </button>
                 </div>
-                <button type="submit"
-                    class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded shadow-sm w-full sm:w-auto">
-                    Filter
-                </button>
             </form>
         </div>
 
-        <!-- Quick Filter Buttons -->
-        <div class="flex flex-wrap items-center gap-2">
-            <span class="text-sm text-gray-500 font-semibold mr-2">Filter Cepat:</span>
-            <button type="button" onclick="setQuickFilter('today')"
-                class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-colors">Hari
-                Ini</button>
-            <button type="button" onclick="setQuickFilter('7days')"
-                class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-colors">7
-                Hari Terakhir</button>
-            <button type="button" onclick="setQuickFilter('thisMonth')"
-                class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-colors">Bulan
-                Ini</button>
-            <button type="button" onclick="setQuickFilter('thisYear')"
-                class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-colors">Tahun
-                Ini</button>
+        <div
+            class="flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100">
+            <span class="text-xs text-gray-500 font-bold uppercase tracking-wider flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Filter Cepat:
+            </span>
+
+            <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="setQuickFilter('today')"
+                    class="px-4 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-all shadow-sm">
+                    Hari Ini
+                </button>
+                <button type="button" onclick="setQuickFilter('7days')"
+                    class="px-4 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-all shadow-sm">
+                    7 Hari Terakhir
+                </button>
+                <button type="button" onclick="setQuickFilter('thisMonth')"
+                    class="px-4 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-all shadow-sm">
+                    Bulan Ini
+                </button>
+                <button type="button" onclick="setQuickFilter('thisYear')"
+                    class="px-4 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200 transition-all shadow-sm">
+                    Tahun Ini
+                </button>
+            </div>
         </div>
     </div>
 
@@ -85,68 +109,88 @@
     </div>
 
     <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Keluhan</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Telepon</th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan </th>
-                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Alamat</th>
-                    <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($visits as $visit)
+        <div class="overflow-x-auto w-full custom-scrollbar" style="-webkit-overflow-scrolling: touch;">
+            <table class="min-w-[1000px] w-full divide-y divide-gray-200">
+                <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-lg font-bold text-gray-900">
-                                {{ sprintf('%03d', $visit->queue_number) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">
-                                {{ $visit->patient->name ?? '-' }}
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">
-                            {{ Str::limit($visit->complaint ?? '-', 30) }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $visit->patient->phone ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $visit->service_name }}
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit($visit->patient->address ?? '-', 30) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            @if($visit->patient)
-                                <a href="{{ route('admin.patients.show', ['patient' => $visit->patient_id, 'queue_id' => $visit->id]) }}"
-                                    class="text-indigo-600 hover:text-indigo-900 mr-2">Detail</a>
-                                <a href="{{ route('admin.patients.editVisit', $visit) }}"
-                                    class="text-amber-600 hover:text-amber-900 mr-2">Edit</a>
-                                @if(!auth()->user()->isBidan() && !auth()->user()->isDokter())
-                                    <form action="{{ route('admin.patients.destroy', $visit->patient) }}" method="POST"
-                                        class="inline-block" id="delete-form-{{ $visit->patient->id }}"
-                                        onsubmit="event.preventDefault();">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button"
-                                            onclick="openDeleteModal(document.getElementById('delete-form-{{ $visit->patient->id }}'), '{{ $visit->patient->name }}')"
-                                            class="text-red-600 hover:text-red-900">Hapus</button>
-                                    </form>
-                                @endif
-                            @endif
-                        </td>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap">No.
+                            Antrian</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap">Nama
+                            Pasien</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap">Keluhan
+                        </th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap">Telepon
+                        </th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap">Layanan
+                        </th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap">Alamat
+                        </th>
+                        <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider whitespace-nowrap">Aksi
+                        </th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada data pasien (kunjungan) hari ini.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-        <div class="px-6 py-4">
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($visits as $visit)
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="text-lg font-bold text-gray-900">
+                                    {{ sprintf('%03d', $visit->queue_number) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ $visit->patient->name ?? '-' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 max-w-[200px] truncate">
+                                {{ $visit->complaint ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $visit->patient->phone ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $visit->service_name }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 max-w-[200px] truncate">
+                                {{ $visit->patient->address ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex justify-end gap-2">
+                                    @if ($visit->patient)
+                                        <a href="{{ route('admin.patients.show', ['patient' => $visit->patient_id, 'queue_id' => $visit->id]) }}"
+                                            class="text-indigo-600 hover:text-indigo-900">Detail</a>
+
+                                        <a href="{{ route('admin.patients.editVisit', $visit) }}"
+                                            class="text-amber-600 hover:text-amber-900">Edit</a>
+
+                                        @if (!auth()->user()->isBidan() && !auth()->user()->isDokter())
+                                            <form action="{{ route('admin.patients.destroy', $visit->patient) }}"
+                                                method="POST" class="inline-block"
+                                                id="delete-form-{{ $visit->patient->id }}"
+                                                onsubmit="event.preventDefault();">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                    onclick="openDeleteModal(document.getElementById('delete-form-{{ $visit->patient->id }}'), '{{ $visit->patient->name }}')"
+                                                    class="text-red-600 hover:text-red-900">Hapus</button>
+                                            </form>
+                                        @endif
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                                Belum ada data pasien (kunjungan) hari ini.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
             {{ $visits->links() }}
         </div>
     </div>
