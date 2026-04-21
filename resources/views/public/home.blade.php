@@ -165,9 +165,11 @@
     <div id="obat" class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Vaksin & Obat Tersedia</h2>
+
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+
                 <div class="overflow-x-auto">
-                    <table class="min-w-[600px] w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
                         <caption class="sr-only">Daftar harga dan ketersediaan vaksin serta obat di Klinik Bidan Siti Hajar
                         </caption>
                         <thead class="bg-gradient-to-r from-pink-500 to-rose-600">
@@ -178,13 +180,16 @@
                                 </th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">
-                                    Kategori</th>
+                                    Kategori
+                                </th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">
-                                    Harga</th>
+                                    Harga
+                                </th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider whitespace-nowrap">
-                                    Keterangan</th>
+                                    Keterangan
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -202,7 +207,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                         Rp {{ number_format($medicine->price, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                                    <td class="px-6 py-4 text-sm text-gray-600 min-w-[200px]">
                                         {{ $medicine->description }}
                                     </td>
                                 </tr>
@@ -215,6 +220,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
