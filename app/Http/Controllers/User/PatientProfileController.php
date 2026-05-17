@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
 use App\Models\UserPatient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,8 @@ class PatientProfileController extends Controller
         $patient->user_id = Auth::id();
         $patient->save();
 
+        $this->syncToPatient($patient);
+
         return redirect()->route('dashboard')->with('success', 'Data Pasien berhasil disimpan.');
     }
 
@@ -64,6 +67,29 @@ class PatientProfileController extends Controller
 
         $patient->update($request->all());
 
+        $this->syncToPatient($patient);
+
         return redirect()->route('dashboard')->with('success', 'Data Pasien berhasil diperbarui.');
+    }
+
+    protected function syncToPatient(UserPatient $userPatient)
+    {
+        if (!$userPatient->user_id) {
+            return;
+        }
+
+        $patient = Patient::where('user_id', $userPatient->user_id)->first();
+        if (!$patient) {
+            return;
+        }
+
+        $patient->update([
+            'name' => $userPatient->name,
+            'nik' => $userPatient->nik,
+            'dob' => $userPatient->dob,
+            'gender' => $userPatient->gender,
+            'phone' => $userPatient->phone,
+            'address' => $userPatient->address,
+        ]);
     }
 }

@@ -108,7 +108,7 @@
     <div class="header">
         <h1>Bidan Siti Hajar</h1>
         <p>Jl. Raya, Merak Batin, Natar, Lampung</p>
-        <p>Telp: (021) 123-4567</p>
+        <p>Telp +62 822-8968-5085</p>
     </div>
 
     <div class="divider"></div>

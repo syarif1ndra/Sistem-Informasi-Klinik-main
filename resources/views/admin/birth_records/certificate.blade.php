@@ -129,7 +129,8 @@
         .sign-title {
             font-size: 11pt;
             font-weight: 700;
-            margin-bottom: 48px;
+            margin-top: 72px;
+            margin-bottom: 18px;
             color: #000;
         }
 
@@ -188,7 +189,7 @@
         </div>
 
         <div class="section">
-            <div class="section-title">Isteri dari</div>
+            <div class="section-title">Istri dari</div>
             <table class="detail-table">
                 <tr>
                     <td class="label">Nama</td>
@@ -262,9 +263,8 @@
     <!-- Tanda tangan kanan bawah -->
     <div class="signature">
         <div class="sign-box">
-            <div class="sign-date">Natar, 16 April 2026</div>
+            <div class="sign-date">Natar, {{ now()->translatedFormat('d F Y') }}</div>
             <div class="sign-title">{{ $birthRecord->attendant_name ?? 'Bidan Siti Hajar' }}</div>
-            <div class="sign-name">bidan siti hajar</div>
         </div>
     </div>
 

@@ -17,10 +17,15 @@ class DashboardController extends Controller
             'total_patients' => Patient::count(),
             'today_queues' => Queue::where('date', date('Y-m-d'))->count(),
             'pending_transactions' => Transaction::where('status', 'unpaid')->count(),
-            'low_stock_medicines' => Medicine::where('stock', '<', 20)->count(),
+            'low_stock_medicines' => Medicine::where('stock', '<=', 10)->count(),
             'today_revenue' => Transaction::whereDate('created_at', date('Y-m-d'))->where('status', 'paid')->sum('total_amount'),
             'total_revenue' => Transaction::where('status', 'paid')->sum('total_amount'),
         ];
+
+        $lowStockMedicines = Medicine::where('stock', '<=', 10)
+            ->orderBy('stock', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
 
         $recentQueues = Queue::with(['patient', 'userPatient'])
             ->where('date', date('Y-m-d'))
@@ -34,7 +39,7 @@ class DashboardController extends Controller
         // 2. Patient Trend (Total) - Last 7 Days
         $patientTrend = $this->getPatientTrend();
 
-        return view('admin.dashboard', compact('stats', 'recentQueues', 'monthlyIncome', 'patientTrend'));
+        return view('admin.dashboard', compact('stats', 'recentQueues', 'monthlyIncome', 'patientTrend', 'lowStockMedicines'));
     }
 
     private function getMonthlyIncome()

@@ -93,7 +93,7 @@
     </div>
 
     <!-- Recent Queues Table -->
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500 mb-8">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h3 class="text-xl font-bold text-gray-800">Antrian Terbaru Hari Ini</h3>
             <a href="{{ route('admin.queues.index') }}" class="text-sm text-blue-600 hover:text-blue-800">Lihat Semua</a>
@@ -139,6 +139,43 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+    <!-- Low Stock Medicines -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-orange-500 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <div>
+                <h3 class="text-xl font-bold text-gray-800">Obat Stok Menipis (&le; 10)</h3>
+                <p class="text-sm text-gray-500">Periksa obat yang perlu segera di-restock.</p>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-sm font-semibold">
+                {{ $lowStockMedicines->count() }} item
+            </span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Obat</th>
+                        <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Stok</th>
+                        <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Min. Stok</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($lowStockMedicines as $medicine)
+                        <tr class="hover:bg-orange-50/50 transition-colors">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $medicine->name }}</td>
+                            <td class="px-6 py-4 text-sm text-right font-semibold {{ $medicine->stock == 0 ? 'text-red-500' : 'text-orange-600' }}">{{ $medicine->stock }}</td>
+                            <td class="px-6 py-4 text-sm text-right text-gray-500">{{ $medicine->min_stock ?? '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-6 text-center text-gray-500">Semua stok obat masih aman.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Chart.js -->
