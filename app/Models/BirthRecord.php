@@ -44,14 +44,27 @@ class BirthRecord extends Model
         'birth_date' => 'date',
     ];
 
+    protected $appends = [
+        'gender_label',
+    ];
+
     /**
      * Interact with the baby's gender.
      */
     protected function gender(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
         return \Illuminate\Database\Eloquent\Casts\Attribute::make(
-            get: fn (string $value) => $value === 'L' ? 'male' : 'female',
-            set: fn (string $value) => strtolower($value) === 'male' || strtolower($value) === 'l' ? 'L' : 'P',
+            get: fn (?string $value) => $value ? strtoupper($value) : null,
+            set: fn (?string $value) => $value === null ? null : match (strtolower($value)) {
+                'male', 'l' => 'L',
+                'female', 'p' => 'P',
+                default => null,
+            },
         );
+    }
+
+    public function getGenderLabelAttribute(): ?string
+    {
+        return $this->gender === 'L' ? 'Laki-laki' : ($this->gender === 'P' ? 'Perempuan' : null);
     }
 }

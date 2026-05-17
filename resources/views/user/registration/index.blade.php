@@ -295,12 +295,11 @@
                 <!-- Status & Payment Method Badges -->
                 <div class="flex gap-2 mb-6">
                     <span id="modal-status"
-                        class="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-600">
+                        class="inline-flex items-center leading-none px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-600">
                         STATUS
                     </span>
                     <span id="modal-payment"
-                        class="inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-50 text-blue-600">
-                        PAYMENT
+                        class="inline-flex items-center leading-none px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-50 text-blue-600">PAYMENT
                     </span>
                 </div>
 
@@ -438,10 +437,10 @@
                 // Color status badge based on value
                 const statusBadge = document.getElementById('modal-status');
                 if (status.toLowerCase() === 'paid') {
-                    statusBadge.className = 'inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700';
+                    statusBadge.className = 'inline-flex items-center leading-none px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700';
                     statusBadge.innerText = 'LUNAS';
                 } else {
-                    statusBadge.className = 'inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-700';
+                    statusBadge.className = 'inline-flex items-center leading-none px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-700';
                     statusBadge.innerText = 'BELUM LUNAS';
                 }
 

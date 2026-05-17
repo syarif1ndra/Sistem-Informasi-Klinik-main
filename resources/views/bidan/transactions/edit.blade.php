@@ -69,7 +69,7 @@
                     </div>
 
                     <!-- Item Selection -->
-                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden min-h-[28rem]">
                         <div class="bg-gradient-to-r from-pink-500 to-rose-600 px-6 py-4">
                             <h2 class="text-white text-lg font-bold flex items-center gap-2">
                                 <span
@@ -79,7 +79,7 @@
                         </div>
                         <div class="p-6">
                             <div class="flex flex-col md:flex-row gap-4 mb-6">
-                                <div class="w-full md:w-1/3">
+                                <div class="w-full md:w-1/4">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Tipe Item</label>
                                     <select x-model="itemType"
                                         class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3">
@@ -93,7 +93,7 @@
                                             class="w-full rounded-lg border-gray-300 focus:border-pink-500 focus:ring-pink-500 shadow-sm transition p-3">
                                     </div>
                                 </div>
-                                <div class="w-full md:w-2/3">
+                                <div class="w-full md:w-3/4">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Item</label>
 
                                     <!-- Service Select -->
@@ -110,7 +110,7 @@
                                     </div>
 
                                     <!-- Medicine Select -->
-                                    <div x-show="itemType === 'medicine'" style="display: none;">
+                                    <div x-show="itemType === 'medicine'" x-cloak>
                                         <select x-model="selectedMedicineId" x-ref="medicineSelect" id="medicineSelect"
                                             class="w-full rounded-lg border-gray-300 shadow-sm transition p-3">
                                             <option value="">-- Pilih Obat --</option>
@@ -318,6 +318,12 @@
             border-color: #ec4899;
             box-shadow: 0 0 0 1px #ec4899;
         }
+
+        .ts-dropdown,
+        .ts-dropdown-content {
+            max-height: 20rem;
+            overflow-y: auto;
+        }
     </style>
     <script>
         document.addEventListener('alpine:init', () => {
@@ -335,6 +341,7 @@
                 new TomSelect('#serviceSelect', {
                     create: false,
                     sortField: { field: 'text', direction: 'asc' },
+                    dropdownParent: 'body',
                     onChange: function (value) {
                         let el = document.getElementById('serviceSelect');
                         el.value = value;
@@ -346,6 +353,7 @@
                 new TomSelect('#medicineSelect', {
                     create: false,
                     sortField: { field: 'text', direction: 'asc' },
+                    dropdownParent: 'body',
                     onChange: function (value) {
                         let el = document.getElementById('medicineSelect');
                         el.value = value;

@@ -93,55 +93,85 @@
     </div>
 
     <!-- Recent Queues Table -->
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-pink-500 mb-8">
         <div class="px-4 py-4 border-b border-gray-200 flex justify-between items-center bg-white">
             <h3 class="text-lg font-bold text-gray-800 leading-tight">Antrian Terbaru Hari Ini</h3>
             <a href="{{ route('admin.queues.index') }}"
                 class="text-xs text-blue-600 hover:text-blue-800 whitespace-nowrap ml-2">Lihat Semua</a>
         </div>
-
-        <div class="w-full overflow-x-auto custom-scrollbar" style="-webkit-overflow-scrolling: touch;">
-            <table class="min-w-[600px] w-full divide-y divide-gray-200">
-                <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">No. Antrian</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Nama Pasien</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Layanan</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($recentQueues as $queue)
                     <tr>
-                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">No. Antrian</th>
-                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Nama Pasien</th>
-                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Layanan</th>
-                        <th class="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Status</th>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-lg font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                                {{ $queue->patient->name ?? ($queue->userPatient->name ?? '-') }}
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                {{ $queue->patient->nik ?? ($queue->userPatient->nik ?? '-') }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $queue->service_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    {{ $queue->status == 'waiting' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                    {{ $queue->status == 'calling' ? 'bg-blue-100 text-blue-800' : '' }}
+                                    {{ $queue->status == 'finished' ? 'bg-green-100 text-green-800' : '' }}
+                                    {{ $queue->status == 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
+                                {{ ucfirst($queue->status) }}
+                            </span>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada antrian hari ini.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Low Stock Medicines -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden border-t-4 border-orange-500 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <div>
+                <h3 class="text-xl font-bold text-gray-800">Obat Stok Menipis (&le; 10)</h3>
+                <p class="text-sm text-gray-500">Periksa obat yang perlu segera di-restock.</p>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-sm font-semibold">
+                {{ $lowStockMedicines->count() }} item
+            </span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Obat</th>
+                        <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Stok</th>
+                        <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Min. Stok</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($recentQueues as $queue)
-                        <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <span
-                                    class="text-base font-bold text-gray-900">{{ sprintf('%03d', $queue->queue_number) }}</span>
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    {{ $queue->patient->name ?? ($queue->userPatient->name ?? '-') }}
-                                </div>
-                                <div class="text-[10px] text-gray-500">
-                                    {{ $queue->patient->nik ?? ($queue->userPatient->nik ?? '-') }}
-                                </div>
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $queue->service_name }}
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap">
-                                <span
-                                    class="px-2 py-0.5 inline-flex text-[10px] leading-4 font-semibold rounded-full
-                                {{ $queue->status == 'waiting' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                {{ $queue->status == 'calling' ? 'bg-blue-100 text-blue-800' : '' }}
-                                {{ $queue->status == 'finished' ? 'bg-green-100 text-green-800' : '' }}
-                                {{ $queue->status == 'cancelled' ? 'bg-red-100 text-red-800' : '' }}">
-                                    {{ ucfirst($queue->status) }}
-                                </span>
-                            </td>
+                    @forelse($lowStockMedicines as $medicine)
+                        <tr class="hover:bg-orange-50/50 transition-colors">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $medicine->name }}</td>
+                            <td class="px-6 py-4 text-sm text-right font-semibold {{ $medicine->stock == 0 ? 'text-red-500' : 'text-orange-600' }}">{{ $medicine->stock }}</td>
+                            <td class="px-6 py-4 text-sm text-right text-gray-500">{{ $medicine->min_stock ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-4 py-4 text-center text-gray-500 text-sm">Belum ada antrian.</td>
+                            <td colspan="3" class="px-6 py-6 text-center text-gray-500">Semua stok obat masih aman.</td>
                         </tr>
                     @endforelse
                 </tbody>

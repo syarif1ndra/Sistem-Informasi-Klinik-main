@@ -100,7 +100,7 @@
                     </div>
 
                     <!-- Items Table -->
-                    <div class="overflow-hidden rounded-lg border border-gray-200 mb-8">
+                    <div class="overflow-x-auto max-h-[420px] overflow-y-auto rounded-lg border border-gray-200 mb-8">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
